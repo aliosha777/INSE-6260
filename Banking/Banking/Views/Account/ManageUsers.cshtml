@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Banking.Models.UserProfile>
+
+@{
+    ViewBag.Title = "ManageUsers";
+}
+
+<h2>ManageUsers</h2>
+
+<div> 
+    <table>
+        <tr>
+            <td>User Id</td>
+            <td>User Name</td>
+            <td></td>
+        </tr>
+        @foreach (var user in Model)
+        { 
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.UserName</td>
+                <td>@Html.ActionLink("Edit", "EditUser", new { id = user.UserId })</td>
+            </tr>
+        }
+    </table>
+</div>
