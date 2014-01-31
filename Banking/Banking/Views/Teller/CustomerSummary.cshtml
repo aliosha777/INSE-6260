@@ -1,0 +1,20 @@
+﻿@using Banking.Models
+@model Banking.ViewModels.CustomerSummary
+
+@{
+    ViewBag.Title = "Customer Summary";
+}
+
+<h2>CustomerSummary</h2>
+
+
+@if (Model != null)
+{
+    <div>
+        <span>Customer: @Model.FirstName </span>
+    </div>   
+    foreach (var account in Model.Accounts)
+    {
+        Html.RenderPartial("~/Views/BankAccount/_AccountInformation.cshtml", account);
+    }
+}

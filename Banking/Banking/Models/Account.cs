@@ -5,15 +5,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Banking.Models
 {
-    [Table("Account")]
-    public class Account
+    public enum AccountTypes
     {
-        public enum AccountTypes
-        {
-            Checking,
-            Savings,
-        }
+        Checking,
+        Savings,
+        Investment,
+        //// For simplicity we could use the same account class for general ledger accounts 
+        //// but might be better to define it as a separate entity
+        GeneralLedger,
+    }
 
+    //// Define IAccount interface to be able to have a general ledger account and a personal account
+    //// yet be able to pass them to the transactional engine where the ownership of the account deos
+    //// not matter 
+
+    public interface IAccount
+    {
+        string AccountNumber { get; set; }
+
+        AccountTypes Type { get; set; }
+
+        decimal Balance { get; set; }
+
+        bool IsActive { get; set; }
+    }
+
+    [Table("Account")]
+    public class Account : IAccount
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AccountId { get; set; }
@@ -22,7 +41,7 @@ namespace Banking.Models
 
         public AccountTypes Type { get; set; }
 
-        public ICollection<Customer> Owners { get; private set; }
+        public ICollection<Customer> Owners { get; set; }
 
         public decimal Balance { get; set; }
 

@@ -19,23 +19,15 @@ namespace Banking.DAL
             this.context = context;
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-
-            this.disposed = true;
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public IEnumerable<Account> GetAllAccounts()
+        {
+            return context.Accounts;
         }
 
         public Account GetAccountById(int accountId)
@@ -56,6 +48,19 @@ namespace Banking.DAL
         public void Save()
         {
             context.SaveChanges();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+
+            this.disposed = true;
         }
     }
 }

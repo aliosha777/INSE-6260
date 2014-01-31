@@ -6,13 +6,38 @@ using System.Web.Mvc;
 
 namespace Banking.Controllers
 {
+    using Banking.DAL;
+    using Banking.ViewModels;
+
+    [Authorize]
     public class CustomerController : Controller
     {
-        // GET: /Customer/
+        private readonly ICustomerRepository customerRepository;
 
-        public ActionResult Index()
+        public CustomerController(ICustomerRepository customerRepository)
         {
-            return View();
+            this.customerRepository = customerRepository;
+        }
+
+        // GET: /Customer/
+        
+        public ActionResult CustomerSummary(int id)
+        {
+            var customer = customerRepository.GetCustomerById(id);
+
+            return View(customer);
+        }
+
+        public ActionResult PersonalDetails(int id)
+        {
+            var customer = customerRepository.GetCustomerById(id);
+
+            var customerPersonalDetails = new CustomerPersonalDetails
+            {
+                Address = customer.Addresses.FirstOrDefault(a => a.IsActive)
+            };
+
+            return View(customerPersonalDetails);
         }
     }
 }

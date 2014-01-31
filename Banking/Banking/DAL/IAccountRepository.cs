@@ -16,5 +16,7 @@ namespace Banking.DAL
         void UpdateAccount(Account account);
 
         void Save();
+
+        IEnumerable<Account> GetAllAccounts();
     }
 }

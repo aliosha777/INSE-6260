@@ -1,0 +1,19 @@
+﻿@using Banking.Models
+
+@{
+    ViewBag.Title = "Teller Home";
+}
+
+<h2>Teller Home</h2>
+
+<div>
+
+    @using (Html.BeginForm("CustomerSummary", "Teller"))
+    {
+        <input type="text" name="customerId"/>
+        <input type="submit" value="View" name="view"/>
+    }
+    
+</div>
+
+

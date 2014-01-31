@@ -14,7 +14,6 @@ using Banking.Models;
 namespace Banking.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
     public class AccountController : Controller
     {
         //

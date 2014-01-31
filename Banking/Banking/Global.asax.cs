@@ -9,6 +9,8 @@ using System.Web.Routing;
 
 namespace Banking
 {
+    using Banking.Logging;
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
@@ -23,6 +25,19 @@ namespace Banking
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            Exception ex = Server.GetLastError();
+
+            if (Response.StatusCode != 404)
+            {
+                // Instantiating here for now
+                ILogger logger = new Logger();
+
+                logger.LogException(ex);
+            }
         }
     }
 }

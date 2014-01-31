@@ -12,20 +12,25 @@ namespace Banking.Controllers
 {
     public class BankAccountController : Controller
     {
-        private BankDBContext db = new BankDBContext();
+        private readonly IAccountRepository accountRepository;
+
+        public BankAccountController(IAccountRepository accountRepository)
+        {
+            this.accountRepository = accountRepository;
+        }
 
         // GET: /BankAccount/
 
         public ActionResult Index()
         {
-            return View(db.Accounts.ToList());
+            return View(accountRepository.GetAllAccounts().ToList());
         }
 
         // GET: /BankAccount/Details/5
 
         public ActionResult Details(int id = 0)
         {
-            Account account = db.Accounts.Find(id);
+            Account account = accountRepository.GetAccountById(id);
             if (account == null)
             {
                 return HttpNotFound();
@@ -47,8 +52,8 @@ namespace Banking.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Accounts.Add(account);
-                db.SaveChanges();
+                accountRepository.InsertAccount(account);
+                accountRepository.Save();
                 return RedirectToAction("Index");
             }
 
@@ -59,54 +64,17 @@ namespace Banking.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Account account = db.Accounts.Find(id);
+            Account account = accountRepository.GetAccountById(id);
             if (account == null)
             {
                 return HttpNotFound();
             }
             return View(account);
-        }
-
-        // POST: /BankAccount/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(Account account)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(account).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(account);
-        }
-
-        // GET: /BankAccount/Delete/5
-
-        public ActionResult Delete(int id = 0)
-        {
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
-        }
-
-        // POST: /BankAccount/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Account account = db.Accounts.Find(id);
-            db.Accounts.Remove(account);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            accountRepository.Dispose();
             base.Dispose(disposing);
         }
     }
