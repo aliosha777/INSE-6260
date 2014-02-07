@@ -188,6 +188,7 @@
     </Compile>
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Membership\SimpleMembershipInitializer.cs" />
     <Compile Include="Migrations\201401190527314_CustomerAccountCreate.cs" />
     <Compile Include="Migrations\201401190527314_CustomerAccountCreate.Designer.cs">
       <DependentUpon>201401190527314_CustomerAccountCreate.cs</DependentUpon>
