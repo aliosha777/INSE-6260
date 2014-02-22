@@ -19,19 +19,8 @@ namespace Banking.Models
     //// yet be able to pass them to the transactional engine where the ownership of the account deos
     //// not matter 
 
-    public interface IAccount
-    {
-        string AccountNumber { get; set; }
-
-        AccountTypes Type { get; set; }
-
-        decimal Balance { get; set; }
-
-        bool IsActive { get; set; }
-    }
-
     [Table("Account")]
-    public class Account : IAccount
+    public class Account
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -50,5 +39,10 @@ namespace Banking.Models
         public DateTime Modified { get; set; }
 
         public bool IsActive { get; set; }
+
+        public bool IsLocked { get; set; }
+
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
     }
 }

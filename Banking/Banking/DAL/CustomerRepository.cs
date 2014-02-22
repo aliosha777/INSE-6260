@@ -11,9 +11,9 @@ namespace Banking.DAL
     {
         private BankDBContext context;
 
-        public CustomerRepository()
+        public CustomerRepository(BankDBContext context)
         {
-            context = new BankDBContext();
+            this.context = context;
         }
 
         public Customer GetCustomerById(int customerId)

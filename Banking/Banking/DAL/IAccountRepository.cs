@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Banking.Models;
+using Banking.Domain.Entities;
 
 namespace Banking.DAL
 {
     public interface IAccountRepository : IDisposable
     {
-        Account GetAccountById(int accountId);
+        IAccount GetAccountById(int accountId);
 
-        void InsertAccount(Account account);
+        void InsertAccount(IAccount account);
 
-        void UpdateAccount(Account account);
+        void UpdateAccount(IAccount account);
 
         void Save();
 
-        IEnumerable<Account> GetAllAccounts();
+        IEnumerable<IAccount> GetAllAccounts();
     }
 }

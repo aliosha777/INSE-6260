@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
+
+using Banking.Domain.Entities;
 
 namespace Banking.DAL
 {
-    using System.Data;
-
-    using Banking.Models;
+    using System.Linq;
 
     public class AccountRepository : IAccountRepository
     {
@@ -25,22 +24,28 @@ namespace Banking.DAL
             GC.SuppressFinalize(this);
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public IEnumerable<IAccount> GetAllAccounts()
         {
-            return context.Accounts;
+            var accounts = context.Accounts;
+
+            return accounts.Select(account => new Account(account)).ToList();
         }
 
-        public Account GetAccountById(int accountId)
+        public IAccount GetAccountById(int accountId)
         {
-            return context.Accounts.Find(accountId);
+            var account = context.Accounts.Find(accountId);
+
+            return new Domain.Entities.Account(account);
         }
 
-        public void InsertAccount(Account account)
+        public void InsertAccount(IAccount account)
         {
-            context.Accounts.Add(account);
+            var accountModel = new Banking.Models.Account();
+
+            context.Accounts.Add(accountModel);
         }
 
-        public void UpdateAccount(Account account)
+        public void UpdateAccount(IAccount account)
         {
             context.Entry(account).State = EntityState.Modified;
         }

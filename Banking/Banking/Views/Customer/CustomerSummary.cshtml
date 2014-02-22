@@ -1,4 +1,4 @@
-﻿@model Banking.Models.Customer
+﻿@model Banking.ViewModels.CustomerSummary
 
 @{
     ViewBag.Title = "CustomerSummary";
@@ -8,6 +8,10 @@
 
 <span>@Model.FirstName</span>
 <span>@Model.LastName</span>
+
+<div>@{ Html.RenderPartial("~/Views/Common/_Address.cshtml", Model.CurrentAddress); }</div>
+
+<h3>Accounts</h3>
 
 @foreach (var account in Model.Accounts)
 {

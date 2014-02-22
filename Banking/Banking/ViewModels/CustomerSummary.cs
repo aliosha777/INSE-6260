@@ -12,12 +12,12 @@ namespace Banking.ViewModels
         public CustomerSummary()
         {
             Accounts = new List<Account>();
-            CurrentAddress = new Address();
+            CurrentAddress = new AddressViewModel();
         }
 
-        public List<Account> Accounts { get; set; }
+        public ICollection<Account> Accounts { get; set; }
 
-        public Address CurrentAddress { get; set; }
+        public AddressViewModel CurrentAddress { get; set; }
 
         public string FirstName { get; set; }
 

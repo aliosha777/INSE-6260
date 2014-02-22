@@ -15,10 +15,13 @@ namespace Banking.DAL
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<Transaction> Transactions { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+            // TODO: Verify this is not redundant
             modelBuilder
                 .Entity<Customer>()
                 .HasMany(c => c.Accounts)

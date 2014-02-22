@@ -25,7 +25,14 @@ namespace Banking.Controllers
         {
             var customer = customerRepository.GetCustomerById(id);
 
-            return View(customer);
+            var customerSummary = new CustomerSummary
+            {
+                Accounts = customer.Accounts,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName
+            };
+
+            return View(customerSummary);
         }
 
         public ActionResult PersonalDetails(int id)

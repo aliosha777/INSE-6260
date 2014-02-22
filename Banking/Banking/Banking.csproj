@@ -171,6 +171,11 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BankingOperationsEngine\AccountOperationsManager.cs" />
+    <Compile Include="BankingOperationsEngine\CustomerOperationsManager.cs" />
+    <Compile Include="BankingOperationsEngine\IAccountOperationsManager.cs" />
+    <Compile Include="BankingOperationsEngine\ICustomerOperationsManager.cs" />
+    <Compile Include="BankingOperationsEngine\ITransactionEngine.cs" />
     <Compile Include="BankingOperationsEngine\TransactionEngine.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountController.cs" />
@@ -182,6 +187,11 @@
     <Compile Include="DAL\CustomerRepository.cs" />
     <Compile Include="DAL\IAccountRepository.cs" />
     <Compile Include="DAL\ICustomerRepository.cs" />
+    <Compile Include="DAL\ITransactionRepository.cs" />
+    <Compile Include="DAL\TransactionRepository.cs" />
+    <Compile Include="Domain\Entities\Account.cs" />
+    <Compile Include="Domain\Entities\IAccount.cs" />
+    <Compile Include="Exceptions\BankingValidationException.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -205,6 +215,18 @@
     <Compile Include="Migrations\201401251644049_AddAddress.Designer.cs">
       <DependentUpon>201401251644049_AddAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.cs" />
+    <Compile Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.Designer.cs">
+      <DependentUpon>201402221844397_AddAccountIsLockedTimestamp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201402221908173_AddTransactionTable.cs" />
+    <Compile Include="Migrations\201402221908173_AddTransactionTable.Designer.cs">
+      <DependentUpon>201402221908173_AddTransactionTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201402222013425_AddTransactionAccounts.cs" />
+    <Compile Include="Migrations\201402222013425_AddTransactionAccounts.Designer.cs">
+      <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Account.cs" />
@@ -212,6 +234,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AddressViewModel.cs" />
     <Compile Include="ViewModels\CustomerPersonalDetails.cs" />
     <Compile Include="ViewModels\CustomerSummary.cs" />
   </ItemGroup>
@@ -338,9 +361,16 @@
     <Content Include="Views\Teller\Home.cshtml" />
     <Content Include="Views\Customer\PersonalDetails.cshtml" />
     <Content Include="Views\Teller\CustomerSummary.cshtml" />
+    <Content Include="Views\Common\_Address.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Core\" />
+    <Folder Include="Application\Models\" />
+    <Folder Include="Application\Services\" />
+    <Folder Include="Application\Web\" />
     <Folder Include="App_Data\" />
+    <Folder Include="Core\" />
+    <Folder Include="Domain\Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -357,6 +387,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201401251644049_AddAddress.resx">
       <DependentUpon>201401251644049_AddAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.resx">
+      <DependentUpon>201402221844397_AddAccountIsLockedTimestamp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402221908173_AddTransactionTable.resx">
+      <DependentUpon>201402221908173_AddTransactionTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402222013425_AddTransactionAccounts.resx">
+      <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

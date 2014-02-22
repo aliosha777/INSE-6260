@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Banking.Models
 {
-    using System.Collections.Generic;
-
     [Table("Customer")]
     public class Customer
     {
@@ -26,8 +25,8 @@ namespace Banking.Models
 
         public string Email { get; set; }
 
-        public List<Address> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
 
-        public List<Account> Accounts { get; set; }
+        public ICollection<Account> Accounts { get; set; }
     }
 }
