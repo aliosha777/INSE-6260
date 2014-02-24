@@ -19,7 +19,7 @@ namespace Banking.Models
     }
 
     [Table("Transaction")]
-    public class Transaction
+    public class TransactionModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -27,9 +27,9 @@ namespace Banking.Models
 
         public TransactionTypes Type { get; set; }
 
-        public Account LeftAccount { get; set; }
+        public BankAccountModel LeftAccount { get; set; }
 
-        public Account RightAccount { get; set; }
+        public BankAccountModel RightAccount { get; set; }
 
         public decimal Value { get; set; }
 

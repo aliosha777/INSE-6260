@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Banking.Domain.Entities;
 
 namespace Banking.DAL
 {
-    using Banking.Models;
-
-    public interface ICustomerRepository
+    public interface ICustomerRepository : IDisposable
     {
-        Customer GetCustomerById(int customerId);
+        ICustomer GetCustomerById(int customerId);
     }
 }

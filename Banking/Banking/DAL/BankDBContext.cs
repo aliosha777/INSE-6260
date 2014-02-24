@@ -11,11 +11,11 @@ namespace Banking.DAL
         { 
         }
 
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<CustomerModel> Customers { get; set; }
 
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<BankAccountModel> Accounts { get; set; }
 
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransactionModel> Transactions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Banking.DAL
 
             // TODO: Verify this is not redundant
             modelBuilder
-                .Entity<Customer>()
+                .Entity<CustomerModel>()
                 .HasMany(c => c.Accounts)
                 .WithMany(a => a.Owners)
                 .Map(

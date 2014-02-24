@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
+
+using Banking.Domain.Entities;
+
 namespace Banking.DAL
 {
-    using System.Collections.Generic;
-
-    using Banking.Models;
-
-    public interface ITransactionRepository
+    public interface ITransactionRepository : IDisposable
     {
-        Transaction GetTransactionById(int transactionId);
+        ITransaction GetTransactionById(int transactionId);
 
-        IEnumerable<Transaction> GetAccountTransactions(IAccount account);
+        IEnumerable<ITransaction> GetAccountTransactions(IAccount account);
+
+        void SaveTransaction(Transaction transaction);
     }
 }

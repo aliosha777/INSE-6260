@@ -1,26 +1,24 @@
 ﻿using Banking.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Banking.Domain.Entities
 {
     public class Account : IAccount
     {
-        public Account(Banking.Models.Account account)
-        {
-            this.AccountId = account.AccountId;
-            this.AccountNumber = account.AccountNumber;
-            this.Balance = account.Balance;
-            this.IsActive = account.IsActive;
-            this.IsLocked = account.IsLocked;
-            this.Type = account.Type;
-        }
-
         public int AccountId { get; set; }
 
         public string AccountNumber { get; set; }
 
         public AccountTypes Type { get; set; }
 
+        public ICollection<ICustomer> Owners { get; set; }
+
         public decimal Balance { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime Modified { get; set; }
 
         public bool IsActive { get; set; }
 

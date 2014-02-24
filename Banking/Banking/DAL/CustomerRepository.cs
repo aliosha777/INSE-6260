@@ -1,26 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
+
+using Banking.Domain.Entities;
 
 namespace Banking.DAL
 {
-    using Banking.Models;
+    using System;
+
+    using Banking.Core;
 
     public class CustomerRepository : ICustomerRepository
     {
         private BankDBContext context;
+        private bool disposed;
 
         public CustomerRepository(BankDBContext context)
         {
             this.context = context;
         }
 
-        public Customer GetCustomerById(int customerId)
+        public ICustomer GetCustomerById(int customerId)
         {
-            var customer = context.Customers.Include("Accounts").FirstOrDefault(c => c.CustomerId == customerId);
+            var customerModel = 
+                context
+                .Customers
+                .Include("Accounts")
+                .FirstOrDefault(c => c.CustomerId == customerId);
 
-            return customer;
+            return customerModel.ToCustomer();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+
+            this.disposed = true;
         }
     }
 }

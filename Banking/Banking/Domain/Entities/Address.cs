@@ -1,12 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace Banking.Models
+namespace Banking.Domain.Entities
 {
-    public class Address
+    public class Address : IAddress
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string AddressId { get; set; }
 
         public string Line1 { get; set; }

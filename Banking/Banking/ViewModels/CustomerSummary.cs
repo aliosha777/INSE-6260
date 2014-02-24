@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+
+using Banking.Domain.Entities;
 
 namespace Banking.ViewModels
 {
-    using Banking.Models;
-
     public class CustomerSummary
     {
         public CustomerSummary()
         {
-            Accounts = new List<Account>();
+            Accounts = new List<IAccount>();
             CurrentAddress = new AddressViewModel();
         }
 
-        public ICollection<Account> Accounts { get; set; }
+        public ICollection<IAccount> Accounts { get; set; }
 
         public AddressViewModel CurrentAddress { get; set; }
 

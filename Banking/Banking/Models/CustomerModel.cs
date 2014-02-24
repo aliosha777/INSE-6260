@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Banking.Models
 {
     [Table("Customer")]
-    public class Customer
+    public class CustomerModel
     {
-        public Customer()
+        public CustomerModel()
         {
-            Accounts = new List<Account>();
-            Addresses = new List<Address>();
+            Accounts = new List<BankAccountModel>();
+            Addresses = new List<AddressModel>();
         }
 
         [Key]
@@ -25,8 +25,8 @@ namespace Banking.Models
 
         public string Email { get; set; }
 
-        public ICollection<Address> Addresses { get; set; }
+        public ICollection<AddressModel> Addresses { get; set; }
 
-        public ICollection<Account> Accounts { get; set; }
+        public ICollection<BankAccountModel> Accounts { get; set; }
     }
 }

@@ -172,7 +172,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BankingOperationsEngine\AccountOperationsManager.cs" />
-    <Compile Include="BankingOperationsEngine\CustomerOperationsManager.cs" />
+    <Compile Include="Core\ExtensionMethods.cs" />
+    <Compile Include="Domain\Services\CustomerOperationsManager.cs" />
     <Compile Include="BankingOperationsEngine\IAccountOperationsManager.cs" />
     <Compile Include="BankingOperationsEngine\ICustomerOperationsManager.cs" />
     <Compile Include="BankingOperationsEngine\ITransactionEngine.cs" />
@@ -190,8 +191,14 @@
     <Compile Include="DAL\ITransactionRepository.cs" />
     <Compile Include="DAL\TransactionRepository.cs" />
     <Compile Include="Domain\Entities\Account.cs" />
+    <Compile Include="Domain\Entities\Address.cs" />
+    <Compile Include="Domain\Entities\Customer.cs" />
     <Compile Include="Domain\Entities\IAccount.cs" />
-    <Compile Include="Exceptions\BankingValidationException.cs" />
+    <Compile Include="Domain\Entities\IAddress.cs" />
+    <Compile Include="Domain\Entities\ICustomer.cs" />
+    <Compile Include="Domain\Entities\ITransaction.cs" />
+    <Compile Include="Domain\Entities\Transaction.cs" />
+    <Compile Include="Core\Exceptions\BankingValidationException.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,10 +236,10 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\Account.cs" />
-    <Compile Include="Models\Address.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\BankAccountModel.cs" />
+    <Compile Include="Models\AddressModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\TransactionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddressViewModel.cs" />
     <Compile Include="ViewModels\CustomerPersonalDetails.cs" />
@@ -369,8 +376,6 @@
     <Folder Include="Application\Services\" />
     <Folder Include="Application\Web\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Core\" />
-    <Folder Include="Domain\Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

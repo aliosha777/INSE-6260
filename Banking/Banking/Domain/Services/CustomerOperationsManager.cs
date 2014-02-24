@@ -5,12 +5,13 @@ using System.Web;
 
 namespace Banking.BankingOperationsEngine
 {
+    using Banking.Domain.Entities;
     using Banking.Exceptions;
     using Banking.Models;
 
     public class CustomerOperationsManager : ICustomerOperationsManager
     {
-        public Address GetActiveAddress(Customer customer)
+        public IAddress GetActiveAddress(ICustomer customer)
         {
             // TODO: Verify this does not result in multiple database queries
             var activeAddresses = customer.Addresses.Where(a => a.IsActive);

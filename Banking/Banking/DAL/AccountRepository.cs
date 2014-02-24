@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 using Banking.Domain.Entities;
+using Banking.Models;
 
 namespace Banking.DAL
 {
-    using System.Linq;
+    using Banking.Core;
 
     public class AccountRepository : IAccountRepository
     {
@@ -28,19 +30,19 @@ namespace Banking.DAL
         {
             var accounts = context.Accounts;
 
-            return accounts.Select(account => new Account(account)).ToList();
+            return accounts.Select(accountModel => accountModel.ToAccount()).ToList();
         }
 
         public IAccount GetAccountById(int accountId)
         {
-            var account = context.Accounts.Find(accountId);
+            var accountModel = context.Accounts.Find(accountId);
 
-            return new Domain.Entities.Account(account);
+            return accountModel.ToAccount();
         }
 
         public void InsertAccount(IAccount account)
         {
-            var accountModel = new Banking.Models.Account();
+            var accountModel = new BankAccountModel();
 
             context.Accounts.Add(accountModel);
         }

@@ -5,10 +5,11 @@ using System.Web;
 
 namespace Banking.ViewModels
 {
+    using Banking.Domain.Entities;
     using Banking.Models;
 
     public class CustomerPersonalDetails
     {
-        public Address Address { get; set; }
+        public IAddress Address { get; set; }
     }
 }

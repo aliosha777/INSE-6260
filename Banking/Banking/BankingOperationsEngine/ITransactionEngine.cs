@@ -1,16 +1,17 @@
+using System.Collections.Generic;
+
+using Banking.Domain.Entities;
+using Banking.Models;
+
 namespace Banking.BankingOperationsEngine
 {
-    using System.Collections.Generic;
-
-    using Banking.Models;
-
     public interface ITransactionEngine
     {
         Transaction CreateTransferTransaction(
             IAccount source, 
             IAccount destination, 
             decimal transactionValue,
-            IEnumerable<Transaction> pendingTransactions);
+            IEnumerable<ITransaction> pendingTransactions);
 
         void ApplyTransaction(Transaction transaction);
     }

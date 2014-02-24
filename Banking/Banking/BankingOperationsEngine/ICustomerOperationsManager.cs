@@ -2,8 +2,10 @@
 
 namespace Banking.BankingOperationsEngine
 {
+    using Banking.Domain.Entities;
+
     public interface ICustomerOperationsManager
     {
-        Address GetActiveAddress(Customer customer);
+        IAddress GetActiveAddress(ICustomer customer);
     }
 }

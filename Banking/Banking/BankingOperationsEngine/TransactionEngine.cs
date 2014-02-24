@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using Banking.Domain.Entities;
 using Banking.Exceptions;
 using Banking.Models;
 
 namespace Banking.BankingOperationsEngine
 {
-    using System.Linq;
-
     public class TransactionEngine : ITransactionEngine
     {
         public Transaction CreateTransferTransaction(
             IAccount source, 
             IAccount destination, 
             decimal transactionValue,
-            IEnumerable<Transaction> pendingTransactions)
+            IEnumerable<ITransaction> pendingTransactions)
         {
             if (!source.IsActive)
             {
@@ -29,9 +30,8 @@ namespace Banking.BankingOperationsEngine
 
             var transaction = new Transaction
             {
-                // TODO: the cast is a hack for now
-                LeftAccount = (Account)source,
-                RightAccount = (Account)destination,
+                LeftAccount = source,
+                RightAccount = destination,
                 Value = transactionValue,
                 Type = TransactionTypes.Transfer,
                 Created = new DateTime()
@@ -68,7 +68,7 @@ namespace Banking.BankingOperationsEngine
         /// <param name="value"></param>
         /// <param name="transactions"></param>
         /// <returns></returns>
-        private bool HasSufficientFunds(IAccount account, decimal value, IEnumerable<Transaction> transactions)
+        private bool HasSufficientFunds(IAccount account, decimal value, IEnumerable<ITransaction> transactions)
         {
             // Account balance plus pending transactions
             decimal totalPending =

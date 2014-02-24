@@ -20,7 +20,7 @@ namespace Banking.Models
     //// not matter 
 
     [Table("Account")]
-    public class Account
+    public class BankAccountModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -30,7 +30,7 @@ namespace Banking.Models
 
         public AccountTypes Type { get; set; }
 
-        public ICollection<Customer> Owners { get; set; }
+        public ICollection<CustomerModel> Owners { get; set; }
 
         public decimal Balance { get; set; }
 

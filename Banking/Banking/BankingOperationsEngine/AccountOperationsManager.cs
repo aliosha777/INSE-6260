@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Banking.DAL;
+using Banking.Domain.Entities;
 
 namespace Banking.BankingOperationsEngine
 {
-    using Banking.DAL;
-    using Banking.Models;
-
     public class AccountOperationsManager : IAccountOperationsManager
     {
         private ITransactionEngine transactionEngine;
@@ -36,7 +31,12 @@ namespace Banking.BankingOperationsEngine
 
         public void Transfer(IAccount source, IAccount destination, decimal amount)
         {
-            var transaction = transactionEngine.CreateTransferTransaction();
+            var pendingTransactions = transactionRepository.GetAccountTransactions(source);
+
+            var transaction = transactionEngine.CreateTransferTransaction(
+                source, destination, amount, pendingTransactions);
+
+            transactionRepository.SaveTransaction(transaction);
         }
     }
 }
