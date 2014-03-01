@@ -47,7 +47,7 @@ namespace Banking.DAL
         }
 
         // TODO: change this to Update only and have a separate add method
-        public void AddOrUpdateTransaction(ITransaction transaction)
+        public void UpdateTransaction(ITransaction transaction)
         {
             // Might need to lock this operation or use optimistic concurency management
             var transactionModel = transaction.ToModel();

@@ -8,8 +8,22 @@ using Banking.Models;
 
 namespace Banking.BankingOperationsEngine
 {
+    using Banking.DAL;
+
     public class TransactionEngine : ITransactionEngine
     {
+        private readonly ITransactionRepository transactionRepository;
+
+        private readonly IAccountRepository accountRepository;
+
+        public TransactionEngine(
+            ITransactionRepository transactionRepository,
+            IAccountRepository accountRepository)
+        {
+            this.transactionRepository = transactionRepository;
+            this.accountRepository = accountRepository;
+        }
+
         public ITransaction CreateTransaction(
             IAccount leftAccount, 
             IAccount rightAccount, 
@@ -39,10 +53,42 @@ namespace Banking.BankingOperationsEngine
             return transaction;
         }
 
+        /// <summary>
+        /// Here where the actual accounts are debited/credited
+        /// Account balances will be updated and the transaction will be marked as applied
+        /// </summary>
+        /// <param name="transaction"></param>
         public void ApplyTransaction(Transaction transaction)
         {
-            // Here where the actual accounts are debited/credited
-            // Account balances will be updated and the transaction will be marked as applied
+            if (transaction.Status != TransactionStatus.Pending)
+            {
+                throw new BankingValidationException("Cannot apply a transaction that is not pending");
+            }
+
+            var accountToBeDebited = transaction.LeftAccount;
+            var accountToBeCredited = transaction.RightAccount;
+
+            // Debiting an asset account increases its balance and creditig it decreases its balance
+
+            decimal debitAccountDelta = 
+                accountToBeDebited.Category == AccountCategories.Asset ? transaction.Value : -transaction.Value;
+
+            decimal creditAccountDelta =
+                accountToBeCredited.Category == AccountCategories.Asset ? -transaction.Value : transaction.Value;
+
+            accountToBeDebited.Balance += debitAccountDelta;
+            accountToBeDebited.Modified = new DateTime();
+
+            accountToBeCredited.Balance += creditAccountDelta;
+            accountToBeCredited.Modified = new DateTime();
+
+            accountRepository.UpdateAccount(accountToBeDebited);
+            accountRepository.UpdateAccount(accountToBeDebited);
+
+            transaction.Status = TransactionStatus.Applied;
+
+            transactionRepository.UpdateTransaction(transaction);
+            transactionRepository.SaveChanges();
         }
     }
 }
