@@ -11,8 +11,6 @@ namespace Banking.Domain.Entities
     {
         int TransactionId { get; set; }
 
-        TransactionTypes Type { get; set; }
-
         IAccount LeftAccount { get; set; }
 
         IAccount RightAccount { get; set; }

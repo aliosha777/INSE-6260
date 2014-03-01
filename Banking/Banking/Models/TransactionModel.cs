@@ -25,8 +25,6 @@ namespace Banking.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TransactionId { get; set; }
 
-        public TransactionTypes Type { get; set; }
-
         public BankAccountModel LeftAccount { get; set; }
 
         public BankAccountModel RightAccount { get; set; }
@@ -34,6 +32,8 @@ namespace Banking.Models
         public decimal Value { get; set; }
 
         public DateTime Created { get; set; }
+
+        public DateTime Applied { get; set; }
 
         public TransactionStatus Status { get; set; }
     }

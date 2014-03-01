@@ -5,6 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Banking.Models
 {
+    // TODO: Make those enums into database lookup tables
+    public enum AccountCategories
+    {
+        Asset,
+        Liability
+    }
+
     public enum AccountTypes
     {
         Checking,
@@ -12,7 +19,7 @@ namespace Banking.Models
         Investment,
         //// For simplicity we could use the same account class for general ledger accounts 
         //// but might be better to define it as a separate entity
-        GeneralLedger,
+        GeneralLedgerCash,
     }
 
     //// Define IAccount interface to be able to have a general ledger account and a personal account

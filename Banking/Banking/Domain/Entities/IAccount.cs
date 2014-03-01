@@ -12,6 +12,8 @@ namespace Banking.Domain.Entities
 
         AccountTypes Type { get; set; }
 
+        AccountCategories Category { get; set; }
+
         ICollection<ICustomer> Owners { get; set; }
 
         decimal Balance { get; set; }

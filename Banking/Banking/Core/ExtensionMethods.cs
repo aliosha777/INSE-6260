@@ -52,7 +52,6 @@ namespace Banking.Core
             var transaction = new Transaction
             {
                 TransactionId = transactionModel.TransactionId,
-                Type = transactionModel.Type,
                 LeftAccount = transactionModel.LeftAccount.ToAccount(),
                 RightAccount = transactionModel.RightAccount.ToAccount(),
                 Value = transactionModel.Value,
@@ -63,12 +62,11 @@ namespace Banking.Core
             return transaction;
         }
 
-        public static TransactionModel ToModel(ITransaction transaction)
+        public static TransactionModel ToModel(this ITransaction transaction)
         {
             var transactionModel = new TransactionModel()
             {
                 TransactionId = transaction.TransactionId,
-                Type = transaction.Type,
                 LeftAccount = transaction.LeftAccount.ToModel(),
                 RightAccount = transaction.RightAccount.ToModel(),
                 Value = transaction.Value,
@@ -79,7 +77,7 @@ namespace Banking.Core
             return transactionModel;
         }
 
-        public static CustomerModel ToModel(ICustomer customer)
+        public static CustomerModel ToModel(this ICustomer customer)
         {
             var customerModel = new CustomerModel
                 {

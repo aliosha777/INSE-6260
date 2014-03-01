@@ -15,6 +15,11 @@ namespace Banking.DAL
         private BankDBContext context;
         private bool disposed = false;
 
+        public AccountRepository()
+            : this(new BankDBContext())
+        {
+        }
+
         public AccountRepository(BankDBContext context)
         {
             this.context = context;
@@ -26,9 +31,16 @@ namespace Banking.DAL
             GC.SuppressFinalize(this);
         }
 
-        public IEnumerable<IAccount> GetAllAccounts()
+        public IAccount GetGeneralLedgerCashAccount()
         {
-            var accounts = context.Accounts;
+            return null;
+        }
+
+        public IEnumerable<IAccount> GetAllAccounts(ICustomer customer)
+        {
+            var customerModel = customer.ToModel();
+
+            var accounts = context.Accounts.Where(a => a.Owners.Contains(customerModel));
 
             return accounts.Select(accountModel => accountModel.ToAccount()).ToList();
         }
@@ -40,7 +52,7 @@ namespace Banking.DAL
             return accountModel.ToAccount();
         }
 
-        public void InsertAccount(IAccount account)
+        public void AddAccount(IAccount account)
         {
             var accountModel = new BankAccountModel();
 

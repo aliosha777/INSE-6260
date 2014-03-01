@@ -7,12 +7,11 @@ namespace Banking.BankingOperationsEngine
 {
     public interface ITransactionEngine
     {
-        Transaction CreateTransferTransaction(
-            IAccount source, 
-            IAccount destination, 
-            decimal transactionValue,
-            IEnumerable<ITransaction> pendingTransactions);
-
         void ApplyTransaction(Transaction transaction);
+
+        ITransaction CreateTransaction(
+            IAccount leftAccount, 
+            IAccount rightAccount, 
+            decimal amount);
     }
 }

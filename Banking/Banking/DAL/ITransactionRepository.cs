@@ -11,6 +11,10 @@ namespace Banking.DAL
 
         IEnumerable<ITransaction> GetAccountTransactions(IAccount account);
 
-        void SaveTransaction(Transaction transaction);
+        void AddOrUpdateTransaction(ITransaction transaction);
+
+        void SaveChanges();
+
+        void AddTransaction(ITransaction transaction);
     }
 }

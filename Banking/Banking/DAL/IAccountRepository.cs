@@ -8,12 +8,14 @@ namespace Banking.DAL
     {
         IAccount GetAccountById(int accountId);
 
-        void InsertAccount(IAccount account);
+        void AddAccount(IAccount account);
 
         void UpdateAccount(IAccount account);
 
         void Save();
 
-        IEnumerable<IAccount> GetAllAccounts();
+        IEnumerable<IAccount> GetAllAccounts(ICustomer customer);
+
+        IAccount GetGeneralLedgerCashAccount();
     }
 }
