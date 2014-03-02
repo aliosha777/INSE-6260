@@ -83,7 +83,9 @@ namespace Banking.BankingOperationsEngine
             accountToBeCredited.Modified = new DateTime();
 
             accountRepository.UpdateAccount(accountToBeDebited);
-            accountRepository.UpdateAccount(accountToBeDebited);
+            accountRepository.UpdateAccount(accountToBeCredited);
+
+            accountRepository.Save();
 
             transaction.Status = TransactionStatus.Applied;
 

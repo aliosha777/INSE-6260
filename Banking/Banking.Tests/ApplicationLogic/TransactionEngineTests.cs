@@ -4,21 +4,30 @@
     using System.Collections.Generic;
 
     using Banking.BankingOperationsEngine;
+    using Banking.DAL;
     using Banking.Domain.Entities;
     using Banking.Exceptions;
+    using Banking.Models;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using Ploeh.AutoFixture;
 
     [TestClass]
     public class TransactionEngineTests
     {
         [TestMethod]
         [ExpectedException(typeof(BankingValidationException))]
-        public void TestTransactionNonLockedSourceAccount_ThrowsException()
+        public void TestCreateTransactionInactiveSourceAccount_ThrowsException()
         {
-            ITransactionEngine transactionEngine = new TransactionEngine();
+            // Parameters to the class under test
+            var accountRepository = Mock.Of<IAccountRepository>();
+            var transactionRepository = Mock.Of<ITransactionRepository>();
+
+            ITransactionEngine transactionEngine = 
+                new TransactionEngine(transactionRepository, accountRepository);
 
             decimal amount = 1;
 
@@ -28,54 +37,119 @@
             var destinationAccout = Mock.Of<IAccount>();
             destinationAccout.IsActive = true;
 
-            var pendingTransactions = new List<ITransaction>();
+            transactionEngine.CreateTransaction(sourceAccount, destinationAccout, amount);
         }
 
         [TestMethod]
         [ExpectedException(typeof(BankingValidationException))]
-        public void TestTransactionNonLockedDestinationAccount_ThrowsException()
+        public void TestCreateTransactionInactiveDestinationAccount_ThrowsException()
         {
-            ITransactionEngine transactionEngine = new TransactionEngine();
+            // Parameters to the class under test
+            var accountRepository = Mock.Of<IAccountRepository>();
+            var transactionRepository = Mock.Of<ITransactionRepository>();
+
+            ITransactionEngine transactionEngine =
+                new TransactionEngine(transactionRepository, accountRepository);
 
             decimal amount = 1;
 
-            var sourceAccount = Mock.Of<IAccount>();
-            sourceAccount.IsActive = true;
+            var leftAccount = Mock.Of<IAccount>();
+            leftAccount.IsActive = true;
 
-            var destinationAccout = Mock.Of<IAccount>();
-            destinationAccout.IsActive = false;
+            var rightAccount = Mock.Of<IAccount>();
+            rightAccount.IsActive = false;
 
-            var pendingTransactions = new List<ITransaction>();
+            transactionEngine.CreateTransaction(leftAccount, rightAccount, amount);
         }
 
         [TestMethod]
-        public void TestCalculatePendingAmounts()
+        public void TestCreateTransaction_Success()
         {
-            var pendingTransactions = new List<ITransaction>();
+            var fixture = new Fixture();
 
-            var sourceAccount = Mock.Of<IAccount>();
-            sourceAccount.IsLocked = true;
+            var accountRepository = Mock.Of<IAccountRepository>();
+            var transactionRepository = Mock.Of<ITransactionRepository>();
 
-            var destinationAccout = Mock.Of<IAccount>();
-            destinationAccout.IsLocked = true;
+            ITransactionEngine transactionEngine =
+                new TransactionEngine(transactionRepository, accountRepository);
 
-            decimal amount = 10;
+            var leftAccount = 
+                fixture
+                .Build<Account>()
+                .Without(a => a.Owners)
+                .With(a => a.IsActive, true)
+                .Create();
 
-            var pendingTransaction1 = Mock.Of<ITransaction>();
-            pendingTransaction1.Value = 1;
+            var rightAccount =
+                fixture
+                .Build<Account>()
+                .Without(a => a.Owners)
+                .With(a => a.IsActive, true)
+                .Create();
 
-            pendingTransactions.Add(pendingTransaction1);
+            decimal amount = 100;
 
-            //var obj = new PrivateObject(new TransactionEngine());
-            //obj.Invoke("HasSufficientFunds");
+            var transaction = transactionEngine.CreateTransaction(leftAccount, rightAccount, amount);
 
-            ITransactionEngine transactionEngine = new TransactionEngine();
+            Assert.AreEqual(transaction.Status, TransactionStatus.Pending);
+            Assert.AreEqual(transaction.LeftAccount, leftAccount);
+            Assert.AreEqual(transaction.RightAccount, rightAccount);
+            Assert.AreEqual(transaction.Value, amount);
+        }
+
+        [TestMethod]
+        public void TestApplyTransactionNonPending_ThrowsException()
+        {
 
         }
 
         [TestMethod]
-        public void TestTransferWithInsufficientFunds_TransactionWithFailedStatus()
+        public void TestApplyTransaction_Success()
         {
+            var fixture = new Fixture();
+            var transactionRepository = Mock.Of<ITransactionRepository>();
+            var accountRepository = Mock.Of<IAccountRepository>();
+
+            var leftAccount =
+                fixture
+                .Build<Account>()
+                .With(a => a.Balance, 500)
+                .With(a => a.Category, AccountCategories.Asset)
+                .Without(a => a.Owners).Create();
+
+            var rightAccount =
+               fixture
+               .Build<Account>()
+               .With(a => a.Balance, 500)
+               .With(a => a.Category, AccountCategories.Liability)
+               .Without(a => a.Owners).Create();
+
+            var transaction =
+               fixture
+               .Build<Transaction>()
+               .With(t => t.LeftAccount, leftAccount)
+               .With(t => t.RightAccount, rightAccount)
+               .With(t => t.Status, TransactionStatus.Pending)
+               .With(t => t.Value, 100)
+               .Create();
+
+            ITransactionEngine transactionEngine = 
+                new TransactionEngine(transactionRepository, accountRepository);
+
+            transactionEngine.ApplyTransaction(transaction);
+
+            Assert.AreEqual(transaction.Status, TransactionStatus.Applied);
+
+            Assert.AreEqual(600, leftAccount.Balance);
+
+            Assert.AreEqual(600, rightAccount.Balance);
+
+            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(leftAccount));
+            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(rightAccount));
+            Mock.Get(accountRepository).Verify(ar => ar.Save());
+
+            Mock.Get(transactionRepository).Verify(tr => tr.UpdateTransaction(transaction));
+            Mock.Get(transactionRepository).Verify(tr => tr.SaveChanges());
         }
     } 
 }
