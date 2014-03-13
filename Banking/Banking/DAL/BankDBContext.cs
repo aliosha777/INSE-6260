@@ -17,6 +17,10 @@ namespace Banking.DAL
 
         public DbSet<TransactionModel> Transactions { get; set; }
 
+        public DbSet<InvestmentModel> Investments { get; set; }
+
+        public DbSet<InvestmentIntervalModel> InvestmentIntervals { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

@@ -174,8 +174,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BankingOperationsEngine\AccountOperationsManager.cs" />
+    <Compile Include="BankingOperationsEngine\IInvestmentManager.cs" />
+    <Compile Include="BankingOperationsEngine\InvestmentManager.cs" />
     <Compile Include="BankingOperationsEngine\ITimeProvider.cs" />
-    <Compile Include="Core\ExtensionMethods.cs" />
+    <Compile Include="BankingOperationsEngine\TimeProvider.cs" />
+    <Compile Include="Core\DomainMapperExtensionMethods.cs" />
+    <Compile Include="DAL\IInvestmentRepository.cs" />
+    <Compile Include="DAL\InvestmentRepository.cs" />
+    <Compile Include="Domain\Entities\IInvestment.cs" />
+    <Compile Include="Domain\Entities\IInvestmentInterval.cs" />
+    <Compile Include="Domain\Entities\Investment.cs" />
+    <Compile Include="Domain\Entities\InvestmentInterval.cs" />
     <Compile Include="Domain\Services\CustomerOperationsManager.cs" />
     <Compile Include="BankingOperationsEngine\IAccountOperationsManager.cs" />
     <Compile Include="BankingOperationsEngine\ICustomerOperationsManager.cs" />
@@ -237,11 +246,17 @@
     <Compile Include="Migrations\201402222013425_AddTransactionAccounts.Designer.cs">
       <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201403130146513_AddInvestments.cs" />
+    <Compile Include="Migrations\201403130146513_AddInvestments.Designer.cs">
+      <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BankAccountModel.cs" />
     <Compile Include="Models\AddressModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\InvestmentIntervalModel.cs" />
+    <Compile Include="Models\InvestmentModel.cs" />
     <Compile Include="Models\TransactionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddressViewModel.cs" />
@@ -404,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201402222013425_AddTransactionAccounts.resx">
       <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403130146513_AddInvestments.resx">
+      <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

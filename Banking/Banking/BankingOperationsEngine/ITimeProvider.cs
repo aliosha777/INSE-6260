@@ -8,5 +8,12 @@ namespace Banking.BankingOperationsEngine
 {
     public interface ITimeProvider
     {
+        DateTime GetNextBusinessDay();
+
+        DateTime GetQuarterSince(DateTime date);
+
+        int GetDifferenceInYears(DateTime start, DateTime end);
+
+        DateTime Today();
     }
 }

@@ -13,12 +13,8 @@ namespace Banking.DAL
     public class AccountRepository : IAccountRepository
     {
         private BankDBContext context;
-        private bool disposed = false;
 
-        public AccountRepository()
-            : this(new BankDBContext())
-        {
-        }
+        private bool disposed = false;
 
         public AccountRepository(BankDBContext context)
         {

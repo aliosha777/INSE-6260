@@ -1,11 +1,11 @@
-﻿using Banking.Domain.Entities;
+﻿using System.Collections.Generic;
+
+using Banking.Domain.Entities;
 using Banking.Models;
 
 namespace Banking.Core
 {
-    using System.Collections.Generic;
-
-    public static class ExtensionMethods
+    public static class DomainMapperExtensionMethods
     {
         public static BankAccountModel ToModel(this IAccount account)
         {
@@ -19,7 +19,14 @@ namespace Banking.Core
                 IsLocked = account.IsLocked,
                 Modified = account.Modified,
                 Type = account.Type,
+                Category = account.Category,
+                Owners = new List<CustomerModel>()
             };
+
+            foreach (var customer in account.Owners)
+            {
+                bankAccountModel.Owners.Add(customer.ToModel());
+            }
 
             return bankAccountModel;
         }
@@ -36,7 +43,8 @@ namespace Banking.Core
                 IsLocked = bankAccountModel.IsLocked,
                 Modified = bankAccountModel.Modified,
                 Owners = new List<ICustomer>(),
-                Type = bankAccountModel.Type
+                Type = bankAccountModel.Type,
+                Category = bankAccountModel.Category
             };
 
             foreach (var customerModel in bankAccountModel.Owners)
@@ -159,6 +167,62 @@ namespace Banking.Core
             };
 
             return addressModel;
+        }
+
+        public static InvestmentIntervalModel ToModel(this IInvestmentInterval investmentInterval)
+        {
+            var investmentIntervalModel = new InvestmentIntervalModel
+                {
+                    
+                };
+
+            return investmentIntervalModel;
+        }
+
+        public static InvestmentInterval ToInvestmentInterval(this InvestmentIntervalModel investmentIntervalModel)
+        {
+            var investmentInterval = new InvestmentInterval { };
+
+            return investmentInterval;
+        }
+
+        public static Investment ToInvestment(this InvestmentModel investmentModel)
+        {
+            var investment = new Investment
+            {
+                TermStart = investmentModel.TermStart,
+                TermEnd = investmentModel.TermEnd,
+                CompoundingFrequency = investmentModel.CompoundingFrequency,
+                InvestmentIntervals = new List<IInvestmentInterval>(),
+                Type = investmentModel.Type
+            };
+
+            foreach (var interval in investmentModel.InvestmentIntervals)
+            {
+                investment.InvestmentIntervals.Add(interval.ToInvestmentInterval());
+            }
+
+            return investment;
+        }
+
+        public static InvestmentModel ToModel(this Investment investment)
+        {
+            var investmentModel = new InvestmentModel
+            {
+                Account = null,
+                CompoundingFrequency = investment.CompoundingFrequency,
+                InvestmentIntervals = new List<InvestmentIntervalModel>(),
+                TermEnd = investment.TermEnd,
+                TermStart = investment.TermStart,
+                Type = investment.Type
+            };
+
+            foreach (var interval in investment.InvestmentIntervals)
+            {
+                investmentModel.InvestmentIntervals.Add(interval.ToModel());
+            }
+
+            return investmentModel;
         }
     }
 }

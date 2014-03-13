@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationLogic\AccoutOperationsTest.cs" />
+    <Compile Include="ApplicationLogic\InvestmentManagerTests.cs" />
     <Compile Include="ApplicationLogic\TransactionEngineTests.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="BankingCustomization.cs" />
