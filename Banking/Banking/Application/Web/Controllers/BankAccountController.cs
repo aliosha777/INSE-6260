@@ -18,11 +18,5 @@ namespace Banking.Controllers
         {
             this.accountRepository = accountRepository;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            accountRepository.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }

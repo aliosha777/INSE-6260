@@ -10,6 +10,8 @@ using Banking.Membership;
 
 namespace Banking
 {
+    using System.Linq;
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
@@ -31,6 +33,20 @@ namespace Banking
 
             // Ensure ASP.NET Simple Membership is initialized only once per app start
             LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
+
+            var razorEngine = ViewEngines.Engines.OfType<RazorViewEngine>().First();
+
+            razorEngine.ViewLocationFormats = 
+                new string[]
+                    {
+                        "~/Application/Web/Views/{1}/{0}.cshtml"
+                    };
+
+            razorEngine.PartialViewLocationFormats =
+                new string[]
+                    {
+                        "~/Application/Web/Views/{1}/{0}.cshtml"
+                    };
         }
 
         protected void Application_Error(object sender, EventArgs e)

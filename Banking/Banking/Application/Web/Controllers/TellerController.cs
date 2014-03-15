@@ -24,8 +24,6 @@ namespace Banking.Controllers
             this.customerOperationsManager = customerOperationsManager;
         }
 
-        // GET: /Teller/
-
         public ActionResult Home()
         {
             return View();
