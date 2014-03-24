@@ -1,4 +1,4 @@
-﻿@model Banking.ViewModels.CustomerSummary
+﻿@model Banking.Application.Web.ViewModels.CustomerSummary
 
 @{
     ViewBag.Title = "CustomerSummary";
@@ -9,7 +9,7 @@
 <span>@Model.FirstName</span>
 <span>@Model.LastName</span>
 
-<div>@{ Html.RenderPartial("~/Views/Common/_Address.cshtml", Model.CurrentAddress); }</div>
+<div>@{ Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", Model.CurrentAddress); }</div>
 
 <h3>Accounts</h3>
 

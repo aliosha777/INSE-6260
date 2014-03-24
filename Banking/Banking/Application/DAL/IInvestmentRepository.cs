@@ -1,9 +1,9 @@
-namespace Banking.DAL
+using System;
+
+using Banking.Domain.Entities;
+
+namespace Banking.Application.DAL
 {
-    using System;
-
-    using Banking.Domain.Entities;
-
     public interface IInvestmentRepository : IDisposable
     {
         IInvestment GetInvestment(int investmentId);

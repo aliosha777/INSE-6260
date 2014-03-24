@@ -6,16 +6,16 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    using Banking.Models;
+    using Banking.Application.DAL;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Banking.DAL.BankDBContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<BankDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Banking.DAL.BankDBContext context)
+        protected override void Seed(BankDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 

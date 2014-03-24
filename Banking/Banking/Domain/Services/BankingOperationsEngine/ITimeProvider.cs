@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
     public interface ITimeProvider
     {

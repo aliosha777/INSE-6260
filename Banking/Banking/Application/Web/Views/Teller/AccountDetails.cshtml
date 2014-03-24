@@ -1,0 +1,11 @@
+﻿@model Banking.Application.Web.ViewModels.AccountViewModel
+
+@ViewBag.Title = "Account Details"
+
+<h2>Account Details</h2>
+
+<div>
+    @{
+        Html.RenderPartial("_AccountInformation", this.Model);
+    }
+</div>

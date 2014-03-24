@@ -1,0 +1,44 @@
+﻿
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>
+        <span>
+            First Name
+        </span>
+        <span>
+            <input type="text" name="firstName"/>
+        </span>
+    </div>
+    
+    <div>
+        <span>
+            Last Name
+        </span>
+        <span>
+            <input type="text" name="lastName"/>
+        </span>
+    </div>
+    
+     <div>
+        <span>
+            Phone
+        </span>
+        <span>
+            <input type="text" name="phone"/>
+        </span>
+    </div>
+    
+    <div>
+        <span>
+            Email
+        </span>
+        <span>
+            <input type="text" name="email"/>
+        </span>
+    </div>
+    
+    <input type="submit" value="Create New Customer"/>
+}

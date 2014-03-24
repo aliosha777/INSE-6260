@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Banking.Domain.Entities;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
     public interface ITransactionRepository : IDisposable
     {

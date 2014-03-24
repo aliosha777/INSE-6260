@@ -1,0 +1,19 @@
+﻿@model Banking.Application.Web.ViewModels.AccountViewModel
+
+<div>
+    <span>
+        @Html.ActionLink(@Model.AccountNumber, "AccountDetails", new { accountNumber = @Model.AccountNumber })
+    </span>
+    <span>
+         @Html.DisplayFor(a => a.Balance)
+    </span>
+    <span>
+        @Html.DisplayFor(a => a.Created)
+    </span>
+    <span>
+        @Html.DisplayFor(a => a.Modified)
+    </span>
+    <span>
+        @Html.DisplayFor(a => a.AccountType)
+    </span>
+</div>

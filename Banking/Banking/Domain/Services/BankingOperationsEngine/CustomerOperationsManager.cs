@@ -1,16 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
+using Banking.Domain.Entities;
+using Banking.Exceptions;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
-    using Banking.Domain.Entities;
-    using Banking.Exceptions;
-    using Banking.Models;
-
     public class CustomerOperationsManager : ICustomerOperationsManager
     {
+        public Customer CreateCustomer(string firstName, string lastName, string phone, string email)
+        {
+            var customer = new Customer
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Phone = phone,
+                Email = email
+            };
+
+            return customer;
+        }
+
         public IAddress GetActiveAddress(ICustomer customer)
         {
             // TODO: Verify this does not result in multiple database queries

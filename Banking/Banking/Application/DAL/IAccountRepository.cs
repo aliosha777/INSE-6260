@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Banking.Domain.Entities;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
     public interface IAccountRepository : IDisposable
     {
@@ -17,5 +17,7 @@ namespace Banking.DAL
         IEnumerable<IAccount> GetAllAccounts(ICustomer customer);
 
         IAccount GetGeneralLedgerCashAccount();
+
+        IAccount GetAccountByNumber(string accountNumber);
     }
 }

@@ -2,10 +2,14 @@
 
 using Banking.Domain.Entities;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
     public interface ICustomerRepository : IDisposable
     {
         ICustomer GetCustomerById(int customerId);
+
+        void AddCustomer(ICustomer customer);
+
+        void Save();
     }
 }

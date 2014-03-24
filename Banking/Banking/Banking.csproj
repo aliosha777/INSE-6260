@@ -165,6 +165,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
+    <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
     <Compile Include="Domain\Services\AdminOperations\BankAccountManager.cs" />
     <Compile Include="Domain\Services\AdminOperations\CustomerManager.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -185,7 +187,7 @@
     <Compile Include="Domain\Entities\IInvestmentInterval.cs" />
     <Compile Include="Domain\Entities\Investment.cs" />
     <Compile Include="Domain\Entities\InvestmentInterval.cs" />
-    <Compile Include="Domain\Services\CustomerOperationsManager.cs" />
+    <Compile Include="Domain\Services\BankingOperationsEngine\CustomerOperationsManager.cs" />
     <Compile Include="Domain\Services\BankingOperationsEngine\IAccountOperationsManager.cs" />
     <Compile Include="Domain\Services\BankingOperationsEngine\ICustomerOperationsManager.cs" />
     <Compile Include="Domain\Services\BankingOperationsEngine\ITransactionEngine.cs" />
@@ -249,6 +251,14 @@
     <Compile Include="Migrations\201403130146513_AddInvestments.cs" />
     <Compile Include="Migrations\201403130146513_AddInvestments.Designer.cs">
       <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403151752021_AddAccountCategory.cs" />
+    <Compile Include="Migrations\201403151752021_AddAccountCategory.Designer.cs">
+      <DependentUpon>201403151752021_AddAccountCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201403221634552_AddressCustomerFK.cs" />
+    <Compile Include="Migrations\201403221634552_AddressCustomerFK.Designer.cs">
+      <DependentUpon>201403221634552_AddressCustomerFK.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -320,6 +330,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Application\Web\Views\Teller\CreateCustomer.cshtml" />
+    <Content Include="Application\Web\Views\BankAccount\AccountDetails.cshtml" />
+    <Content Include="Application\Web\Views\Teller\AccountDetails.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -381,7 +394,7 @@
     <Content Include="Application\Web\Views\BankAccount\Create.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\Edit.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\Delete.cshtml" />
-    <Content Include="Application\Web\Views\BankAccount\_AccountInformation.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_AccountInformation.cshtml" />
     <Content Include="Application\Web\Views\Customer\CustomerSummary.cshtml" />
     <Content Include="Application\Web\Views\Teller\Home.cshtml" />
     <Content Include="Application\Web\Views\Customer\PersonalDetails.cshtml" />
@@ -419,6 +432,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201403130146513_AddInvestments.resx">
       <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403151752021_AddAccountCategory.resx">
+      <DependentUpon>201403151752021_AddAccountCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201403221634552_AddressCustomerFK.resx">
+      <DependentUpon>201403221634552_AddressCustomerFK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

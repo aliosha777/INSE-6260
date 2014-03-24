@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Banking.Application.Core;
+using Banking.Application.DAL;
+using Banking.Application.Web.ViewModels;
+using Banking.Domain.Services.BankingOperationsEngine;
 
-namespace Banking.Controllers
+namespace Banking.Application.Web.Controllers
 {
-    using Banking.DAL;
-    using Banking.ViewModels;
-
     [Authorize]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository customerRepository;
 
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly ICustomerOperationsManager customerOperationsManager;
+
+        public CustomerController(
+            ICustomerRepository customerRepository,
+            ICustomerOperationsManager customerOperationsManager)
         {
             this.customerRepository = customerRepository;
+            this.customerOperationsManager = customerOperationsManager;
         }
 
         // GET: /Customer/
@@ -27,7 +33,7 @@ namespace Banking.Controllers
 
             var customerSummary = new CustomerSummary
             {
-                Accounts = customer.Accounts,
+                Accounts = customer.Accounts.Select(account => account.ToViewModel()).ToList(),
                 FirstName = customer.FirstName,
                 LastName = customer.LastName
             };
@@ -39,9 +45,11 @@ namespace Banking.Controllers
         {
             var customer = customerRepository.GetCustomerById(id);
 
+            var address = customerOperationsManager.GetActiveAddress(customer);
+
             var customerPersonalDetails = new CustomerPersonalDetails
             {
-                Address = customer.Addresses.FirstOrDefault(a => a.IsActive)
+                Address = address.ToViewModel()
             };
 
             return View(customerPersonalDetails);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Banking.Domain.Entities;
 using Banking.Models;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
     public interface ITransactionEngine
     {

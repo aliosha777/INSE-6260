@@ -1,6 +1,4 @@
 ﻿using System;
-using Banking.BankingOperationsEngine;
-using Banking.DAL;
 using Banking.Domain.Entities;
 using Banking.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,6 +8,9 @@ using Ploeh.AutoFixture;
 namespace Banking.Tests.ApplicationLogic
 {
     using System.Collections.Generic;
+
+    using Banking.Application.DAL;
+    using Banking.Domain.Services.BankingOperationsEngine;
 
     using Ploeh.AutoFixture.AutoMoq;
 

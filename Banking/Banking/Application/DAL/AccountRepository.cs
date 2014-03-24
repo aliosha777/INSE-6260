@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
+using Banking.Domain.Core;
 using Banking.Domain.Entities;
 using Banking.Models;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
-    using Banking.Core;
-
     public class AccountRepository : IAccountRepository
     {
         private BankDBContext context;
@@ -45,7 +44,14 @@ namespace Banking.DAL
         {
             var accountModel = context.Accounts.Find(accountId);
 
-            return accountModel.ToAccount();
+            return accountModel == null ? null : accountModel.ToAccount();
+        }
+
+        public IAccount GetAccountByNumber(string accountNumber)
+        {
+            var accountModel = context.Accounts.FirstOrDefault(a => a.AccountNumber == accountNumber);
+
+            return accountModel == null ? null : accountModel.ToAccount();
         }
 
         public void AddAccount(IAccount account)

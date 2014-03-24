@@ -1,9 +1,7 @@
 using Banking.Domain.Entities;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
-    using System.Collections.Generic;
-
     public interface IAccountOperationsManager
     {
         void Deposit(IAccount account, decimal amount);

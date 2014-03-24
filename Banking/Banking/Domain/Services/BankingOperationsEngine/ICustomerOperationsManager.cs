@@ -1,11 +1,11 @@
-﻿using Banking.Models;
+﻿using Banking.Domain.Entities;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
-    using Banking.Domain.Entities;
-
     public interface ICustomerOperationsManager
     {
         IAddress GetActiveAddress(ICustomer customer);
+
+        Customer CreateCustomer(string firstName, string lastName, string phone, string email);
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System.Linq;
+using System;
 
+using Banking.Domain.Core;
 using Banking.Domain.Entities;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
-    using System;
-
-    using Banking.Core;
-
     public class CustomerRepository : ICustomerRepository
     {
         private BankDBContext context;
@@ -24,9 +22,21 @@ namespace Banking.DAL
                 context
                 .Customers
                 .Include("Accounts")
+                .Include("Addresses")
                 .FirstOrDefault(c => c.CustomerId == customerId);
 
             return customerModel.ToCustomer();
+        }
+
+        public void AddCustomer(ICustomer customer)
+        {
+            var customerModel = customer.ToModel();
+            context.Customers.Add(customerModel);
+        }
+
+        public void Save()
+        {
+            context.SaveChanges();
         }
 
         public void Dispose()

@@ -1,15 +1,13 @@
-﻿using Banking.DAL;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Banking.Application.DAL;
 using Banking.Domain.Entities;
+using Banking.Exceptions;
+using Banking.Models;
 
-namespace Banking.BankingOperationsEngine
+namespace Banking.Domain.Services.BankingOperationsEngine
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Banking.Exceptions;
-    using Banking.Models;
-
     public class AccountOperationsManager : IAccountOperationsManager
     {
         private ITransactionEngine transactionEngine;

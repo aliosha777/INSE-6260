@@ -1,5 +1,4 @@
-﻿@using Banking.Models
-
+﻿
 @{
     ViewBag.Title = "Teller Home";
 }
@@ -13,6 +12,8 @@
         <input type="text" name="customerId"/>
         <input type="submit" value="View" name="view"/>
     }
+    
+    @Html.ActionLink("Create Customer", "CreateCustomer")
     
 </div>
 

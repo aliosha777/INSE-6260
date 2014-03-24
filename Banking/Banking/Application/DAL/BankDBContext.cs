@@ -2,7 +2,7 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
 using Banking.Models;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
     public class BankDBContext : DbContext
     {
@@ -25,7 +25,6 @@ namespace Banking.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            // TODO: Verify this is not redundant
             modelBuilder
                 .Entity<CustomerModel>()
                 .HasMany(c => c.Accounts)

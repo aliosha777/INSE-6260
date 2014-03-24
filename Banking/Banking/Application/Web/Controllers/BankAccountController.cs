@@ -5,10 +5,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Banking.Models;
-using Banking.DAL;
+using Banking.Application.DAL;
 
-namespace Banking.Controllers
+namespace Banking.Application.Web.Controllers
 {
     public class BankAccountController : Controller
     {

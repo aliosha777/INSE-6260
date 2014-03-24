@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 
-using Banking.Domain.Entities;
-
-namespace Banking.ViewModels
+namespace Banking.Application.Web.ViewModels
 {
     public class CustomerSummary
     {
         public CustomerSummary()
         {
-            Accounts = new List<IAccount>();
+            Accounts = new List<AccountViewModel>();
             CurrentAddress = new AddressViewModel();
         }
 
-        public ICollection<IAccount> Accounts { get; set; }
+        public List<AccountViewModel> Accounts { get; set; }
 
         public AddressViewModel CurrentAddress { get; set; }
 

@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Banking.Domain.Entities;
+using Banking.Domain.Services.BankingOperationsEngine;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Ploeh.AutoFixture;
+
 namespace Banking.Tests.ApplicationLogic
 {
-    using Banking.BankingOperationsEngine;
-    using Banking.Domain.Entities;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using Moq;
-
-    using Ploeh.AutoFixture;
-
     [TestClass]
     public class InvestmentManagerTests
     {

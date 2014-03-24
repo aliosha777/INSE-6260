@@ -3,7 +3,7 @@
 using Banking.Domain.Entities;
 using Banking.Models;
 
-namespace Banking.Core
+namespace Banking.Domain.Core
 {
     public static class DomainMapperExtensionMethods
     {
@@ -49,7 +49,7 @@ namespace Banking.Core
 
             foreach (var customerModel in bankAccountModel.Owners)
             {
-                account.Owners.Add(customerModel.ToCustomer());
+                account.Owners.Add(customerModel.ToCustomer(true));
             }
 
             return account;
@@ -111,7 +111,7 @@ namespace Banking.Core
             return customerModel;
         }
 
-        public static ICustomer ToCustomer(this CustomerModel customerModel)
+        public static ICustomer ToCustomer(this CustomerModel customerModel, bool ignoreAccounts = false)
         {
             var customer = new Customer
                 {
@@ -124,9 +124,12 @@ namespace Banking.Core
                     Phone = customerModel.Phone
                 };
 
-            foreach (var accountModel in customerModel.Accounts)
+            if (!ignoreAccounts)
             {
-                customer.Accounts.Add(accountModel.ToAccount());
+                foreach (var accountModel in customerModel.Accounts)
+                {
+                    customer.Accounts.Add(accountModel.ToAccount());
+                }
             }
 
             foreach (var addressModel in customerModel.Addresses)

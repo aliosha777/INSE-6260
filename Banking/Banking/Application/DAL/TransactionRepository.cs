@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-using Banking.Core;
-
 using Banking.Domain.Entities;
+using Banking.Domain.Core;
 
-namespace Banking.DAL
+namespace Banking.Application.DAL
 {
     public class TransactionRepository : ITransactionRepository
     {

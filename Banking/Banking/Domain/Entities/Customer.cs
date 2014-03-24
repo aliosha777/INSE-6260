@@ -9,6 +9,12 @@ namespace Banking.Domain.Entities
 
     public class Customer : ICustomer
     {
+        public Customer()
+        {
+            Addresses = new List<IAddress>();
+            Accounts = new List<IAccount>();
+        }
+
         public int CustomerId { get; set; }
 
         public string FirstName { get; set; }

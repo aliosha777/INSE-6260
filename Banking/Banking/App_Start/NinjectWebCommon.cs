@@ -6,8 +6,8 @@ namespace Banking.App_Start
     using System;
     using System.Web;
 
-    using Banking.BankingOperationsEngine;
-    using Banking.DAL;
+    using Banking.Application.DAL;
+    using Banking.Domain.Services.BankingOperationsEngine;
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 

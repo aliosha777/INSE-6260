@@ -1,7 +1,7 @@
-namespace Banking.BankingOperationsEngine
-{
-    using Banking.Domain.Entities;
+using Banking.Domain.Entities;
 
+namespace Banking.Domain.Services.BankingOperationsEngine
+{
     public interface IInvestmentManager
     {
         /// <summary>
