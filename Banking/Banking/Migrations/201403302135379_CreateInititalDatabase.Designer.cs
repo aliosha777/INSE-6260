@@ -5,13 +5,13 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class CustomerAccountsTable : IMigrationMetadata
+    public sealed partial class CreateInititalDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CustomerAccountsTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateInititalDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "201401191648285_CustomerAccountsTable"; }
+            get { return "201403302135379_CreateInititalDatabase"; }
         }
         
         string IMigrationMetadata.Source

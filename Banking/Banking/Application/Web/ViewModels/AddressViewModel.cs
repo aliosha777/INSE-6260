@@ -5,6 +5,9 @@ using System.Web;
 
 namespace Banking.Application.Web.ViewModels
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table("Address")]
     public class AddressViewModel
     {
         public string Line1 { get; set; }

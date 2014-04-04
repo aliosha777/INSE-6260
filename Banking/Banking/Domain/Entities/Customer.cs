@@ -5,8 +5,6 @@ using System.Web;
 
 namespace Banking.Domain.Entities
 {
-    using Banking.Models;
-
     public class Customer : ICustomer
     {
         public Customer()
@@ -16,6 +14,8 @@ namespace Banking.Domain.Entities
         }
 
         public int CustomerId { get; set; }
+
+        public string UserName { get; set; }
 
         public string FirstName { get; set; }
 

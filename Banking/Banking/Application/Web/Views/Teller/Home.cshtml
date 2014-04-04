@@ -10,10 +10,10 @@
     @using (Html.BeginForm("CustomerSummary", "Teller"))
     {
         <input type="text" name="customerId"/>
-        <input type="submit" value="View" name="view"/>
+        <input type="submit" value="View" name="view" formmethod="get"/>
     }
     
-    @Html.ActionLink("Create Customer", "CreateCustomer")
+    @Html.ActionLink("Create Customer", "CreateCustomerStep1")
     
 </div>
 

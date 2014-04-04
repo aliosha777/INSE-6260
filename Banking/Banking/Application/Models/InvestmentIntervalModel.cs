@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Banking.Models
+namespace Banking.Application.Models
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
+    [Table("InvestmentInterval")]
     public class InvestmentIntervalModel
     {
         [Key]
@@ -21,5 +21,10 @@ namespace Banking.Models
         public double InterestRate { get; set; }
 
         public decimal StartingAmount { get; set; }
+
+        public int InvestmentId { get; set; }
+
+        [ForeignKey("InvestmentId")]
+        public virtual InvestmentModel Investment { get; set; }
     }
 }

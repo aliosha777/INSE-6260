@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-using Banking.Models;
-
 namespace Banking.Domain.Entities
 {
     public interface ICustomer
     {
        int CustomerId { get; set; }
+
+       string UserName { get; set; }
 
        string FirstName { get; set; }
 

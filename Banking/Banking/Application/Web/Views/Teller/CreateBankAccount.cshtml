@@ -1,0 +1,16 @@
+﻿@using System.Collections.Specialized
+
+<h2>Open New Bank Account</h2>
+@using (Html.BeginForm())
+{
+    <div>
+        <span>Account Type: </span>
+        
+        @Html.DropDownList("accountType", (SelectList)ViewBag.AccountTypesList)
+
+    </div>
+    
+    <div>
+        <input type="submit" value="Create Account"/>
+    </div>
+}

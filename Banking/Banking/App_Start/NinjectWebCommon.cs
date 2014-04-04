@@ -58,7 +58,10 @@ namespace Banking.App_Start
         {
             kernel.Bind<ICustomerRepository>().To<CustomerRepository>();
             kernel.Bind<IAccountRepository>().To<AccountRepository>();
+            kernel.Bind<ITransactionRepository>().To<TransactionRepository>();
             kernel.Bind<ICustomerOperationsManager>().To<CustomerOperationsManager>();
+            kernel.Bind<IAccountOperationsManager>().To<AccountOperationsManager>();
+            kernel.Bind<ITransactionEngine>().To<TransactionEngine>();
         }        
     }
 }

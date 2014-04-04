@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Banking.Models
+namespace Banking.Application.Models
 {
     [Table("Customer")]
     public class CustomerModel
@@ -17,6 +17,8 @@ namespace Banking.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int CustomerId { get; set; }
 
+        public string UserName { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -25,8 +27,8 @@ namespace Banking.Models
 
         public string Email { get; set; }
 
-        public ICollection<AddressModel> Addresses { get; set; }
+        public virtual List<AddressModel> Addresses { get; set; }
 
-        public ICollection<BankAccountModel> Accounts { get; set; }
+        public virtual List<BankAccountModel> Accounts { get; set; }
     }
 }

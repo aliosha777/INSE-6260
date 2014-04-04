@@ -33,7 +33,7 @@ namespace Banking.Application.DAL
                 .Where(
                     t => 
                         t.LeftAccount.AccountId == account.AccountId 
-                        || t.RightAccount.AccountId == account.AccountId);
+                        || t.RightAccount.AccountId == account.AccountId).ToList();
 
             return transactions.Select(t => t.ToTransaction());
         }

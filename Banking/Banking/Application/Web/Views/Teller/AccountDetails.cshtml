@@ -1,11 +1,18 @@
-﻿@model Banking.Application.Web.ViewModels.AccountViewModel
+﻿@model Banking.Application.Web.ViewModels.AccountDetailsViewModel
 
-@ViewBag.Title = "Account Details"
+@{
+    ViewBag.Title = "Account Details";   
+}
 
 <h2>Account Details</h2>
 
 <div>
     @{
-        Html.RenderPartial("_AccountInformation", this.Model);
+        Html.RenderPartial("_AccountInformation", Model.Account);
     }
 </div>
+
+@foreach (var transaction in Model.Transactions)
+{
+    Html.RenderPartial("_TransactionInformation", transaction);
+}

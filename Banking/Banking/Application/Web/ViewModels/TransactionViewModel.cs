@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Banking.Application.Models;
+using Banking.Domain.Entities;
 
-namespace Banking.Domain.Entities
+namespace Banking.Application.Web.ViewModels
 {
-    public class Transaction : ITransaction
+    using Banking.Application.Models;
+
+    public class TransactionViewModel
     {
-        public Transaction()
-        {
-        }
-
         public int TransactionId { get; set; }
-
-        public IAccount LeftAccount { get; set; }
-
-        public IAccount RightAccount { get; set; }
 
         public decimal Value { get; set; }
 

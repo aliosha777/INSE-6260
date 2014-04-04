@@ -5,13 +5,13 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class AddAccountType : IMigrationMetadata
+    public sealed partial class Test : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAccountType));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Test));
         
         string IMigrationMetadata.Id
         {
-            get { return "201401210248450_AddAccountType"; }
+            get { return "201404010136386_Test"; }
         }
         
         string IMigrationMetadata.Source

@@ -1,11 +1,15 @@
-﻿using Banking.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Banking.Domain.Entities
 {
     public class Account : IAccount
     {
+        public Account()
+        {
+            Owners = new List<ICustomer>();
+        }
+
         public int AccountId { get; set; }
 
         public string AccountNumber { get; set; }

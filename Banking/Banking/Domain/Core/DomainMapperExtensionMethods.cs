@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Banking.Domain.Entities;
-using Banking.Models;
+using Banking.Application.Models;
 
 namespace Banking.Domain.Core
 {
@@ -25,7 +25,7 @@ namespace Banking.Domain.Core
 
             foreach (var customer in account.Owners)
             {
-                bankAccountModel.Owners.Add(customer.ToModel());
+                bankAccountModel.Owners.Add(customer.ToModel(true));
             }
 
             return bankAccountModel;
@@ -85,24 +85,28 @@ namespace Banking.Domain.Core
             return transactionModel;
         }
 
-        public static CustomerModel ToModel(this ICustomer customer)
+        public static CustomerModel ToModel(this ICustomer customer, bool ignoreAccounts = false)
         {
             var customerModel = new CustomerModel
                 {
                     Accounts = new List<BankAccountModel>(),
                     Addresses = new List<AddressModel>(),
                     CustomerId = customer.CustomerId,
+                    UserName = customer.UserName,
                     Email = customer.Email,
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
                     Phone = customer.Phone
                 };
 
-            foreach (var account in customer.Accounts)
+            if (!ignoreAccounts)
             {
-                customerModel.Accounts.Add(account.ToModel());
+                foreach (var account in customer.Accounts)
+                {
+                    customerModel.Accounts.Add(account.ToModel());
+                }
             }
-
+            
             foreach (var address in customer.Addresses)
             {
                 customerModel.Addresses.Add(address.ToModel());
@@ -118,6 +122,7 @@ namespace Banking.Domain.Core
                     Accounts = new List<IAccount>(),
                     Addresses = new List<IAddress>(),
                     CustomerId = customerModel.CustomerId,
+                    UserName = customerModel.UserName,
                     Email = customerModel.Email,
                     FirstName = customerModel.FirstName,
                     LastName = customerModel.LastName,

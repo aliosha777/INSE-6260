@@ -4,12 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Banking.Domain.Entities;
 
-namespace Banking.Models
+namespace Banking.Application.Models
 {
-    //// Define IAccount interface to be able to have a general ledger account and a personal account
-    //// yet be able to pass them to the transactional engine where the ownership of the account deos
-    //// not matter 
-
     [Table("Account")]
     public class BankAccountModel
     {
@@ -23,7 +19,7 @@ namespace Banking.Models
 
         public AccountCategories Category { get; set; }
 
-        public ICollection<CustomerModel> Owners { get; set; }
+        public List<CustomerModel> Owners { get; set; }
 
         public decimal Balance { get; set; }
 

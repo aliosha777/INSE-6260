@@ -10,8 +10,12 @@
 @if (Model != null)
 {
     <div>
-        <span>Customer: @Model.FirstName </span>
+        <div>Personal Information:</div>
+        <span>@Model.FirstName + " " + @Model.LastName </span>
     </div>   
+    
+    <span>Accounts:</span>
+    
     foreach (var account in Model.Accounts)
     {
         Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", account);
@@ -19,3 +23,7 @@
     
     Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", @Model.CurrentAddress);
 }
+
+<div>
+    @Html.ActionLink("Open Account", "CreateBankAccount", "Teller")
+</div>

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Banking.Domain.Entities;
 
-namespace Banking.Models
+namespace Banking.Application.Models
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    using Banking.Domain.Entities;
-
     [Table("Investment")]
     public class InvestmentModel
     {
@@ -17,6 +13,9 @@ namespace Banking.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InvestmentId { get; set; }
 
+        public int AccountId { get; set; }
+
+        [ForeignKey("AccountId")]
         public BankAccountModel Account { get; set; }
 
         public DateTime TermStart { get; set; }
@@ -27,6 +26,6 @@ namespace Banking.Models
 
         public CompoundingFrequency CompoundingFrequency { get; set; }
 
-        public ICollection<InvestmentIntervalModel> InvestmentIntervals { get; set; } 
+        public List<InvestmentIntervalModel> InvestmentIntervals { get; set; } 
     }
 }

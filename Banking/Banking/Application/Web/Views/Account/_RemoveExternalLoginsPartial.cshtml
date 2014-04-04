@@ -1,11 +1,11 @@
-﻿@model ICollection<Banking.Models.ExternalLogin>
+﻿@model ICollection<Banking.Application.Models.ExternalLogin>
 
 @if (Model.Count > 0)
 {
     <h3>Registered external logins</h3>
     <table>
         <tbody>
-        @foreach (Banking.Models.ExternalLogin externalLogin in Model)
+        @foreach (var externalLogin in Model)
         {
             <tr>
                 <td>@externalLogin.ProviderDisplayName</td>

@@ -3,7 +3,7 @@ namespace Banking.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddressCustomerFK : DbMigration
+    public partial class Test : DbMigration
     {
         public override void Up()
         {

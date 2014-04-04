@@ -32,5 +32,17 @@ namespace Banking.Application.Core
                     Province = address.Province
                 };
         }
+
+        public static TransactionViewModel ToViewModel(this ITransaction transaction)
+        {
+            return new TransactionViewModel
+            {
+                TransactionId  = transaction.TransactionId,
+                Value = transaction.Value,
+                Created = transaction.Created,
+                Applied = transaction.Applied,
+                Status = transaction.Status
+            };
+        }
     }
 }

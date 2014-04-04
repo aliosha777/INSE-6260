@@ -5,7 +5,7 @@ using System.Linq;
 using Banking.Application.DAL;
 using Banking.Domain.Entities;
 using Banking.Exceptions;
-using Banking.Models;
+using Banking.Application.Models;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {

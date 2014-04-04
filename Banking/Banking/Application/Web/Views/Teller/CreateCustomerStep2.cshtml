@@ -1,0 +1,31 @@
+﻿@model Banking.Application.Web.ViewModels.CustomerPersonalInformation
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>Personal Information</div>
+
+    <div>
+        <span>First Name</span>
+        <span>@Html.TextBoxFor(c => c.FirstName)</span>
+    </div>
+
+    <div>
+        <span>Last Name</span>
+        <span>@Html.TextBoxFor(c => c.LastName)</span>
+    </div>
+
+    <div>
+        <span>Phone</span>
+        <span>@Html.TextBoxFor(c => c.Phone)</span>
+    </div>
+
+    <div>
+        <span>Email</span>
+        <span>@Html.TextBoxFor(c => c.Email)</span>
+    </div>
+    
+    <input type="submit" value="Save"/>
+}

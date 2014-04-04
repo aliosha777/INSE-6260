@@ -9,5 +9,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         void Withdraw(IAccount account, decimal amount);
 
         void Transfer(IAccount source, IAccount destination, decimal amount);
+
+        IAccount CreateAccount(AccountTypes accountType, ICustomer owner);
     }
 }

@@ -5,13 +5,17 @@ using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using DotNetOpenAuth.AspNet;
-using Microsoft.Web.WebPages.OAuth;
-using WebMatrix.WebData;
-using Banking.Filters;
-using Banking.Models;
 
-namespace Banking.Controllers
+using Banking.Application.Models;
+using Banking.Filters;
+
+using DotNetOpenAuth.AspNet;
+
+using Microsoft.Web.WebPages.OAuth;
+
+using WebMatrix.WebData;
+
+namespace Banking.Application.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller

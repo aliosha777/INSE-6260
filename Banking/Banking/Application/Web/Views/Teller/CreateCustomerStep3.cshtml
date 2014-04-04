@@ -1,0 +1,33 @@
+﻿@model Banking.Application.Web.ViewModels.AddressViewModel
+
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+@Html.ValidationSummary()
+
+<div>Address</div>
+    
+    <div>
+        <span>Line 1</span>
+        <span>@Html.TextBoxFor(c => c.Line1)</span>
+    </div>
+    <div>
+        <span>Line 2</span>
+        <span>@Html.TextBoxFor(c => c.Line2)</span>
+    </div>
+    <div>
+        <span>City</span>
+        <span>@Html.TextBoxFor(c => c.City)</span>
+    </div>
+    <div>
+        <span>Province</span>
+        <span>@Html.TextBoxFor(c => c.Province)</span>
+    </div>
+    <div>
+        <span>Postal Code</span>
+        <span>@Html.TextBoxFor(c => c.PostalCode)</span>
+    </div>
+    
+    <input type="submit" value="Save"/>
+
+}

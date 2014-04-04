@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Banking.Models
+namespace Banking.Application.Models
 {
     [Table("Address")]
     public class AddressModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string AddressId { get; set; }
+        public int AddressId { get; set; }
 
         public string Line1 { get; set; }
 
@@ -23,5 +23,8 @@ namespace Banking.Models
         public bool IsActive { get; set; }
 
         public int CustomerId { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public CustomerModel Customer { get; set; }
     }
 }

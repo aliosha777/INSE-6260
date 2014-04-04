@@ -166,7 +166,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
+    <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\TransactionViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\UserViewModel.cs" />
     <Compile Include="Domain\Services\AdminOperations\BankAccountManager.cs" />
     <Compile Include="Domain\Services\AdminOperations\CustomerManager.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -220,45 +223,17 @@
     <Compile Include="Application\Core\Logging\ILogger.cs" />
     <Compile Include="Application\Core\Logging\Logger.cs" />
     <Compile Include="Membership\SimpleMembershipInitializer.cs" />
-    <Compile Include="Migrations\201401190527314_CustomerAccountCreate.cs" />
-    <Compile Include="Migrations\201401190527314_CustomerAccountCreate.Designer.cs">
-      <DependentUpon>201401190527314_CustomerAccountCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201403302135379_CreateInititalDatabase.cs" />
+    <Compile Include="Migrations\201403302135379_CreateInititalDatabase.Designer.cs">
+      <DependentUpon>201403302135379_CreateInititalDatabase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201401191648285_CustomerAccountsTable.cs" />
-    <Compile Include="Migrations\201401191648285_CustomerAccountsTable.Designer.cs">
-      <DependentUpon>201401191648285_CustomerAccountsTable.cs</DependentUpon>
+    <Compile Include="Migrations\201404010136386_Test.cs" />
+    <Compile Include="Migrations\201404010136386_Test.Designer.cs">
+      <DependentUpon>201404010136386_Test.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201401210248450_AddAccountType.cs" />
-    <Compile Include="Migrations\201401210248450_AddAccountType.Designer.cs">
-      <DependentUpon>201401210248450_AddAccountType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401251644049_AddAddress.cs" />
-    <Compile Include="Migrations\201401251644049_AddAddress.Designer.cs">
-      <DependentUpon>201401251644049_AddAddress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.cs" />
-    <Compile Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.Designer.cs">
-      <DependentUpon>201402221844397_AddAccountIsLockedTimestamp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402221908173_AddTransactionTable.cs" />
-    <Compile Include="Migrations\201402221908173_AddTransactionTable.Designer.cs">
-      <DependentUpon>201402221908173_AddTransactionTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402222013425_AddTransactionAccounts.cs" />
-    <Compile Include="Migrations\201402222013425_AddTransactionAccounts.Designer.cs">
-      <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403130146513_AddInvestments.cs" />
-    <Compile Include="Migrations\201403130146513_AddInvestments.Designer.cs">
-      <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403151752021_AddAccountCategory.cs" />
-    <Compile Include="Migrations\201403151752021_AddAccountCategory.Designer.cs">
-      <DependentUpon>201403151752021_AddAccountCategory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201403221634552_AddressCustomerFK.cs" />
-    <Compile Include="Migrations\201403221634552_AddressCustomerFK.Designer.cs">
-      <DependentUpon>201403221634552_AddressCustomerFK.cs</DependentUpon>
+    <Compile Include="Migrations\201404020023434_RenameForeignKeys.cs" />
+    <Compile Include="Migrations\201404020023434_RenameForeignKeys.Designer.cs">
+      <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -270,7 +245,7 @@
     <Compile Include="Application\Models\TransactionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Application\Web\ViewModels\AddressViewModel.cs" />
-    <Compile Include="Application\Web\ViewModels\CustomerPersonalDetails.cs" />
+    <Compile Include="Application\Web\ViewModels\CustomerPersonalInformation.cs" />
     <Compile Include="Application\Web\ViewModels\CustomerSummary.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +308,11 @@
     <Content Include="Application\Web\Views\Teller\CreateCustomer.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\AccountDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\AccountDetails.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_TransactionInformation.cshtml" />
+    <Content Include="Application\Web\Views\Teller\CreateCustomerStep1.cshtml" />
+    <Content Include="Application\Web\Views\Teller\CreateCustomerStep2.cshtml" />
+    <Content Include="Application\Web\Views\Teller\CreateCustomerStep3.cshtml" />
+    <Content Include="Application\Web\Views\Teller\CreateBankAccount.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -409,35 +389,14 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201401190527314_CustomerAccountCreate.resx">
-      <DependentUpon>201401190527314_CustomerAccountCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403302135379_CreateInititalDatabase.resx">
+      <DependentUpon>201403302135379_CreateInititalDatabase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401191648285_CustomerAccountsTable.resx">
-      <DependentUpon>201401191648285_CustomerAccountsTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404010136386_Test.resx">
+      <DependentUpon>201404010136386_Test.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401210248450_AddAccountType.resx">
-      <DependentUpon>201401210248450_AddAccountType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401251644049_AddAddress.resx">
-      <DependentUpon>201401251644049_AddAddress.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402221844397_AddAccountIsLockedTimestamp.resx">
-      <DependentUpon>201402221844397_AddAccountIsLockedTimestamp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402221908173_AddTransactionTable.resx">
-      <DependentUpon>201402221908173_AddTransactionTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402222013425_AddTransactionAccounts.resx">
-      <DependentUpon>201402222013425_AddTransactionAccounts.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403130146513_AddInvestments.resx">
-      <DependentUpon>201403130146513_AddInvestments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403151752021_AddAccountCategory.resx">
-      <DependentUpon>201403151752021_AddAccountCategory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201403221634552_AddressCustomerFK.resx">
-      <DependentUpon>201403221634552_AddressCustomerFK.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404020023434_RenameForeignKeys.resx">
+      <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

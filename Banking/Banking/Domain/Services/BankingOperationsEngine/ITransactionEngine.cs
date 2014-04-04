@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 using Banking.Domain.Entities;
-using Banking.Models;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {

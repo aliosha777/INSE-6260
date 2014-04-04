@@ -47,7 +47,7 @@ namespace Banking.Application.Web.Controllers
 
             var address = customerOperationsManager.GetActiveAddress(customer);
 
-            var customerPersonalDetails = new CustomerPersonalDetails
+            var customerPersonalDetails = new CustomerPersonalInformation
             {
                 Address = address.ToViewModel()
             };

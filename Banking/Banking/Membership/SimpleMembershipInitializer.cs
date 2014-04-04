@@ -8,7 +8,7 @@ namespace Banking.Membership
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
 
-    using Banking.Models;
+    using Banking.Application.Models;
 
     using WebMatrix.WebData;
 

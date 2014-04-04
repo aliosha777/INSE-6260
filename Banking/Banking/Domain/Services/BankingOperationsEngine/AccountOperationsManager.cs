@@ -4,10 +4,12 @@ using System.Linq;
 using Banking.Application.DAL;
 using Banking.Domain.Entities;
 using Banking.Exceptions;
-using Banking.Models;
+using Banking.Application.Models;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
+    using System;
+
     public class AccountOperationsManager : IAccountOperationsManager
     {
         private ITransactionEngine transactionEngine;
@@ -22,6 +24,31 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             this.transactionEngine = transactionEngine;
             this.transactionRepository = transactionRepository;
             this.accountRepository = accountRepository;
+        }
+
+        public IAccount CreateAccount(AccountTypes accountType, ICustomer owner)
+        {
+            if (accountType == AccountTypes.GeneralLedgerCash)
+            {
+                throw new BankingValidationException("Cannot create General Cash account!!");
+            }
+
+            var creationDate = DateTime.Now;
+
+            var account = new Account
+                {
+                    AccountNumber = "xxx-xxx-xxxx",
+                    Balance = 0,
+                    Type = accountType,
+                    Category = AccountCategories.Liability,
+                    Created = creationDate,
+                    Modified = creationDate,
+                    IsActive = true
+                };
+
+            account.Owners.Add(owner);
+
+            return account;
         }
 
         public void Deposit(IAccount account, decimal amount)

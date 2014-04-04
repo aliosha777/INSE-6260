@@ -5,13 +5,13 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class AddTransactionTable : IMigrationMetadata
+    public sealed partial class RenameForeignKeys : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddTransactionTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RenameForeignKeys));
         
         string IMigrationMetadata.Id
         {
-            get { return "201402221908173_AddTransactionTable"; }
+            get { return "201404020023434_RenameForeignKeys"; }
         }
         
         string IMigrationMetadata.Source

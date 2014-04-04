@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using Banking.Models;
+using Banking.Application.Models;
 
 namespace Banking.Application.DAL
 {
@@ -12,6 +12,8 @@ namespace Banking.Application.DAL
         }
 
         public DbSet<CustomerModel> Customers { get; set; }
+
+        public DbSet<AddressModel> Addresses { get; set; }
 
         public DbSet<BankAccountModel> Accounts { get; set; }
 

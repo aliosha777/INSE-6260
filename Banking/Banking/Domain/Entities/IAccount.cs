@@ -1,9 +1,10 @@
-﻿using Banking.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Banking.Domain.Entities
 {
+    using System.ComponentModel;
+
     // TODO: Make those enums into database lookup tables
     public enum AccountCategories
     {
@@ -13,11 +14,15 @@ namespace Banking.Domain.Entities
 
     public enum AccountTypes
     {
+        [Description("Checking")]
         Checking,
+        [Description("Savings")]
         Savings,
+        [Description("Investment")]
         Investment,
         //// For simplicity we could use the same account class for general ledger accounts 
         //// but might be better to define it as a separate entity
+        [Description("General Ledger Cash")]
         GeneralLedgerCash,
     }
 

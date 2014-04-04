@@ -2,7 +2,7 @@ namespace Banking.Domain.Entities
 {
     public interface IAddress
     {
-        string AddressId { get; set; }
+        int AddressId { get; set; }
 
         string Line1 { get; set; }
 

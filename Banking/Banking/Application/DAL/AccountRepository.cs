@@ -5,7 +5,7 @@ using System.Linq;
 
 using Banking.Domain.Core;
 using Banking.Domain.Entities;
-using Banking.Models;
+using Banking.Application.Models;
 
 namespace Banking.Application.DAL
 {
@@ -49,7 +49,11 @@ namespace Banking.Application.DAL
 
         public IAccount GetAccountByNumber(string accountNumber)
         {
-            var accountModel = context.Accounts.FirstOrDefault(a => a.AccountNumber == accountNumber);
+            var accountModel = 
+                context
+                .Accounts
+                .Include("Owners")
+                .FirstOrDefault(a => a.AccountNumber == accountNumber);
 
             return accountModel == null ? null : accountModel.ToAccount();
         }

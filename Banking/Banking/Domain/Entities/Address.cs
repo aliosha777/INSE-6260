@@ -7,7 +7,7 @@ namespace Banking.Domain.Entities
 {
     public class Address : IAddress
     {
-        public string AddressId { get; set; }
+        public int AddressId { get; set; }
 
         public string Line1 { get; set; }
 
