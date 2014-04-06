@@ -28,7 +28,11 @@ namespace Banking.Application.DAL
 
         public IAccount GetGeneralLedgerCashAccount()
         {
-            return null;
+            return 
+                context
+                .Accounts
+                .Single(account => account.Type == AccountTypes.GeneralLedgerCash)
+                .ToAccount();
         }
 
         public IEnumerable<IAccount> GetAllAccounts(ICustomer customer)
@@ -65,9 +69,19 @@ namespace Banking.Application.DAL
             context.Accounts.Add(accountModel);
         }
 
-        public void UpdateAccount(IAccount account)
+        public void UpdateAccount(IAccount account, bool saveImmediately = false)
         {
-            context.Entry(account).State = EntityState.Modified;
+            var accountModel = account.ToModel();
+            var trackedEntity = context.Accounts.Find(accountModel.AccountId);
+            var entry = context.Entry(trackedEntity);
+
+            entry.CurrentValues.SetValues(accountModel);
+            entry.State = EntityState.Modified;
+            
+            if (saveImmediately)
+            {
+                context.SaveChanges();
+            }
         }
 
         public void Save()

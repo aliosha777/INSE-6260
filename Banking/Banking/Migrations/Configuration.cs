@@ -7,6 +7,8 @@ namespace Banking.Migrations
     using System.Linq;
 
     using Banking.Application.DAL;
+    using Banking.Application.Models;
+    using Banking.Domain.Entities;
 
     internal sealed class Configuration : DbMigrationsConfiguration<BankDBContext>
     {
@@ -17,37 +19,22 @@ namespace Banking.Migrations
 
         protected override void Seed(BankDBContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            if (!context.Accounts.Any(a => a.Type == AccountTypes.GeneralLedgerCash))
+            {
+                var creationDate = DateTime.Now;
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+                var generalCashAccount = new BankAccountModel()
+                    {
+                        AccountNumber = "xxx-xxx-xxxx",
+                        Balance = 10000000,
+                        Category = AccountCategories.Asset,
+                        Created = creationDate,
+                        Modified = creationDate,
+                        IsActive = true,
+                    };
 
-            ////var customers = new List<Customer>();
-
-            ////for(int i = 1; i < 20; i++)
-            ////{
-            ////    var cust = new Customer()
-            ////    {
-            ////        FirstName = "CusrtomerFirst" + i,
-            ////        LastName = "CustomerLast" + i,
-            ////        Address = "Montreal", 
-            ////        Email = "customer" + i +"@acme.com",
-            ////        Phone = "555-555-5555",
-            ////    };
-
-            ////    var account = new Account();
-
-            ////    cust.Accounts.Add(account);
-            ////    customers.Add(cust);
-            ////}
+                context.Accounts.Add(generalCashAccount);
+            }
         }
     }
 }

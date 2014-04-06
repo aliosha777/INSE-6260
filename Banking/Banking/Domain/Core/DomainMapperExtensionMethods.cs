@@ -25,7 +25,7 @@ namespace Banking.Domain.Core
 
             foreach (var customer in account.Owners)
             {
-                bankAccountModel.Owners.Add(customer.ToModel(true));
+                bankAccountModel.Owners.Add(customer.ToModel(true, true));
             }
 
             return bankAccountModel;
@@ -49,7 +49,7 @@ namespace Banking.Domain.Core
 
             foreach (var customerModel in bankAccountModel.Owners)
             {
-                account.Owners.Add(customerModel.ToCustomer(true));
+                account.Owners.Add(customerModel.ToCustomer(true, true));
             }
 
             return account;
@@ -64,6 +64,7 @@ namespace Banking.Domain.Core
                 RightAccount = transactionModel.RightAccount.ToAccount(),
                 Value = transactionModel.Value,
                 Created = transactionModel.Created,
+                Applied = transactionModel.Applied,
                 Status = transactionModel.Status
             };
 
@@ -79,13 +80,17 @@ namespace Banking.Domain.Core
                 RightAccount = transaction.RightAccount.ToModel(),
                 Value = transaction.Value,
                 Created = transaction.Created,
+                Applied = transaction.Applied,
                 Status = transaction.Status
             };
 
             return transactionModel;
         }
 
-        public static CustomerModel ToModel(this ICustomer customer, bool ignoreAccounts = false)
+        public static CustomerModel ToModel(
+            this ICustomer customer, 
+            bool ignoreAccounts = false,
+            bool ignoreAddresses = false)
         {
             var customerModel = new CustomerModel
                 {
@@ -106,16 +111,22 @@ namespace Banking.Domain.Core
                     customerModel.Accounts.Add(account.ToModel());
                 }
             }
-            
-            foreach (var address in customer.Addresses)
-            {
-                customerModel.Addresses.Add(address.ToModel());
-            }
 
+            if (!ignoreAddresses)
+            {
+                foreach (var address in customer.Addresses)
+                {
+                    customerModel.Addresses.Add(address.ToModel());
+                }
+            }
+            
             return customerModel;
         }
 
-        public static ICustomer ToCustomer(this CustomerModel customerModel, bool ignoreAccounts = false)
+        public static ICustomer ToCustomer(
+            this CustomerModel customerModel, 
+            bool ignoreAccounts = false,
+            bool ignoreAddresses = false)
         {
             var customer = new Customer
                 {
@@ -137,11 +148,13 @@ namespace Banking.Domain.Core
                 }
             }
 
-            foreach (var addressModel in customerModel.Addresses)
+            if (!ignoreAddresses)
             {
-                customer.Addresses.Add(addressModel.ToAddress());
+                foreach (var addressModel in customerModel.Addresses)
+                {
+                    customer.Addresses.Add(addressModel.ToAddress());
+                }
             }
-
             return customer;
         }
 

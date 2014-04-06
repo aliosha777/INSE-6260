@@ -9,6 +9,11 @@ namespace Banking.Application.Models
     [Table("Account")]
     public class BankAccountModel
     {
+        public BankAccountModel()
+        {
+            Owners = new List<CustomerModel>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AccountId { get; set; }

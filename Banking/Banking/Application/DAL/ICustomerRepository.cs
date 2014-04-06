@@ -12,6 +12,6 @@ namespace Banking.Application.DAL
 
         void Save();
 
-        void UpdateCustomer(ICustomer customer, bool saveImmediately);
+        ICustomer UpdateCustomer(ICustomer customer, bool saveImmediately);
     }
 }

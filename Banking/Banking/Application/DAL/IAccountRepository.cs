@@ -10,7 +10,7 @@ namespace Banking.Application.DAL
 
         void AddAccount(IAccount account);
 
-        void UpdateAccount(IAccount account);
+        void UpdateAccount(IAccount account, bool saveImmediately = false);
 
         void Save();
 

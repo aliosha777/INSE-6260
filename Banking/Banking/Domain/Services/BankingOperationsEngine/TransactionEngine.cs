@@ -44,7 +44,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             {
                 LeftAccount = leftAccount,
                 RightAccount = rightAccount,
-                Created = new DateTime(),
+                Created = DateTime.Now,
+                Applied = null,
                 Status = TransactionStatus.Pending,
                 Value = amount
             };

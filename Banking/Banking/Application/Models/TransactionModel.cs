@@ -33,7 +33,7 @@ namespace Banking.Application.Models
 
         public DateTime Created { get; set; }
 
-        public DateTime Applied { get; set; }
+        public DateTime? Applied { get; set; }
 
         public TransactionStatus Status { get; set; }
     }

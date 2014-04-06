@@ -167,6 +167,7 @@
   <ItemGroup>
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\AccountsOperationsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\TransactionViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\UserViewModel.cs" />
@@ -234,6 +235,10 @@
     <Compile Include="Migrations\201404020023434_RenameForeignKeys.cs" />
     <Compile Include="Migrations\201404020023434_RenameForeignKeys.Designer.cs">
       <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404061652080_TransactionAppliedDateNullable.cs" />
+    <Compile Include="Migrations\201404061652080_TransactionAppliedDateNullable.Designer.cs">
+      <DependentUpon>201404061652080_TransactionAppliedDateNullable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -313,6 +318,9 @@
     <Content Include="Application\Web\Views\Teller\CreateCustomerStep2.cshtml" />
     <Content Include="Application\Web\Views\Teller\CreateCustomerStep3.cshtml" />
     <Content Include="Application\Web\Views\Teller\CreateBankAccount.cshtml" />
+    <Content Include="Application\Web\Views\Teller\Deposit.cshtml" />
+    <Content Include="Application\Web\Views\Teller\Transfer.cshtml" />
+    <Content Include="Application\Web\Views\Teller\Withdraw.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -397,6 +405,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404020023434_RenameForeignKeys.resx">
       <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404061652080_TransactionAppliedDateNullable.resx">
+      <DependentUpon>201404061652080_TransactionAppliedDateNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

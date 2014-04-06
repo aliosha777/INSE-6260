@@ -32,6 +32,7 @@ namespace Banking.Tests.ApplicationLogic
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
+            var customerRepository = Mock.Of<ICustomerRepository>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction = 
@@ -56,9 +57,12 @@ namespace Banking.Tests.ApplicationLogic
 
             // TODO: Use autofixture create anonymous
             var accountOperationsManager = new AccountOperationsManager(
-                transactionEngine, transactionRepository, accountRepository);
+                transactionEngine, 
+                transactionRepository, 
+                accountRepository,
+                customerRepository);
 
-            accountOperationsManager.Deposit(customerAccount, depositAmount);
+            accountOperationsManager.Deposit(customerAccount, (double)depositAmount);
 
             Mock.Get(transactionRepository).Verify(r => r.AddTransaction(transaction));
             Mock.Get(transactionRepository).Verify(r => r.SaveChanges());
@@ -91,6 +95,7 @@ namespace Banking.Tests.ApplicationLogic
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
+            var customerRepository = Mock.Of<ICustomerRepository>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction =
@@ -115,7 +120,10 @@ namespace Banking.Tests.ApplicationLogic
 
             // TODO: Use autofixture create anonymous
             var accountOperationsManager = new AccountOperationsManager(
-                transactionEngine, transactionRepository, accountRepository);
+                transactionEngine, 
+                transactionRepository,
+                accountRepository,
+                customerRepository);
 
             accountOperationsManager.Withdraw(customerAccount, withdrawAmount);
 
@@ -147,6 +155,7 @@ namespace Banking.Tests.ApplicationLogic
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
+            var customerRepository = Mock.Of<ICustomerRepository>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction =
@@ -175,7 +184,10 @@ namespace Banking.Tests.ApplicationLogic
 
             // TODO: Use autofixture create anonymous
             var accountOperationsManager = new AccountOperationsManager(
-                transactionEngine, transactionRepository, accountRepository);
+                transactionEngine, 
+                transactionRepository,
+                accountRepository,
+                customerRepository);
 
             accountOperationsManager.Transfer(sourceAccount, destinationAccount, amount);
 
@@ -227,9 +239,13 @@ namespace Banking.Tests.ApplicationLogic
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
+            var customerRepository = Mock.Of<ICustomerRepository>();
 
             var accountOperationsManager = new AccountOperationsManager(
-                transactionEngine, transactionRepository, accountRepository);
+                transactionEngine, 
+                transactionRepository, 
+                accountRepository,
+                customerRepository);
 
             var obj = new PrivateObject(accountOperationsManager);
             var hasFunds = obj.Invoke("HasSufficientFunds", sourceAccount, amount, pendingTransactions);

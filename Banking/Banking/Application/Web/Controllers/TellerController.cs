@@ -7,6 +7,7 @@ using Banking.Domain.Services.BankingOperationsEngine;
 namespace Banking.Application.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Web.Security;
 
@@ -194,10 +195,64 @@ namespace Banking.Application.Web.Controllers
             var customer = customerRepository.GetCustomerById(customerId);
             var account = accountOperationsManager.CreateAccount(type, customer);
 
-            customer.Accounts.Add(account);
-            customerRepository.UpdateCustomer(customer, true);
-
             return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId.ToString() });
+        }
+
+        public ActionResult Deposit()
+        {
+            int customerId;
+            
+            int.TryParse((string)Session[CurrentCustomerId], out customerId);
+
+            var customer = customerRepository.GetCustomerById(customerId);
+
+            var values = 
+                customer.Accounts
+                .Select(
+                    account => new SelectListItem()
+                    {
+                        Value = account.AccountNumber,
+                        Text = account.Type.ToString(),
+                    });
+
+            var viewModel = new AccountsOperationsViewModel
+                {
+                    Amount = 0,
+                    OperationType = OperationTypes.Deposit,
+                    AccountsSelectList = new List<SelectListItem>(values)
+                };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Deposit(
+            [Bind(Include = "Amount, SelectedSourceAccountNumber")]
+            AccountsOperationsViewModel accountsOperations)
+        {
+            var customerId = (string)Session[CurrentCustomerId];
+
+            var customer = customerRepository.GetCustomerById(int.Parse(customerId));
+
+            var sourceAccount =
+                customer
+                .Accounts
+                .FirstOrDefault(account => account.AccountNumber == accountsOperations.SelectedSourceAccountNumber);
+
+            accountOperationsManager.Deposit(sourceAccount, accountsOperations.Amount);
+
+            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId });
+        }
+
+        public ActionResult Withdraw()
+        {
+            // Not sure yet where this should go
+            return View();
+        }
+
+        public ActionResult Transfer()
+        {
+            return View();
         }
 
         public ActionResult AccountDetails(string accountNumber)

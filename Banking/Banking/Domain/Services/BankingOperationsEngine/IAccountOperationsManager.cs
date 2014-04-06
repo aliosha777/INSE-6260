@@ -4,7 +4,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 {
     public interface IAccountOperationsManager
     {
-        void Deposit(IAccount account, decimal amount);
+        void Deposit(IAccount account, double amount);
 
         void Withdraw(IAccount account, decimal amount);
 

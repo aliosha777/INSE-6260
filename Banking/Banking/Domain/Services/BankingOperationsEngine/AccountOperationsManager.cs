@@ -12,18 +12,21 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
     public class AccountOperationsManager : IAccountOperationsManager
     {
-        private ITransactionEngine transactionEngine;
-        private IAccountRepository accountRepository;
-        private ITransactionRepository transactionRepository;
+        private readonly ITransactionEngine transactionEngine;
+        private readonly IAccountRepository accountRepository;
+        private readonly ITransactionRepository transactionRepository;
+        private readonly ICustomerRepository customerRepository;
 
         public AccountOperationsManager(
             ITransactionEngine transactionEngine,
             ITransactionRepository transactionRepository,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository,
+            ICustomerRepository customerRepository)
         {
             this.transactionEngine = transactionEngine;
             this.transactionRepository = transactionRepository;
             this.accountRepository = accountRepository;
+            this.customerRepository = customerRepository;
         }
 
         public IAccount CreateAccount(AccountTypes accountType, ICustomer owner)
@@ -37,7 +40,6 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             var account = new Account
                 {
-                    AccountNumber = "xxx-xxx-xxxx",
                     Balance = 0,
                     Type = accountType,
                     Category = AccountCategories.Liability,
@@ -47,14 +49,21 @@ namespace Banking.Domain.Services.BankingOperationsEngine
                 };
 
             account.Owners.Add(owner);
+            owner.Accounts.Add(account);
+            customerRepository.UpdateCustomer(owner, true);
+
+            account.AccountNumber = GetNewAccountNumber(account.AccountId);
+
+            // We have to save again to save the account number
+            accountRepository.UpdateAccount(account, true);
 
             return account;
         }
 
-        public void Deposit(IAccount account, decimal amount)
+        public void Deposit(IAccount account, double amount)
         {
             var cashAccount = accountRepository.GetGeneralLedgerCashAccount();
-            var transaction = transactionEngine.CreateTransaction(cashAccount, account, amount);
+            var transaction = transactionEngine.CreateTransaction(cashAccount, account, (decimal)amount);
 
             transactionRepository.AddTransaction(transaction);
             transactionRepository.SaveChanges();
@@ -127,6 +136,15 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             totalPending = totalIncrease - totalDecrease;
 
             return account.Balance >= totalPending + value;
+        }
+
+        private string GetNewAccountNumber(int accountId)
+        {
+            // TODO: Those numbers should be placed in a settings file
+            const string BankId = "123";
+            const string BranchId = "456";
+
+            return string.Format("{0}-{1}-{2}", BankId, BranchId, accountId.ToString("D6"));
         }
     }
 }

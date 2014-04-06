@@ -6,6 +6,7 @@ using Banking.Domain.Entities;
 
 namespace Banking.Application.DAL
 {
+    using System.Collections.Generic;
     using System.Data;
 
     using Banking.Application.Models;
@@ -49,35 +50,43 @@ namespace Banking.Application.DAL
 
         /// <summary>
         /// Updates an already existing customer.
+        /// The assumption is that related entities with Id == 0 are not saved to the db yet.
+        /// Accounts and addresses cannot be deleted; they are marked as inactive instead.
+        /// An updated customer object is returned. The passes cutomer object is not to be used.
         /// </summary>
         /// <param name="customer"></param>
         /// <param name="saveImmediately"></param>
-        public void UpdateCustomer(ICustomer customer, bool saveImmediately = false)
+        public ICustomer UpdateCustomer(ICustomer customer, bool saveImmediately = false)
         {
-            // TODO: update the customer object with the new address Id
             var customerModel = customer.ToModel();
 
-            var trackedEntity = context.Customers.Find(customerModel.CustomerId);
-
+            CustomerModel trackedEntity = context.Customers.Find(customerModel.CustomerId);
+            
+            // Sync scalar values to the tracked object. 
+            context.Entry(trackedEntity).CurrentValues.SetValues(customerModel);
+            
+            // Sync Addresses 
             foreach (var address in customerModel.Addresses)
             {
-                // Assume addresses that have been created but not yet saved to the db 
-                // have no Id yet
                 if (address.AddressId == 0)
                 {
                     trackedEntity.Addresses.Add(address);
                 }
             }
 
-            foreach (var account in customerModel.Accounts)
+            // Sync Accounts
+            // A messy way to track new accounts and set their Ids back to the original object
+            var updatedAccounts = new List<Tuple<IAccount, BankAccountModel>>();
+
+            foreach (var account in customer.Accounts)
             {
                 if (account.AccountId == 0)
                 {
-                    trackedEntity.Accounts.Add(account);
+                    var accountModel = account.ToModel();
+                    updatedAccounts.Add(new Tuple<IAccount, BankAccountModel>(account, accountModel));
+                    trackedEntity.Accounts.Add(accountModel);
                 }
             }
-
-            context.Entry(trackedEntity).CurrentValues.SetValues(customerModel);
 
             context.Entry(trackedEntity).State = EntityState.Modified;
 
@@ -86,21 +95,12 @@ namespace Banking.Application.DAL
                 context.SaveChanges();
             }
             
-            ////// Save new addresses first
-            ////foreach (var address in customerModel.Addresses)
-            ////{
-            ////    if (address.AddressId == 0)
-            ////    {
-            ////        context.Addresses.Add(address);
-            ////        context.Entry(address).State = EntityState.Added;
-            ////    }
-            ////    else
-            ////    {
-            ////        this.AttachEntity(address);
-            ////    }
-            ////}
-
-            ////context.SaveChanges();
+            // At this point all AccountModel objects in newAccounts should have Ids
+            foreach (var accountTuple in updatedAccounts)
+            {
+                var account = customer.Accounts.First(a => a == accountTuple.Item1);
+                account.AccountId = accountTuple.Item2.AccountId;
+            }
 
             ////var entry = context.Entry(customerModel);
 
@@ -124,6 +124,8 @@ namespace Banking.Application.DAL
             ////        context.SaveChanges();
             ////    }
             ////}
+
+            return trackedEntity.ToCustomer();
         }
 
         public void Dispose()

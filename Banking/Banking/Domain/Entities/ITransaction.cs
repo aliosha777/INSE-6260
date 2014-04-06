@@ -19,7 +19,7 @@ namespace Banking.Domain.Entities
 
         DateTime Created { get; set; }
 
-        DateTime Applied { get; set; }
+        DateTime? Applied { get; set; }
 
         TransactionStatus Status { get; set; }
     }
