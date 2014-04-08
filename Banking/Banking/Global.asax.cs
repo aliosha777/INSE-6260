@@ -5,12 +5,13 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-using Banking.Logging;
 using Banking.Membership;
 
 namespace Banking
 {
     using System.Linq;
+
+    using Banking.Application.Core.Logging;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801

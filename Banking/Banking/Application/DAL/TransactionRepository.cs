@@ -30,6 +30,8 @@ namespace Banking.Application.DAL
             var transactions =
                 context
                 .Transactions
+                .Include("LeftAccount")
+                .Include("RightAccount")
                 .Where(
                     t => 
                         t.LeftAccount.AccountId == account.AccountId 

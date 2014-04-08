@@ -3,7 +3,7 @@ namespace Banking.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CreateInititalDatabase : DbMigration
+    public partial class InitialDatabaseCreate : DbMigration
     {
         public override void Up()
         {
@@ -31,11 +31,11 @@ namespace Banking.Migrations
                         Province = c.String(),
                         PostalCode = c.String(),
                         IsActive = c.Boolean(nullable: false),
-                        Customer_CustomerId = c.Int(),
+                        CustomerId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.AddressId)
-                .ForeignKey("dbo.Customer", t => t.Customer_CustomerId)
-                .Index(t => t.Customer_CustomerId);
+                .ForeignKey("dbo.Customer", t => t.CustomerId)
+                .Index(t => t.CustomerId);
             
             CreateTable(
                 "dbo.Account",
@@ -59,33 +59,33 @@ namespace Banking.Migrations
                 c => new
                     {
                         TransactionId = c.Int(nullable: false, identity: true),
+                        LeftAccountId = c.Int(nullable: false),
+                        RightAccountId = c.Int(nullable: false),
                         Value = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Created = c.DateTime(nullable: false),
-                        Applied = c.DateTime(nullable: false),
+                        Applied = c.DateTime(),
                         Status = c.Int(nullable: false),
-                        LeftAccount_AccountId = c.Int(),
-                        RightAccount_AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.TransactionId)
-                .ForeignKey("dbo.Account", t => t.LeftAccount_AccountId)
-                .ForeignKey("dbo.Account", t => t.RightAccount_AccountId)
-                .Index(t => t.LeftAccount_AccountId)
-                .Index(t => t.RightAccount_AccountId);
+                .ForeignKey("dbo.Account", t => t.LeftAccountId)
+                .ForeignKey("dbo.Account", t => t.RightAccountId)
+                .Index(t => t.LeftAccountId)
+                .Index(t => t.RightAccountId);
             
             CreateTable(
                 "dbo.Investment",
                 c => new
                     {
                         InvestmentId = c.Int(nullable: false, identity: true),
+                        AccountId = c.Int(nullable: false),
                         TermStart = c.DateTime(nullable: false),
                         TermEnd = c.DateTime(nullable: false),
                         Type = c.Int(nullable: false),
                         CompoundingFrequency = c.Int(nullable: false),
-                        Account_AccountId = c.Int(),
                     })
                 .PrimaryKey(t => t.InvestmentId)
-                .ForeignKey("dbo.Account", t => t.Account_AccountId)
-                .Index(t => t.Account_AccountId);
+                .ForeignKey("dbo.Account", t => t.AccountId)
+                .Index(t => t.AccountId);
             
             CreateTable(
                 "dbo.InvestmentInterval",
@@ -96,11 +96,11 @@ namespace Banking.Migrations
                         End = c.DateTime(nullable: false),
                         InterestRate = c.Double(nullable: false),
                         StartingAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Investment_InvestmentId = c.Int(),
+                        InvestmentId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.InvestmentIntervalId)
-                .ForeignKey("dbo.Investment", t => t.Investment_InvestmentId)
-                .Index(t => t.Investment_InvestmentId);
+                .ForeignKey("dbo.Investment", t => t.InvestmentId)
+                .Index(t => t.InvestmentId);
             
             CreateTable(
                 "dbo.CustomerAccounts",
@@ -121,18 +121,18 @@ namespace Banking.Migrations
         {
             DropIndex("dbo.CustomerAccounts", new[] { "AccountId" });
             DropIndex("dbo.CustomerAccounts", new[] { "CustomerId" });
-            DropIndex("dbo.InvestmentInterval", new[] { "Investment_InvestmentId" });
-            DropIndex("dbo.Investment", new[] { "Account_AccountId" });
-            DropIndex("dbo.Transaction", new[] { "RightAccount_AccountId" });
-            DropIndex("dbo.Transaction", new[] { "LeftAccount_AccountId" });
-            DropIndex("dbo.Address", new[] { "Customer_CustomerId" });
+            DropIndex("dbo.InvestmentInterval", new[] { "InvestmentId" });
+            DropIndex("dbo.Investment", new[] { "AccountId" });
+            DropIndex("dbo.Transaction", new[] { "RightAccountId" });
+            DropIndex("dbo.Transaction", new[] { "LeftAccountId" });
+            DropIndex("dbo.Address", new[] { "CustomerId" });
             DropForeignKey("dbo.CustomerAccounts", "AccountId", "dbo.Account");
             DropForeignKey("dbo.CustomerAccounts", "CustomerId", "dbo.Customer");
-            DropForeignKey("dbo.InvestmentInterval", "Investment_InvestmentId", "dbo.Investment");
-            DropForeignKey("dbo.Investment", "Account_AccountId", "dbo.Account");
-            DropForeignKey("dbo.Transaction", "RightAccount_AccountId", "dbo.Account");
-            DropForeignKey("dbo.Transaction", "LeftAccount_AccountId", "dbo.Account");
-            DropForeignKey("dbo.Address", "Customer_CustomerId", "dbo.Customer");
+            DropForeignKey("dbo.InvestmentInterval", "InvestmentId", "dbo.Investment");
+            DropForeignKey("dbo.Investment", "AccountId", "dbo.Account");
+            DropForeignKey("dbo.Transaction", "RightAccountId", "dbo.Account");
+            DropForeignKey("dbo.Transaction", "LeftAccountId", "dbo.Account");
+            DropForeignKey("dbo.Address", "CustomerId", "dbo.Customer");
             DropTable("dbo.CustomerAccounts");
             DropTable("dbo.InvestmentInterval");
             DropTable("dbo.Investment");

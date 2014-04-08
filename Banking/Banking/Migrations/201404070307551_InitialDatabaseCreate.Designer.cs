@@ -5,13 +5,13 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class TransactionAppliedDateNullable : IMigrationMetadata
+    public sealed partial class InitialDatabaseCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(TransactionAppliedDateNullable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDatabaseCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201404061652080_TransactionAppliedDateNullable"; }
+            get { return "201404070307551_InitialDatabaseCreate"; }
         }
         
         string IMigrationMetadata.Source

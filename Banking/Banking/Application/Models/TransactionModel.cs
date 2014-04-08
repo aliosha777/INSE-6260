@@ -25,8 +25,14 @@ namespace Banking.Application.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TransactionId { get; set; }
 
+        public int LeftAccountId { get; set; }
+
+        public int RightAccountId { get; set; }
+
+        [ForeignKey("LeftAccountId")]
         public BankAccountModel LeftAccount { get; set; }
 
+        [ForeignKey("RightAccountId")]
         public BankAccountModel RightAccount { get; set; }
 
         public decimal Value { get; set; }

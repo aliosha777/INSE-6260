@@ -25,9 +25,10 @@ namespace Banking.Migrations
 
                 var generalCashAccount = new BankAccountModel()
                     {
-                        AccountNumber = "xxx-xxx-xxxx",
+                        AccountNumber = "123-456-000000",
                         Balance = 10000000,
                         Category = AccountCategories.Asset,
+                        Type = AccountTypes.GeneralLedgerCash,
                         Created = creationDate,
                         Modified = creationDate,
                         IsActive = true,

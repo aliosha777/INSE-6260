@@ -224,21 +224,9 @@
     <Compile Include="Application\Core\Logging\ILogger.cs" />
     <Compile Include="Application\Core\Logging\Logger.cs" />
     <Compile Include="Membership\SimpleMembershipInitializer.cs" />
-    <Compile Include="Migrations\201403302135379_CreateInititalDatabase.cs" />
-    <Compile Include="Migrations\201403302135379_CreateInititalDatabase.Designer.cs">
-      <DependentUpon>201403302135379_CreateInititalDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404010136386_Test.cs" />
-    <Compile Include="Migrations\201404010136386_Test.Designer.cs">
-      <DependentUpon>201404010136386_Test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404020023434_RenameForeignKeys.cs" />
-    <Compile Include="Migrations\201404020023434_RenameForeignKeys.Designer.cs">
-      <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404061652080_TransactionAppliedDateNullable.cs" />
-    <Compile Include="Migrations\201404061652080_TransactionAppliedDateNullable.Designer.cs">
-      <DependentUpon>201404061652080_TransactionAppliedDateNullable.cs</DependentUpon>
+    <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.cs" />
+    <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.Designer.cs">
+      <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -397,17 +385,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201403302135379_CreateInititalDatabase.resx">
-      <DependentUpon>201403302135379_CreateInititalDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404010136386_Test.resx">
-      <DependentUpon>201404010136386_Test.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404020023434_RenameForeignKeys.resx">
-      <DependentUpon>201404020023434_RenameForeignKeys.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404061652080_TransactionAppliedDateNullable.resx">
-      <DependentUpon>201404061652080_TransactionAppliedDateNullable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404070307551_InitialDatabaseCreate.resx">
+      <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

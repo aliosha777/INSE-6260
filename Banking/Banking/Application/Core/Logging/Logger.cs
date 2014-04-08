@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Banking.Logging
+﻿namespace Banking.Application.Core.Logging
 {
+    using System;
+
     public class Logger : ILogger
     {
         public void Log(string message)

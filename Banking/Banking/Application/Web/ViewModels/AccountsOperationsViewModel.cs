@@ -55,9 +55,9 @@ namespace Banking.Application.Web.ViewModels
 
         public IEnumerable<SelectListItem> AccountsSelectList { get; set; }
 
-        public string SelectedSourceAccountNumber { get; set; }
+        public int SelectedSourceAccountId { get; set; }
 
-        public string SelectedTargetAccountNumber { get; set; }
+        public int SelectedTargetAccountId { get; set; }
 
         public OperationTypes OperationType { get; set; }
     }

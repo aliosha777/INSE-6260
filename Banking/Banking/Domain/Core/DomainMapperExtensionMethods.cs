@@ -76,8 +76,10 @@ namespace Banking.Domain.Core
             var transactionModel = new TransactionModel()
             {
                 TransactionId = transaction.TransactionId,
-                LeftAccount = transaction.LeftAccount.ToModel(),
-                RightAccount = transaction.RightAccount.ToModel(),
+                LeftAccount = null,
+                RightAccount = null,
+                LeftAccountId = transaction.LeftAccount.AccountId,
+                RightAccountId = transaction.RightAccount.AccountId,
                 Value = transaction.Value,
                 Created = transaction.Created,
                 Applied = transaction.Applied,

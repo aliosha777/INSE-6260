@@ -13,6 +13,7 @@ namespace Banking.Application.Web.Controllers
 
     using Banking.Application.Core;
     using Banking.Domain.Entities;
+    using Banking.Exceptions;
 
     using WebMatrix.WebData;
 
@@ -127,7 +128,7 @@ namespace Banking.Application.Web.Controllers
 
             customerRepository.AddCustomer(customer);
 
-            Session["NewCustomerId"] = customer.CustomerId;
+            Session[CurrentCustomerId] = customer.CustomerId;
 
             return RedirectToAction("CreateCustomerStep3", "Teller");
         }
@@ -154,9 +155,7 @@ namespace Banking.Application.Web.Controllers
             // Make the first address active by default
             address.IsActive = true;
 
-            var customerId = (int)Session["NewCustomerId"];
-
-            Session.Remove("NewCustomerId");
+            var customerId = (int)Session[CurrentCustomerId];
 
             var customer = customerRepository.GetCustomerById(customerId);
 
@@ -193,7 +192,7 @@ namespace Banking.Application.Web.Controllers
             int.TryParse((string)Session[CurrentCustomerId], out customerId);
 
             var customer = customerRepository.GetCustomerById(customerId);
-            var account = accountOperationsManager.CreateAccount(type, customer);
+            accountOperationsManager.CreateAccount(type, customer);
 
             return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId.ToString() });
         }
@@ -211,8 +210,8 @@ namespace Banking.Application.Web.Controllers
                 .Select(
                     account => new SelectListItem()
                     {
-                        Value = account.AccountNumber,
-                        Text = account.Type.ToString(),
+                        Value = account.AccountId.ToString(),
+                        Text = string.Format("{0} - {1}", account.Type.ToString(), account.AccountNumber)
                     });
 
             var viewModel = new AccountsOperationsViewModel
@@ -227,19 +226,24 @@ namespace Banking.Application.Web.Controllers
 
         [HttpPost]
         public ActionResult Deposit(
-            [Bind(Include = "Amount, SelectedSourceAccountNumber")]
+            [Bind(Include = "Amount, SelectedTargetAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
             var customerId = (string)Session[CurrentCustomerId];
 
             var customer = customerRepository.GetCustomerById(int.Parse(customerId));
 
-            var sourceAccount =
+            var targetAccount =
                 customer
                 .Accounts
-                .FirstOrDefault(account => account.AccountNumber == accountsOperations.SelectedSourceAccountNumber);
+                .FirstOrDefault(account => account.AccountId == accountsOperations.SelectedTargetAccountId);
 
-            accountOperationsManager.Deposit(sourceAccount, accountsOperations.Amount);
+            if (targetAccount == null)
+            {
+                throw new BankingValidationException("Inavalid Account Id");
+            }
+
+            accountOperationsManager.Deposit(targetAccount, accountsOperations.Amount);
 
             return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId });
         }
