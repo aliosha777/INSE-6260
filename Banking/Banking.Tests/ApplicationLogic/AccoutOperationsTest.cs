@@ -28,6 +28,8 @@ namespace Banking.Tests.ApplicationLogic
             var customerAccount = fixture.Build<Account>().Without(a => a.Owners).Create();
             var cashAccount = fixture.Build<Account>().Without(a => a.Owners).Create();
 
+            var customer = Mock.Of<ICustomer>();
+
             // Parameters to the class under test
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
@@ -44,6 +46,8 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Value, depositAmount)
                 .With(t => t.Created, created)
                 .Create();
+
+            Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { customerAccount });
 
             Mock.Get(accountRepository)
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
@@ -62,7 +66,7 @@ namespace Banking.Tests.ApplicationLogic
                 accountRepository,
                 customerRepository);
 
-            accountOperationsManager.Deposit(customerAccount, (double)depositAmount);
+            accountOperationsManager.Deposit(customer, customerAccount.AccountId, (double)depositAmount);
 
             Mock.Get(transactionRepository).Verify(r => r.AddTransaction(transaction));
             Mock.Get(transactionRepository).Verify(r => r.SaveChanges());
@@ -75,6 +79,8 @@ namespace Banking.Tests.ApplicationLogic
 
             var withdrawAmount = 100;
             var created = fixture.Freeze<DateTime>();
+
+            var customer = Mock.Of<ICustomer>();
 
             var customerAccount =
                 fixture
@@ -108,6 +114,8 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Created, created)
                 .Create();
 
+            Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { customerAccount });
+
             Mock.Get(accountRepository)
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
 
@@ -125,7 +133,7 @@ namespace Banking.Tests.ApplicationLogic
                 accountRepository,
                 customerRepository);
 
-            accountOperationsManager.Withdraw(customerAccount, withdrawAmount);
+            accountOperationsManager.Withdraw(customer, customerAccount.AccountId, withdrawAmount);
 
             Mock.Get(transactionRepository).Verify(r => r.AddTransaction(transaction));
             Mock.Get(transactionRepository).Verify(r => r.SaveChanges());

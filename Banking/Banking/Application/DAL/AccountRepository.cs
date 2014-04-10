@@ -62,13 +62,6 @@ namespace Banking.Application.DAL
             return accountModel == null ? null : accountModel.ToAccount();
         }
 
-        public void AddAccount(IAccount account)
-        {
-            var accountModel = new BankAccountModel();
-
-            context.Accounts.Add(accountModel);
-        }
-
         public void UpdateAccount(IAccount account, bool saveImmediately = false)
         {
             var accountModel = account.ToModel();

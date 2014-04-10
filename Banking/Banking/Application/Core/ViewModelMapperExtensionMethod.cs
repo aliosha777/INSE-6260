@@ -13,7 +13,8 @@ namespace Banking.Application.Core
         {
            return new AccountViewModel
             {
-                AccountNumber = account.AccountNumber, 
+                AccountNumber = account.AccountNumber,
+                AccountId = account.AccountId,
                 AccountType = account.Type, 
                 Balance = account.Balance, 
                 Created = account.Created, 

@@ -4,34 +4,41 @@
     ViewBag.Title = "Customer Summary";
 }
 
-<h2>Customer Summary</h2>
-
+<h2>Customer</h2>
+<br />
 
 @if (Model != null)
 {
     <div>
-        <div>Personal Information:</div>
-        <span>@Model.FirstName + " " + @Model.LastName </span>
+        <span>@Html.DisplayFor(m => Model.FirstName)&nbsp;</span>
+        <span>@Html.DisplayFor(m => Model.LastName)</span>
     </div>   
     
-    <span>Accounts:</span>
+    <h2>Accounts</h2>
     
-    foreach (var account in Model.Accounts)
-    {
-        Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", account);
-    }
     
+    Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", @Model.Accounts);
+   
     Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", @Model.CurrentAddress);
+    
+    <br />
+
+    <div>
+        @Html.ActionLink("Open Account", "CreateBankAccount", "Teller")
+    </div>
+    <div>
+        @Html.ActionLink("Deposit", "Deposit", "Teller")
+    </div>
+    <div>
+        @Html.ActionLink("Withdraw", "Withdraw", "Teller")
+    </div>
+}
+else
+{
+    <h3>No Customers Found</h3>
 }
 
+<br />
+@Html.ActionLink("Back", "Home")
 
-<div>
-    @Html.ActionLink("Open Account", "CreateBankAccount", "Teller")
-</div>
-<div>
-    @Html.ActionLink("Deposit", "Deposit", "Teller")
-</div>
-<div>
-    @Html.ActionLink("Withdraw", "Withdraw", "Teller")
-</div>
 

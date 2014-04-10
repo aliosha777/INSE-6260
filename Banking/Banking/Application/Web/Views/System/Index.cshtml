@@ -1,0 +1,42 @@
+﻿@using Banking.Domain.Entities
+
+@using (Html.BeginForm("ProcessTransactions", "System"))
+{
+    @Html.AntiForgeryToken()
+    
+    <input type ="submit" name="ApplyPendingTransactions" id="ApplyPendingTransactions" value="Apply Pending"/>   
+}
+
+<table>
+    <tr>
+        <td><span>Transaction Number</span></td>
+        <td><span>Amount</span></td>
+        <td><span>Status</span></td>
+        <td><span>Created</span></td>
+        <td><span>Applied</span></td>
+        <td><span>Due</span></td>
+    </tr>
+
+    @foreach (var transaction in (IEnumerable<Tuple<ITransaction, bool>>)ViewData["Transactions"])
+    {
+    <tr>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item1.TransactionId)</span>
+        </td>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item1.Value)</span>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item1.Status)</span>
+        </td>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item1.Created)</span>
+        </td>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item1.Applied)</span>
+        </td>
+        <td>
+            <span>@Html.DisplayFor(t => transaction.Item2)</span>
+        </td>
+    </tr>
+    }
+</table>

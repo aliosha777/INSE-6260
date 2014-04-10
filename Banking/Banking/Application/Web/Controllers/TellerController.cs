@@ -21,7 +21,6 @@ namespace Banking.Application.Web.Controllers
     public class TellerController : Controller
     {
         private const string CurrentCustomerId = "CurrentCustomerId";
-        private const string NewCustomerId = "NewCustomerId"; 
        
         private readonly ICustomerRepository customerRepository;
         private readonly IAccountRepository accountRepository;
@@ -51,7 +50,6 @@ namespace Banking.Application.Web.Controllers
         public ActionResult CustomerSummary(string customerId)
         {
             int id;
-
             CustomerSummary customerSummary = null;
 
             if (int.TryParse(customerId, out id))
@@ -63,7 +61,11 @@ namespace Banking.Application.Web.Controllers
                     // Easier to keep track of the customer we're working with this way
                     Session[CurrentCustomerId] = customerId;
 
-                    customerSummary = new CustomerSummary();
+                    customerSummary = new CustomerSummary
+                    {
+                        FirstName = customer.FirstName, 
+                        LastName = customer.LastName
+                    };
 
                     foreach (var account in customer.Accounts)
                     {
@@ -71,11 +73,9 @@ namespace Banking.Application.Web.Controllers
                     }
 
                     var address = customerOperationsManager.GetActiveAddress(customer);
-
                     customerSummary.CurrentAddress = address.ToViewModel();
                 }
             }
-
             return View(customerSummary);
         }
 
@@ -88,21 +88,23 @@ namespace Banking.Application.Web.Controllers
         [HttpPost]
         public ActionResult CreateCustomerStep1(UserViewModel userModel)
         {
-            // Create a user account for the new customer
-            try
+            if (ModelState.IsValid)
             {
-                WebSecurity.CreateUserAndAccount(userModel.UserName, userModel.Password);
-                Session.Add("NewCreatedUserName", userModel.UserName);
-                return RedirectToAction("CreateCustomerStep2", "Teller");
+                // Create a user account for the new customer
+                try
+                {
+                    WebSecurity.CreateUserAndAccount(userModel.UserName, userModel.Password);
+                    Session.Add("NewCreatedUserName", userModel.UserName);
+                    return RedirectToAction("CreateCustomerStep2", "Teller");
+                }
+                catch (MembershipCreateUserException e)
+                {
+                    ModelState.AddModelError(string.Empty, e.StatusCode.ToString());
+                }
             }
-            catch (MembershipCreateUserException e)
-            {
-                ModelState.AddModelError(string.Empty, e.StatusCode.ToString());
-            }
-
             return View(userModel);
         }
-        
+
         [HttpGet]
         public ActionResult CreateCustomerStep2()
         {
@@ -112,25 +114,29 @@ namespace Banking.Application.Web.Controllers
         [HttpPost]
         public ActionResult CreateCustomerStep2(CustomerPersonalInformation customerPersonalInformation)
         {
-            var userName = (string)Session["NewCreatedUserName"];
+            if (ModelState.IsValid)
+            {
+                var userName = (string)Session["NewCreatedUserName"];
 
-            Session.Remove("NewCreatedUserName");
+                Session.Remove("NewCreatedUserName");
 
-            // Fill the personal details
-            var customer = customerOperationsManager
-                .CreateCustomer(
-                customerPersonalInformation.FirstName,
-                customerPersonalInformation.LastName,
-                customerPersonalInformation.Phone,
-                customerPersonalInformation.Email);
+                // Fill the personal details
+                var customer = customerOperationsManager.CreateCustomer(
+                    customerPersonalInformation.FirstName,
+                    customerPersonalInformation.LastName,
+                    customerPersonalInformation.Phone,
+                    customerPersonalInformation.Email);
 
-            customer.UserName = userName;
+                customer.UserName = userName;
 
-            customerRepository.AddCustomer(customer);
+                customerRepository.AddCustomer(customer, true);
 
-            Session[CurrentCustomerId] = customer.CustomerId;
+                Session[CurrentCustomerId] = customer.CustomerId;
 
-            return RedirectToAction("CreateCustomerStep3", "Teller");
+                return RedirectToAction("CreateCustomerStep3", "Teller");
+            }
+
+            return View();
         }
 
         [HttpGet]
@@ -142,28 +148,30 @@ namespace Banking.Application.Web.Controllers
         [HttpPost]
         public ActionResult CreateCustomerStep3(AddressViewModel addressViewModel)
         {
-            // Add an aaddress
-            var address = new Address
+            if (ModelState.IsValid)
             {
-                Line1 = addressViewModel.Line1,
-                Line2 = addressViewModel.Line2,
-                City = addressViewModel.City,
-                PostalCode = addressViewModel.PostalCode,
-                Province = addressViewModel.Province
-            };
+                var address = new Address
+                {
+                    Line1 = addressViewModel.Line1,
+                    Line2 = addressViewModel.Line2,
+                    City = addressViewModel.City,
+                    PostalCode = addressViewModel.PostalCode,
+                    Province = addressViewModel.Province
+                };
 
-            // Make the first address active by default
-            address.IsActive = true;
+                // Make the first address active by default
+                address.IsActive = true;
 
-            var customerId = (int)Session[CurrentCustomerId];
+                var customer = GetCurrentCustomer();
 
-            var customer = customerRepository.GetCustomerById(customerId);
+                customer.Addresses.Add(address);
+                customerRepository.UpdateCustomer(customer, true);
 
-            customer.Addresses.Add(address);
+                return RedirectToAction(
+                    "CustomerSummary", "Teller", new { customerId = customer.CustomerId.ToString() });
+            }
 
-            customerRepository.UpdateCustomer(customer, true);
-
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId.ToString() });
+            return this.View();
         }
 
         public ActionResult CreateBankAccount()
@@ -187,32 +195,16 @@ namespace Banking.Application.Web.Controllers
 
             Enum.TryParse(accountType, out type);
 
-            int customerId;
-
-            int.TryParse((string)Session[CurrentCustomerId], out customerId);
-
-            var customer = customerRepository.GetCustomerById(customerId);
+            var customer = this.GetCurrentCustomer();
             accountOperationsManager.CreateAccount(type, customer);
 
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId.ToString() });
+            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId.ToString() });
         }
 
         public ActionResult Deposit()
         {
-            int customerId;
-            
-            int.TryParse((string)Session[CurrentCustomerId], out customerId);
-
-            var customer = customerRepository.GetCustomerById(customerId);
-
-            var values = 
-                customer.Accounts
-                .Select(
-                    account => new SelectListItem()
-                    {
-                        Value = account.AccountId.ToString(),
-                        Text = string.Format("{0} - {1}", account.Type.ToString(), account.AccountNumber)
-                    });
+            var customer = this.GetCurrentCustomer();
+            var values = this.GetAccountsSelectList(customer);
 
             var viewModel = new AccountsOperationsViewModel
                 {
@@ -229,29 +221,40 @@ namespace Banking.Application.Web.Controllers
             [Bind(Include = "Amount, SelectedTargetAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
-            var customerId = (string)Session[CurrentCustomerId];
+            var customer = this.GetCurrentCustomer();
 
-            var customer = customerRepository.GetCustomerById(int.Parse(customerId));
+            accountOperationsManager.Deposit(
+                customer, accountsOperations.SelectedTargetAccountId, accountsOperations.Amount);
 
-            var targetAccount =
-                customer
-                .Accounts
-                .FirstOrDefault(account => account.AccountId == accountsOperations.SelectedTargetAccountId);
-
-            if (targetAccount == null)
-            {
-                throw new BankingValidationException("Inavalid Account Id");
-            }
-
-            accountOperationsManager.Deposit(targetAccount, accountsOperations.Amount);
-
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customerId });
+            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId });
         }
 
         public ActionResult Withdraw()
         {
-            // Not sure yet where this should go
-            return View();
+            var customer = this.GetCurrentCustomer();
+            var values = this.GetAccountsSelectList(customer);
+
+            var viewModel = new AccountsOperationsViewModel
+            {
+                Amount = 0,
+                OperationType = OperationTypes.Withdrawal,
+                AccountsSelectList = new List<SelectListItem>(values)
+            };
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Withdraw(
+            [Bind(Include = "Amount, SelectedTargetAccountId")]
+            AccountsOperationsViewModel accountsOperations)
+        {
+            var customer = this.GetCurrentCustomer();
+
+            accountOperationsManager.Withdraw(
+                customer, accountsOperations.SelectedSourceAccountId, accountsOperations.Amount);
+
+            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId });
         }
 
         public ActionResult Transfer()
@@ -259,9 +262,10 @@ namespace Banking.Application.Web.Controllers
             return View();
         }
 
-        public ActionResult AccountDetails(string accountNumber)
+        public ActionResult AccountDetails(int accountId)
         {
-            var account = accountRepository.GetAccountByNumber(accountNumber);
+            var customer = this.GetCurrentCustomer();
+            var account = customerOperationsManager.GetAccount(customer, accountId);
 
             var accountTransactions = transactionRepository.GetAccountTransactions(account);
 
@@ -273,6 +277,28 @@ namespace Banking.Application.Web.Controllers
             }
             
             return View(accountDetails);
+        }
+
+        private IEnumerable<SelectListItem> GetAccountsSelectList(ICustomer customer)
+        {
+            var values =
+                customer.Accounts
+                .Select(
+                    account => new SelectListItem()
+                    {
+                        Value = account.AccountId.ToString(),
+                        Text = string.Format("{0} - {1}", account.Type.ToString(), account.AccountNumber)
+                    });
+
+            return values;
+        }
+
+        private ICustomer GetCurrentCustomer()
+        {
+            var customerId = (string)Session[CurrentCustomerId];
+            var customer = customerRepository.GetCustomerById(int.Parse(customerId));
+
+            return customer;
         }
     }
 }

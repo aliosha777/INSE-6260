@@ -58,11 +58,16 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         /// Account balances will be updated and the transaction will be marked as applied
         /// </summary>
         /// <param name="transaction"></param>
-        public void ApplyTransaction(Transaction transaction)
+        public void ApplyTransaction(ITransaction transaction)
         {
             if (transaction.Status != TransactionStatus.Pending)
             {
                 throw new BankingValidationException("Cannot apply a transaction that is not pending");
+            }
+
+            if (!this.IsTransactionDue(transaction))
+            {
+                return;
             }
 
             var accountToBeDebited = transaction.LeftAccount;
@@ -76,11 +81,13 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             decimal creditAccountDelta =
                 accountToBeCredited.Category == AccountCategories.Asset ? -transaction.Value : transaction.Value;
 
+            var modified = DateTime.Now;
+
             accountToBeDebited.Balance += debitAccountDelta;
-            accountToBeDebited.Modified = new DateTime();
+            accountToBeDebited.Modified = modified;
 
             accountToBeCredited.Balance += creditAccountDelta;
-            accountToBeCredited.Modified = new DateTime();
+            accountToBeCredited.Modified = modified;
 
             accountRepository.UpdateAccount(accountToBeDebited);
             accountRepository.UpdateAccount(accountToBeCredited);
@@ -91,6 +98,15 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             transactionRepository.UpdateTransaction(transaction);
             transactionRepository.SaveChanges();
+        }
+
+        public bool IsTransactionDue(ITransaction transaction)
+        {
+            var today = DateTime.Now;
+
+            return 
+                !transaction.Applied.HasValue 
+                || transaction.Applied.GetValueOrDefault().Date <= today;
         }
     }
 }

@@ -8,6 +8,8 @@ using Banking.Domain.Core;
 
 namespace Banking.Application.DAL
 {
+    using Banking.Application.Models;
+
     public class TransactionRepository : ITransactionRepository
     {
         private BankDBContext context;
@@ -47,21 +49,25 @@ namespace Banking.Application.DAL
             context.Entry(transactionModel).State = EntityState.Added;
         }
 
-        // TODO: change this to Update only and have a separate add method
+        public IEnumerable<ITransaction> GetPendingTransactions()
+        {
+            var pendingTransactions = context
+                .Transactions
+                .Include("LeftAccount")
+                .Include("RightAccount")
+                .Where(t => t.Status == TransactionStatus.Pending).ToList();
+
+            return pendingTransactions.Select(t => t.ToTransaction());
+        }
+
         public void UpdateTransaction(ITransaction transaction)
         {
             // Might need to lock this operation or use optimistic concurency management
             var transactionModel = transaction.ToModel();
+            var trackedEntity = context.Transactions.Find(transactionModel.TransactionId);
 
-            if (context.Transactions.Find(transaction.TransactionId) != null)
-            {
-                context.Transactions.Add(transactionModel);
-                context.Entry(transactionModel).State = EntityState.Added;
-            }
-            else
-            {
-                context.Entry(transactionModel).State = EntityState.Modified; 
-            }
+            context.Entry(trackedEntity).CurrentValues.SetValues(transactionModel);
+            context.Entry(trackedEntity).State = EntityState.Modified;
         }
 
         public void SaveChanges()

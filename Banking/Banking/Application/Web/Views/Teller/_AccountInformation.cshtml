@@ -1,19 +1,27 @@
-﻿@model Banking.Application.Web.ViewModels.AccountViewModel
+﻿@using Banking.Application.Web.ViewModels
+@model IEnumerable<AccountViewModel>
 
-<div>
-    <span>
-        @Html.ActionLink(@Model.AccountNumber, "AccountDetails", new { accountNumber = @Model.AccountNumber })
-    </span>
-    <span>
-         @Html.DisplayFor(a => a.Balance)
-    </span>
-    <span>
-        @Html.DisplayFor(a => a.Created)
-    </span>
-    <span>
-        @Html.DisplayFor(a => a.Modified)
-    </span>
-    <span>
-        @Html.DisplayFor(a => a.AccountType)
-    </span>
+
+<div class="table-background">
+    <table style="width: 100%">
+        <tr class="table-header">
+            <td><span>Account Number</span></td>
+            <td><span>Balance</span></td>
+            <td><span>Created</span></td>
+            <td><span>Modified</span></td>
+            <td><span>Account Type</span></td>
+        </tr>
+    @foreach (var account in Model)
+    {
+        <tr>
+            <td><span>
+                @Html.ActionLink(account.AccountNumber, "AccountDetails", new { accountId = account.AccountId })
+            </span></td>
+            <td><span>@Html.DisplayFor(a => account.Balance)</span></td>
+            <td><span>@Html.DisplayFor(a => account.Created)</span></td>
+            <td><span>@Html.DisplayFor(a => account.Modified)</span></td>
+            <td><span>@Html.DisplayFor(a => account.AccountType)</span></td>
+        </tr>
+    }
+    </table>
 </div>

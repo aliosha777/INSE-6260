@@ -9,6 +9,8 @@ namespace Banking.Application.Web.ViewModels
     {
         public string AccountNumber { get; set; }
 
+        public int AccountId { get; set; }
+
         public AccountTypes AccountType { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}")]

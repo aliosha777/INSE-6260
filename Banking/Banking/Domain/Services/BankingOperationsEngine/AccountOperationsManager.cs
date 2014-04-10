@@ -55,13 +55,15 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             account.AccountNumber = GetNewAccountNumber(account.AccountId);
 
             // We have to save again to save the account number
-            accountRepository.UpdateAccount(account, true);
+            customerRepository.UpdateCustomer(owner, true);
 
             return account;
         }
 
-        public void Deposit(IAccount account, double amount)
+        public void Deposit(ICustomer customer, int accountId, double amount)
         {
+            var account = this.GetCustomerAccount(customer, accountId);
+
             var cashAccount = accountRepository.GetGeneralLedgerCashAccount();
             var transaction = transactionEngine.CreateTransaction(cashAccount, account, (decimal)amount);
 
@@ -69,14 +71,16 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             transactionRepository.SaveChanges();
         }
 
-        public void Withdraw(IAccount account, decimal amount)
+        public void Withdraw(ICustomer customer, int accountId, double amount)
         {
             var cashAccount = accountRepository.GetGeneralLedgerCashAccount();
+            var account = this.GetCustomerAccount(customer, accountId);
             var pendingTransactions = transactionRepository.GetAccountTransactions(account);
 
-            if (HasSufficientFunds(account, amount, pendingTransactions))
+            if (HasSufficientFunds(account, (decimal)amount, pendingTransactions))
             {
-                var transaction = transactionEngine.CreateTransaction(account, cashAccount, amount);
+                var transaction = 
+                    transactionEngine.CreateTransaction(account, cashAccount, (decimal)amount);
                 transactionRepository.AddTransaction(transaction);
                 transactionRepository.SaveChanges();
             }
@@ -145,6 +149,22 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             const string BranchId = "456";
 
             return string.Format("{0}-{1}-{2}", BankId, BranchId, accountId.ToString("D6"));
+        }
+
+        private IAccount GetCustomerAccount(ICustomer customer, int accountId)
+        {
+            var targetAccount =
+                customer
+                .Accounts
+                .FirstOrDefault(account => account.AccountId == accountId);
+
+            if (targetAccount == null)
+            {
+                throw new BankingValidationException(
+                    string.Format("This customer does not have an Account with Id {0}", accountId));
+            }
+
+            return targetAccount;
         }
     }
 }

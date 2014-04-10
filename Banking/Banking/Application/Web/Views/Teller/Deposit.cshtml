@@ -1,5 +1,5 @@
 ﻿@using Banking.Application.Web.ViewModels
-@model Banking.Application.Web.ViewModels.AccountsOperationsViewModel
+@model AccountsOperationsViewModel
 
 @{
     ViewBag.Title = "Deposit";
@@ -9,31 +9,8 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-    
-    <div>
-        @Html.LabelFor(m => m.Amount)
-        @Html.TextBoxFor(m => m.Amount)
 
-    </div>
-    
-    if(Model.OperationType == OperationTypes.Transfer || Model.OperationType == OperationTypes.Withdrawal)
-    {
-         
-         <div>
-             @Html.LabelFor(m => m.SourceList)
-             @Html.DropDownListFor(m => m.SourceList, new SelectList(@Model.SourceList, "Value", "Text"))
-
-         </div>
-    }
-    
-     if(Model.OperationType == OperationTypes.Transfer || Model.OperationType == OperationTypes.Deposit)
-    {
-        <div>
-            @Html.LabelFor(m => m.TargetList)
-            @Html.DropDownListFor(m => m.SelectedTargetAccountId, new SelectList(@Model.TargetList, "Value", "Text"))
-
-        </div>
-    }
+    Html.RenderPartial("_AccountsOperations");
     
     <input type="submit" id="deposit" value="Deposit"/>
 }

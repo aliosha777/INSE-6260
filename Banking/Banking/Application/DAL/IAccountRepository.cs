@@ -8,8 +8,6 @@ namespace Banking.Application.DAL
     {
         IAccount GetAccountById(int accountId);
 
-        void AddAccount(IAccount account);
-
         void UpdateAccount(IAccount account, bool saveImmediately = false);
 
         void Save();

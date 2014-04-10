@@ -16,5 +16,7 @@ namespace Banking.Application.DAL
         void SaveChanges();
 
         void AddTransaction(ITransaction transaction);
+
+        IEnumerable<ITransaction> GetPendingTransactions();
     }
 }

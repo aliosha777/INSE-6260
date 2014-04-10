@@ -36,5 +36,17 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             return activeAddresses.FirstOrDefault();
         }
+
+        public IAccount GetAccount(ICustomer customer, int accountId)
+        {
+            var account = customer.Accounts.FirstOrDefault(a => a.AccountId == accountId);
+
+            if (account == null)
+            {
+                throw new BankingValidationException("This customer does not have an account with Id " + accountId);
+            }
+
+            return account;
+        }
     }
 }

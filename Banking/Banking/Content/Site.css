@@ -60,7 +60,7 @@ mark {
 
 h1, h2, h3,
 h4, h5, h6 {
-    color: #000;
+    color: #2795B6;
     margin-bottom: 0;
     padding-bottom: 0;
 }
@@ -530,7 +530,6 @@ input[type="checkbox"].input-validation-error {
 table {
     border-collapse: collapse;
     border-spacing: 0;
-    margin-top: 0.75em;
     border: 0 none;
 }
 
@@ -578,7 +577,7 @@ th {
     }
 
 td {
-    padding: 0.25em 2em 0.25em 0em;
+    padding: 0.25em 2em 0.25em 1em;
     border: 0 none;
 }
 
@@ -586,6 +585,34 @@ tr.pager td {
     padding: 0 0.25em 0 0;
 }
 
+/*Custom*/
+
+.header-color 
+{
+    color: #2795B6;
+}
+
+.table-background
+{
+    background-color: white;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+}
+
+.table-header 
+{
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 18px;
+    text-align: left;
+}
+
+.table-row 
+{
+    line-height: 18px;
+}
+
+tr:nth-child(odd) { background-color: #F9F9F9; }
 
 /********************
 *   Mobile Styles   *

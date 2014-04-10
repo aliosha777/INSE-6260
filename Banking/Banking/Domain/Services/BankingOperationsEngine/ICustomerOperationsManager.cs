@@ -7,5 +7,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         IAddress GetActiveAddress(ICustomer customer);
 
         Customer CreateCustomer(string firstName, string lastName, string phone, string email);
+
+        IAccount GetAccount(ICustomer customer, int accountId);
     }
 }

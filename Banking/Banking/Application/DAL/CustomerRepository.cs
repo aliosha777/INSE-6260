@@ -33,12 +33,15 @@ namespace Banking.Application.DAL
             return customerModel == null ? null : customerModel.ToCustomer();
         }
 
-        public void AddCustomer(ICustomer customer)
+        public void AddCustomer(ICustomer customer, bool saveImmediately = false)
         {
             var customerModel = customer.ToModel();
             context.Customers.Add(customerModel);
 
-            context.SaveChanges();
+            if (saveImmediately)
+            {
+                context.SaveChanges();
+            }
 
             customer.CustomerId = customerModel.CustomerId;
         }

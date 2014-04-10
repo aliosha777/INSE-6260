@@ -1,1 +1,17 @@
-﻿
+﻿@using Banking.Application.Web.ViewModels
+@model AccountsOperationsViewModel
+
+@{
+    ViewBag.Title = "Withdraw";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    Html.RenderPartial("_AccountsOperations");
+    
+    <input type="submit" id="withdraw" value="Withdraw"/>
+}
+

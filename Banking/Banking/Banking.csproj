@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
+    <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountsOperationsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
@@ -309,6 +310,8 @@
     <Content Include="Application\Web\Views\Teller\Deposit.cshtml" />
     <Content Include="Application\Web\Views\Teller\Transfer.cshtml" />
     <Content Include="Application\Web\Views\Teller\Withdraw.cshtml" />
+    <Content Include="Application\Web\Views\System\Index.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_AccountsOperations.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

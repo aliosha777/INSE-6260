@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
 
-    using Banking.BankingOperationsEngine;
-    using Banking.DAL;
+    using Banking.Application.DAL;
+    using Banking.Application.Models;
     using Banking.Domain.Entities;
+    using Banking.Domain.Services.BankingOperationsEngine;
     using Banking.Exceptions;
-    using Banking.Models;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -100,7 +100,17 @@
         [TestMethod]
         public void TestApplyTransactionNonPending_ThrowsException()
         {
+            /*
+            var fixture = new Fixture().Customize(new BankingCustomization());
 
+            var account = fixture.Build<Account>().Create();
+
+            Console.WriteLine(account.AccountId);
+
+            var transaction = fixture.Build<Transaction>().Create();
+
+            Console.WriteLine(transaction.TransactionId);
+             */
         }
 
         [TestMethod]
@@ -109,6 +119,8 @@
             var fixture = new Fixture();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var accountRepository = Mock.Of<IAccountRepository>();
+
+            var today = DateTime.Now.Date;
 
             var leftAccount =
                 fixture
@@ -131,6 +143,7 @@
                .With(t => t.RightAccount, rightAccount)
                .With(t => t.Status, TransactionStatus.Pending)
                .With(t => t.Value, 100)
+               .With(t => t.Applied, today)
                .Create();
 
             ITransactionEngine transactionEngine = 
@@ -144,8 +157,8 @@
 
             Assert.AreEqual(600, rightAccount.Balance);
 
-            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(leftAccount));
-            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(rightAccount));
+            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(leftAccount, false));
+            Mock.Get(accountRepository).Verify(ar => ar.UpdateAccount(rightAccount, false));
             Mock.Get(accountRepository).Verify(ar => ar.Save());
 
             Mock.Get(transactionRepository).Verify(tr => tr.UpdateTransaction(transaction));

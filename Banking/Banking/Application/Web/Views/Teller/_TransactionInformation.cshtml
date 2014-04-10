@@ -1,19 +1,32 @@
-﻿@model Banking.Application.Web.ViewModels.TransactionViewModel
+﻿@model IEnumerable<Banking.Application.Web.ViewModels.TransactionViewModel>
+<div class="table-background">
+    <table style="width: 100%">
+        <tr class="table-header">
+            <td><span>Transaction Number</span></td>
+            <td><span>Amount</span></td>
+            <td><span>Status</span></td>
+            <td><span>Created</span></td>
+            <td><span>Applied</span></td>
+        </tr>
 
-<div>
-    <span>
-        @Html.DisplayFor(t => t.TransactionId)
-    </span>
-    <span>
-        @Html.DisplayFor(t => t.Value)
-    </span>
-    <span>
-        @Html.DisplayFor(t => t.Status)
-    </span>
-    <span>
-        @Html.DisplayFor(t => t.Created)
-    </span>
-     <span>
-        @Html.DisplayFor(t => t.Applied)
-    </span>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>
+                    <span>@Html.DisplayFor(t => transaction.TransactionId)</span>
+                </td>
+                <td>
+                <span>@Html.DisplayFor(t => transaction.Value)</span>
+                <td>
+                    <span>@Html.DisplayFor(t => transaction.Status)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(t => transaction.Created)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(t => transaction.Applied)</span>
+                </td>
+            </tr>
+        }
+    </table>
 </div>
