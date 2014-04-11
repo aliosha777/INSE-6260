@@ -83,11 +83,18 @@ namespace Banking.Application.DAL
 
             foreach (var account in customer.Accounts)
             {
+                var accountModel = account.ToModel();
+                
                 if (account.AccountId == 0)
                 {
-                    var accountModel = account.ToModel();
                     updatedAccounts.Add(new Tuple<IAccount, BankAccountModel>(account, accountModel));
                     trackedEntity.Accounts.Add(accountModel);
+                }
+                else
+                {
+                    // update the account from the model
+                    var trackedAccount = trackedEntity.Accounts.Single(a => a.AccountId == accountModel.AccountId);
+                    context.Entry(trackedAccount).CurrentValues.SetValues(accountModel);
                 }
             }
 

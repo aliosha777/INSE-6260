@@ -132,12 +132,12 @@ namespace Banking.Domain.Services.BankingOperationsEngine
                     if (account.AccountId == transaction.RightAccount.AccountId)
                     {
                         // Liability + right = increase;
-                        totalDecrease += totalIncrease;
+                        totalIncrease += transaction.Value;
                     }
                 }
             }
 
-            totalPending = totalIncrease - totalDecrease;
+            totalPending = totalDecrease - totalIncrease;
 
             return account.Balance >= totalPending + value;
         }

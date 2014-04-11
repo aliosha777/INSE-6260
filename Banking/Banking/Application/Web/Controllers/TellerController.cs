@@ -246,7 +246,7 @@ namespace Banking.Application.Web.Controllers
 
         [HttpPost]
         public ActionResult Withdraw(
-            [Bind(Include = "Amount, SelectedTargetAccountId")]
+            [Bind(Include = "Amount, SelectedSourceAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
             var customer = this.GetCurrentCustomer();

@@ -12,7 +12,7 @@
          
          <div>
              @Html.LabelFor(m => m.SourceList)
-             @Html.DropDownListFor(m => m.SourceList, new SelectList(@Model.SourceList, "Value", "Text"))
+             @Html.DropDownListFor(m => m.SelectedSourceAccountId, new SelectList(@Model.SourceList, "Value", "Text"))
 
          </div>
     }
