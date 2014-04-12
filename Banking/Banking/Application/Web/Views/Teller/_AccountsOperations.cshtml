@@ -12,7 +12,7 @@
          
          <div>
              @Html.LabelFor(m => m.SourceList)
-             @Html.DropDownListFor(m => m.SelectedSourceAccountId, new SelectList(@Model.SourceList, "Value", "Text"))
+             @Html.DropDownListFor(m => m.SelectedSourceAccountId, new SelectList(@Model.SourceList, "Value", "Text"), new Dictionary<string, object> { {"class", "accounts-list"} })
 
          </div>
     }
@@ -21,7 +21,7 @@
     {
         <div>
             @Html.LabelFor(m => m.TargetList)
-            @Html.DropDownListFor(m => m.SelectedTargetAccountId, new SelectList(@Model.TargetList, "Value", "Text"))
+            @Html.DropDownListFor(m => m.SelectedTargetAccountId, new SelectList(@Model.TargetList, "Value", "Text"), new Dictionary<string, object> { {"class", "accounts-list"} })
 
         </div>
     }

@@ -17,6 +17,10 @@ namespace Banking.Domain.Entities
 
     public interface IInvestment
     {
+        int InvestmentId { get; set; }
+
+        IAccount Account { get; set; }
+
         DateTime TermStart { get; set; }
 
         DateTime TermEnd { get; set; }

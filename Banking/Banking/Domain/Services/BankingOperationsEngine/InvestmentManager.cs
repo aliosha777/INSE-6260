@@ -2,18 +2,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Banking.Domain.Entities;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
-    using Banking.Domain.Entities;
+    using Banking.Application.DAL;
+    using Banking.Exceptions;
 
     public class InvestmentManager : IInvestmentManager
     {
-        private readonly ITimeProvider timeProvider;
+        private const double FixedInterestRate = 0.05;
+        private const int MaxTermInYears = 5;
 
-        public InvestmentManager(ITimeProvider timeProvider)
+        private readonly ITimeProvider timeProvider;
+        private readonly IInvestmentRepository investmentRepository;
+
+        public InvestmentManager(
+            ITimeProvider timeProvider,
+            IInvestmentRepository investmentRepository)
         {
             this.timeProvider = timeProvider;
+            this.investmentRepository = investmentRepository;
+        }
+
+        public Investment CreateGicInvestment(
+            DateTime start, int termDuration, double startingAmount, IAccount associatedAccount)
+        {
+            if (associatedAccount.Type != AccountTypes.Investment)
+            {
+                throw new BankingValidationException("Investments can only be associated with accounts of type Investment.");
+            }
+
+            var termEnd = start.AddYears(termDuration);
+
+            var investment = new Investment
+            {
+                Type = InvestmentTypes.FixedRate,
+                TermStart = start,
+                TermEnd = termEnd,
+                CompoundingFrequency = CompoundingFrequency.Yearly,
+                Account = associatedAccount
+            };
+
+            var investmentInterval = new InvestmentInterval()
+                {
+                    Start = start,
+                    End = termEnd,
+                    InterestRate = this.GetGicInterestrate(),
+                    StartingAmount = (decimal)startingAmount,
+                    Investment = investment
+                };
+
+            investment.InvestmentIntervals.Add(investmentInterval);
+
+            investmentRepository.AddInvestment(investment);
+
+            return investment;
         }
 
         // Investment account: regular account + interest calculator
@@ -68,16 +112,22 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         /// </summary>
         /// <param name="investment"></param>
         /// <returns></returns>
-        public decimal CalculateProjectedBalanceAtMaturity(IInvestment investment)
+        public decimal CalculateBalanceAtMaturity(IInvestment investment)
         {
             // Assumptions: investment term is in whole years
             var interval = investment.InvestmentIntervals.FirstOrDefault();
 
             var yearCount = timeProvider.GetDifferenceInYears(interval.Start, interval.End);
 
-            var amount = ((double)interval.StartingAmount) * Math.Pow(1 + interval.InterestRate, yearCount);
+            var amount = CalculateFixedRateCompoundInterest(
+                (double)interval.StartingAmount, interval.InterestRate, yearCount);
 
             return (decimal)amount;
+        }
+
+        public double CalculateProjectedInterestAtMaturity(int termDuration, double startingAmount, double interestRate)
+        {
+            return CalculateFixedRateCompoundInterest(startingAmount, interestRate, termDuration);
         }
 
         public DateTime GetNextCompoundingDate(IInvestment investment)
@@ -90,17 +140,34 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             if (investment.CompoundingFrequency == CompoundingFrequency.Yearly)
             {
-                var yearsFromStart = timeProvider.GetDifferenceInYears(investment.TermStart, timeProvider.Today());
+                var yearsFromStart = timeProvider.GetDifferenceInYears(investment.TermStart, timeProvider.Now());
             }
 
-            return new DateTime();
+            return timeProvider.Now();
         }
 
-        private decimal CalculateInterestOfInterval(IInvestmentInterval investmentInterval)
+        public double GetGicInterestrate()
         {
-            decimal interest = 0;
+            return FixedInterestRate;
+        }
 
-            return interest;
+        public int GetMaxTermInYears()
+        {
+            return MaxTermInYears;
+        }
+
+        /// <summary>
+        /// Calculates the compound interest on the given amount assuming yearly compounding.
+        /// Can be used to calculate the interest at the end of an investment interval
+        /// </summary>
+        /// <param name="startingAmount"></param>
+        /// <param name="interestRate"></param>
+        /// <param name="years"></param>
+        /// <returns></returns>
+        private double CalculateFixedRateCompoundInterest(double startingAmount, double interestRate, int years)
+        {
+            double amount = startingAmount * Math.Pow(1 + interestRate, years);
+            return amount;
         }
     }
 }

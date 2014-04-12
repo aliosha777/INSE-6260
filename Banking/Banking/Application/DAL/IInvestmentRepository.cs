@@ -11,5 +11,7 @@ namespace Banking.Application.DAL
         void UpdateInvestment(Investment investment);
 
         void Save();
+
+        void AddInvestment(IInvestment investment);
     }
 }

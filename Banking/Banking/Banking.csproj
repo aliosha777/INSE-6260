@@ -166,10 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
+    <Compile Include="Application\Web\Attributes\MultipleButtonAttribute.cs" />
     <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountsOperationsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\InvestmentViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\TransactionViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\UserViewModel.cs" />
     <Compile Include="Domain\Services\AdminOperations\BankAccountManager.cs" />
@@ -312,6 +314,10 @@
     <Content Include="Application\Web\Views\Teller\Withdraw.cshtml" />
     <Content Include="Application\Web\Views\System\Index.cshtml" />
     <Content Include="Application\Web\Views\Teller\_AccountsOperations.cshtml" />
+    <Content Include="Application\Web\Views\Teller\Invest.cshtml" />
+    <Content Include="Application\Web\Views\Teller\InvestmentDetails.cshtml" />
+    <Content Include="Application\Web\Views\Teller\InvestmentSummary.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_InvestmentData.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

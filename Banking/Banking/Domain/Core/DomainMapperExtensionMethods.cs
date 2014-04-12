@@ -196,7 +196,13 @@ namespace Banking.Domain.Core
         {
             var investmentIntervalModel = new InvestmentIntervalModel
                 {
-                    
+                    InvestmentIntervalId = investmentInterval.InvestmentIntervalId,
+                    Investment = null,
+                    InvestmentId = investmentInterval.Investment.InvestmentId,
+                    StartingAmount = investmentInterval.StartingAmount,
+                    InterestRate = investmentInterval.InterestRate,
+                    Start = investmentInterval.Start,
+                    End = investmentInterval.End,
                 };
 
             return investmentIntervalModel;
@@ -209,7 +215,7 @@ namespace Banking.Domain.Core
             return investmentInterval;
         }
 
-        public static Investment ToInvestment(this InvestmentModel investmentModel)
+        public static IInvestment ToInvestment(this InvestmentModel investmentModel)
         {
             var investment = new Investment
             {
@@ -228,11 +234,12 @@ namespace Banking.Domain.Core
             return investment;
         }
 
-        public static InvestmentModel ToModel(this Investment investment)
+        public static InvestmentModel ToModel(this IInvestment investment)
         {
             var investmentModel = new InvestmentModel
             {
                 Account = null,
+                AccountId = investment.Account.AccountId,
                 CompoundingFrequency = investment.CompoundingFrequency,
                 InvestmentIntervals = new List<InvestmentIntervalModel>(),
                 TermEnd = investment.TermEnd,

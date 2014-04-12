@@ -1,4 +1,21 @@
-﻿@{
-    Layout = null;
+﻿@using Banking.Application.Web.ViewModels
+@model AccountsOperationsViewModel
+
+@{
+    ViewBag.Title = "Transfer";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    Html.RenderPartial("_AccountsOperations");
+    
+    <br />
+    <input type="submit" id="transfer" value="Transfer"/>
+    
+    <br />
+    @Html.ActionLink("Back", "CustomerSummary")
 }
 

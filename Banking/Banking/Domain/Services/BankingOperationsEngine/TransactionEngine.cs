@@ -12,15 +12,18 @@ namespace Banking.Domain.Services.BankingOperationsEngine
     public class TransactionEngine : ITransactionEngine
     {
         private readonly ITransactionRepository transactionRepository;
-
         private readonly IAccountRepository accountRepository;
+
+        private ITimeProvider timeProvider;
 
         public TransactionEngine(
             ITransactionRepository transactionRepository,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository,
+            ITimeProvider timeProvider)
         {
             this.transactionRepository = transactionRepository;
             this.accountRepository = accountRepository;
+            this.timeProvider = timeProvider;
         }
 
         public ITransaction CreateTransaction(
@@ -40,11 +43,16 @@ namespace Banking.Domain.Services.BankingOperationsEngine
                     "Cannot perform transactions on an account that is not active. Account number: " + rightAccount.AccountNumber);
             }
 
+            if (rightAccount.AccountId == leftAccount.AccountId)
+            {
+                throw new BankingValidationException("Left account cannot be the same as right account");
+            }
+
             var transaction = new Transaction()
             {
                 LeftAccount = leftAccount,
                 RightAccount = rightAccount,
-                Created = DateTime.Now,
+                Created = timeProvider.Now(),
                 Applied = null,
                 Status = TransactionStatus.Pending,
                 Value = amount
@@ -81,7 +89,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             decimal creditAccountDelta =
                 accountToBeCredited.Category == AccountCategories.Asset ? -transaction.Value : transaction.Value;
 
-            var modified = DateTime.Now;
+            var modified = timeProvider.Now();
 
             accountToBeDebited.Balance += debitAccountDelta;
             accountToBeDebited.Modified = modified;
@@ -95,6 +103,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             accountRepository.Save();
 
             transaction.Status = TransactionStatus.Applied;
+            transaction.Applied = modified;
 
             transactionRepository.UpdateTransaction(transaction);
             transactionRepository.SaveChanges();
@@ -102,7 +111,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
         public bool IsTransactionDue(ITransaction transaction)
         {
-            var today = DateTime.Now;
+            var today = timeProvider.Now();
 
             return 
                 !transaction.Applied.HasValue 

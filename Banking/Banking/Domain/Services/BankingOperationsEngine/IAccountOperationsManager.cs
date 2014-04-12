@@ -6,9 +6,9 @@ namespace Banking.Domain.Services.BankingOperationsEngine
     {
         void Deposit(ICustomer customer, int accountId, double amount);
 
-        void Withdraw(ICustomer customer, int accountId, double amount);
+        bool Withdraw(ICustomer customer, int accountId, double amount);
 
-        void Transfer(IAccount source, IAccount destination, decimal amount);
+        bool Transfer(ICustomer customer, int sourceAccountId, int destinationAccountId, double amount);
 
         IAccount CreateAccount(AccountTypes accountType, ICustomer owner);
     }

@@ -22,12 +22,17 @@
         [ExpectedException(typeof(BankingValidationException))]
         public void TestCreateTransactionInactiveSourceAccount_ThrowsException()
         {
+            var now = DateTime.Now;
+
             // Parameters to the class under test
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
+
+            Mock.Get(timeProvider).Setup(t => t.Now()).Returns(now);
 
             ITransactionEngine transactionEngine = 
-                new TransactionEngine(transactionRepository, accountRepository);
+                new TransactionEngine(transactionRepository, accountRepository, timeProvider);
 
             decimal amount = 1;
 
@@ -44,12 +49,17 @@
         [ExpectedException(typeof(BankingValidationException))]
         public void TestCreateTransactionInactiveDestinationAccount_ThrowsException()
         {
+            var now = DateTime.Now;
+
             // Parameters to the class under test
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
+
+            Mock.Get(timeProvider).Setup(t => t.Now()).Returns(now);
 
             ITransactionEngine transactionEngine =
-                new TransactionEngine(transactionRepository, accountRepository);
+                new TransactionEngine(transactionRepository, accountRepository, timeProvider);
 
             decimal amount = 1;
 
@@ -66,12 +76,16 @@
         public void TestCreateTransaction_Success()
         {
             var fixture = new Fixture();
+            var now = DateTime.Now;
 
             var accountRepository = Mock.Of<IAccountRepository>();
             var transactionRepository = Mock.Of<ITransactionRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
+
+            Mock.Get(timeProvider).Setup(t => t.Now()).Returns(now);
 
             ITransactionEngine transactionEngine =
-                new TransactionEngine(transactionRepository, accountRepository);
+                new TransactionEngine(transactionRepository, accountRepository, timeProvider);
 
             var leftAccount = 
                 fixture
@@ -119,8 +133,11 @@
             var fixture = new Fixture();
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var accountRepository = Mock.Of<IAccountRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
 
-            var today = DateTime.Now.Date;
+            var today = DateTime.Now;
+            Mock.Get(timeProvider).Setup(t => t.Now()).Returns(today);
+            
 
             var leftAccount =
                 fixture
@@ -147,7 +164,7 @@
                .Create();
 
             ITransactionEngine transactionEngine = 
-                new TransactionEngine(transactionRepository, accountRepository);
+                new TransactionEngine(transactionRepository, accountRepository, timeProvider);
 
             transactionEngine.ApplyTransaction(transaction);
 

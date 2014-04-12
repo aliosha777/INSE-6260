@@ -1,5 +1,5 @@
 using Banking.Domain.Entities;
-
+using System;
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
     public interface IInvestmentManager
@@ -10,6 +10,14 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         /// </summary>
         /// <param name="investment"></param>
         /// <returns></returns>
-        decimal CalculateProjectedBalanceAtMaturity(IInvestment investment);
+        decimal CalculateBalanceAtMaturity(IInvestment investment);
+
+        double GetGicInterestrate();
+
+        int GetMaxTermInYears();
+
+        double CalculateProjectedInterestAtMaturity(int termDuration, double startingAmount, double interestRate);
+
+        Investment CreateGicInvestment(DateTime start, int termDuration, double startingAmount, IAccount associatedAccount);
     }
 }

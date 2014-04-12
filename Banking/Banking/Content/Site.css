@@ -614,6 +614,28 @@ tr.pager td {
 
 tr:nth-child(odd) { background-color: #F9F9F9; }
 
+.accounts-list 
+{
+    font-family: monospace;
+    padding: 5px;
+}
+
+.select-list 
+{
+    font-size: +1.2em;
+    margin: 5px 0 6px;
+    padding: 5px;
+    width: 300px;
+    color: #333333;
+    border: 1px solid #E2E2E2;
+}
+
+.readonly-value 
+{
+    display: block;
+    padding: 5px;
+}
+
 /********************
 *   Mobile Styles   *
 ********************/

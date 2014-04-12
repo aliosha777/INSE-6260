@@ -27,9 +27,9 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             return end.Subtract(start).Days / DaysInYear;
         }
 
-        public DateTime Today()
+        public DateTime Now()
         {
-            return new DateTime();
+            return DateTime.Today;
         }
     }
 }

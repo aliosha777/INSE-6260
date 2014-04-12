@@ -4,6 +4,8 @@ namespace Banking.Domain.Entities
 
     public interface IInvestmentInterval
     {
+        int InvestmentIntervalId { get; set; }
+
         DateTime Start { get; set; }
 
         DateTime End { get; set; }
@@ -11,5 +13,7 @@ namespace Banking.Domain.Entities
         double InterestRate { get; set; }
 
         decimal StartingAmount { get; set; }
+
+        Investment Investment { get; set; }
     }
 }

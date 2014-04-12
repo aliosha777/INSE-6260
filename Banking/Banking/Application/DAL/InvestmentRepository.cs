@@ -5,6 +5,9 @@ using System.Web;
 
 namespace Banking.Application.DAL
 {
+    using System.Data;
+
+    using Banking.Domain.Core;
     using Banking.Domain.Entities;
 
     public class InvestmentRepository : IInvestmentRepository
@@ -19,7 +22,22 @@ namespace Banking.Application.DAL
 
         public IInvestment GetInvestment(int investmentId)
         {
-            return null;
+            var investment = 
+                context
+                .Investments
+                .Include("InvestmentIntervals")
+                .SingleOrDefault(i => i.InvestmentId == investmentId);
+
+            return investment.ToInvestment();
+        }
+
+        public void AddInvestment(IInvestment investment)
+        {
+            var investmentModel = investment.ToModel();
+
+            context.Investments.Add(investmentModel);
+            context.SaveChanges();
+            investment.InvestmentId = investmentModel.InvestmentId;
         }
 
         public void UpdateInvestment(Investment investment)

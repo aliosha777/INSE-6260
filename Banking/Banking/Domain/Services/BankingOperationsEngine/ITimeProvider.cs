@@ -14,6 +14,6 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
         int GetDifferenceInYears(DateTime start, DateTime end);
 
-        DateTime Today();
+        DateTime Now();
     }
 }

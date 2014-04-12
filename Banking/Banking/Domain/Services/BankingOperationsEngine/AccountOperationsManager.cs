@@ -17,16 +17,20 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         private readonly ITransactionRepository transactionRepository;
         private readonly ICustomerRepository customerRepository;
 
+        private readonly ITimeProvider timeProvider;
+
         public AccountOperationsManager(
             ITransactionEngine transactionEngine,
             ITransactionRepository transactionRepository,
             IAccountRepository accountRepository,
-            ICustomerRepository customerRepository)
+            ICustomerRepository customerRepository,
+            ITimeProvider timeProvider)
         {
             this.transactionEngine = transactionEngine;
             this.transactionRepository = transactionRepository;
             this.accountRepository = accountRepository;
             this.customerRepository = customerRepository;
+            this.timeProvider = timeProvider;
         }
 
         public IAccount CreateAccount(AccountTypes accountType, ICustomer owner)
@@ -36,7 +40,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
                 throw new BankingValidationException("Cannot create General Cash account!!");
             }
 
-            var creationDate = DateTime.Now;
+            var creationDate = timeProvider.Now();
 
             var account = new Account
                 {
@@ -71,32 +75,47 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             transactionRepository.SaveChanges();
         }
 
-        public void Withdraw(ICustomer customer, int accountId, double amount)
+        public bool Withdraw(ICustomer customer, int accountId, double amount)
         {
             var cashAccount = accountRepository.GetGeneralLedgerCashAccount();
             var account = this.GetCustomerAccount(customer, accountId);
             var pendingTransactions = transactionRepository.GetAccountTransactions(account);
 
-            if (HasSufficientFunds(account, (decimal)amount, pendingTransactions))
+            var hasSufficientFunds = HasSufficientFunds(account, (decimal)amount, pendingTransactions);
+
+            if (hasSufficientFunds)
             {
                 var transaction = 
                     transactionEngine.CreateTransaction(account, cashAccount, (decimal)amount);
                 transactionRepository.AddTransaction(transaction);
                 transactionRepository.SaveChanges();
             }
+
+            return hasSufficientFunds;
         }
 
-        public void Transfer(IAccount source, IAccount destination, decimal amount)
+        public bool Transfer(ICustomer customer, int sourceAccountId, int destinationAccountId, double amount)
         {
-            var pendingTransactions = transactionRepository.GetAccountTransactions(source);
-
-            if (HasSufficientFunds(source, amount, pendingTransactions))
+            if (sourceAccountId == destinationAccountId)
             {
-                var transaction = transactionEngine.CreateTransaction(source, destination, amount);
+                throw new BankingValidationException("Source and target accounts cannot be the same");
+            }
+
+            var source = this.GetCustomerAccount(customer, sourceAccountId);
+            var destination = this.GetCustomerAccount(customer, destinationAccountId);
+
+            var pendingTransactions = transactionRepository.GetAccountTransactions(source);
+            var hasSufficientFunds = HasSufficientFunds(source, (decimal)amount, pendingTransactions);
+
+            if (hasSufficientFunds)
+            {
+                var transaction = transactionEngine.CreateTransaction(source, destination, (decimal)amount);
 
                 transactionRepository.AddTransaction(transaction);
                 transactionRepository.SaveChanges();
             }
+
+            return hasSufficientFunds;
         }
 
         /// <summary>

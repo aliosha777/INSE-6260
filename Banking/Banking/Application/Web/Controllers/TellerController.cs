@@ -12,6 +12,7 @@ namespace Banking.Application.Web.Controllers
     using System.Web.Security;
 
     using Banking.Application.Core;
+    using Banking.Application.Web.Attributes;
     using Banking.Domain.Entities;
     using Banking.Exceptions;
 
@@ -28,18 +29,22 @@ namespace Banking.Application.Web.Controllers
         private readonly ICustomerOperationsManager customerOperationsManager;
         private readonly IAccountOperationsManager accountOperationsManager;
 
+        private readonly IInvestmentManager investmentManager;
+
         public TellerController(
             ICustomerRepository customerRepository,
             IAccountRepository accountRepository,
             ITransactionRepository transactionRepository,
             ICustomerOperationsManager customerOperationsManager,
-            IAccountOperationsManager accountOperationsManager)
+            IAccountOperationsManager accountOperationsManager,
+            IInvestmentManager investmentManager)
         {
             this.customerRepository = customerRepository;
             this.accountRepository = accountRepository;
             this.transactionRepository = transactionRepository;
             this.customerOperationsManager = customerOperationsManager;
             this.accountOperationsManager = accountOperationsManager;
+            this.investmentManager = investmentManager;
         }
 
         public ActionResult Home()
@@ -51,31 +56,28 @@ namespace Banking.Application.Web.Controllers
         {
             int id;
             CustomerSummary customerSummary = null;
+            ICustomer customer = null;
 
-            if (int.TryParse(customerId, out id))
+            // If this is coming from a "Back" button then we should have the customer Id in the Session
+            if (string.IsNullOrEmpty(customerId))
             {
-                var customer = customerRepository.GetCustomerById(id);
-
-                if (customer != null)
+                customer = this.GetCurrentCustomer();
+            }
+            else
+            {
+                if (int.TryParse(customerId, out id))
                 {
-                    // Easier to keep track of the customer we're working with this way
-                    Session[CurrentCustomerId] = customerId;
-
-                    customerSummary = new CustomerSummary
-                    {
-                        FirstName = customer.FirstName, 
-                        LastName = customer.LastName
-                    };
-
-                    foreach (var account in customer.Accounts)
-                    {
-                        customerSummary.Accounts.Add(account.ToViewModel());
-                    }
-
-                    var address = customerOperationsManager.GetActiveAddress(customer);
-                    customerSummary.CurrentAddress = address.ToViewModel();
+                    customer = customerRepository.GetCustomerById(id);
                 }
             }
+            
+            if (customer != null)
+            {
+                // Easier to keep track of the customer we're working with this way
+                Session[CurrentCustomerId] = customerId;
+                customerSummary = this.CreateCustomerSummaryViewModel(customer);
+            }
+           
             return View(customerSummary);
         }
 
@@ -167,8 +169,7 @@ namespace Banking.Application.Web.Controllers
                 customer.Addresses.Add(address);
                 customerRepository.UpdateCustomer(customer, true);
 
-                return RedirectToAction(
-                    "CustomerSummary", "Teller", new { customerId = customer.CustomerId.ToString() });
+                return RedirectToAction("CustomerSummary", "Teller");
             }
 
             return this.View();
@@ -198,7 +199,7 @@ namespace Banking.Application.Web.Controllers
             var customer = this.GetCurrentCustomer();
             accountOperationsManager.CreateAccount(type, customer);
 
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId.ToString() });
+            return RedirectToAction("CustomerSummary", "Teller");
         }
 
         public ActionResult Deposit()
@@ -226,19 +227,18 @@ namespace Banking.Application.Web.Controllers
             accountOperationsManager.Deposit(
                 customer, accountsOperations.SelectedTargetAccountId, accountsOperations.Amount);
 
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId });
+            return RedirectToAction("CustomerSummary", "Teller");
         }
 
         public ActionResult Withdraw()
         {
             var customer = this.GetCurrentCustomer();
-            var values = this.GetAccountsSelectList(customer);
 
             var viewModel = new AccountsOperationsViewModel
             {
                 Amount = 0,
                 OperationType = OperationTypes.Withdrawal,
-                AccountsSelectList = new List<SelectListItem>(values)
+                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
             };
 
             return this.View(viewModel);
@@ -251,15 +251,151 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
 
-            accountOperationsManager.Withdraw(
+            var success = accountOperationsManager.Withdraw(
                 customer, accountsOperations.SelectedSourceAccountId, accountsOperations.Amount);
+            
+            if (success)
+            {
+                return 
+                    RedirectToAction("CustomerSummary", "Teller");
+            }
 
-            return RedirectToAction("CustomerSummary", "Teller", new { customerId = customer.CustomerId });
+            ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
+
+            var viewModel = new AccountsOperationsViewModel
+            {
+                Amount = 0,
+                OperationType = OperationTypes.Withdrawal,
+                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
+            };
+
+            return this.View(viewModel);
         }
 
         public ActionResult Transfer()
         {
-            return View();
+            var customer = this.GetCurrentCustomer();
+
+            var viewModel = new AccountsOperationsViewModel
+            {
+                Amount = 0,
+                OperationType = OperationTypes.Transfer,
+                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Transfer(
+            [Bind(Include = "Amount, SelectedSourceAccountId, SelectedTargetAccountId")]
+            AccountsOperationsViewModel accountsOperations)
+        {
+            var customer = this.GetCurrentCustomer();
+
+            var viewModel = new AccountsOperationsViewModel
+            {
+                Amount = 0,
+                OperationType = OperationTypes.Transfer,
+                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
+            };
+
+            if (accountsOperations.SelectedSourceAccountId == accountsOperations.SelectedTargetAccountId)
+            {
+                ModelState.AddModelError(string.Empty, "Source and target accounts cannot be the same");
+                return this.View(viewModel);
+            }
+
+            var success = accountOperationsManager.Transfer(
+                customer,
+                accountsOperations.SelectedSourceAccountId,
+                accountsOperations.SelectedTargetAccountId,
+                accountsOperations.Amount);
+
+            if (success)
+            {
+                return
+                    RedirectToAction("CustomerSummary", "Teller");
+            }
+
+            ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "CalculateInterest")]
+        public ActionResult CalculateInterest(
+            [Bind(Include = "Type, Frequency, TermDuration, Start, StartingAmount, AccountId")]
+            InvestmentViewModel investmentViewModel)
+        {
+            var customer = this.GetCurrentCustomer();
+
+            var gicRate = investmentManager.GetGicInterestrate();
+
+            var interest = investmentManager
+                .CalculateProjectedInterestAtMaturity(
+                    investmentViewModel.TermDuration,
+                    investmentViewModel.StartingAmount,
+                    gicRate);
+
+            investmentViewModel.Interest = interest;
+            investmentViewModel.InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes));
+            investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
+            investmentViewModel.MaxYears = investmentManager.GetMaxTermInYears();
+            investmentViewModel.Rate = gicRate;
+            investmentViewModel.AccountsList = this.GetAccountsSelectList(customer);
+
+            return this.View("Invest", investmentViewModel);
+        }
+
+        public ActionResult Invest()
+        {
+            var customer = this.GetCurrentCustomer();
+
+            var viewModel = new InvestmentViewModel()
+            {
+                InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes)),
+                Start = DateTime.Now,
+                MaxYears = investmentManager.GetMaxTermInYears(),
+                Rate = investmentManager.GetGicInterestrate(),
+                CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency)),
+                AccountsList = this.GetAccountsSelectList(customer)
+            };
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "Invest")]
+        public ActionResult Invest(InvestmentViewModel investmentViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = this.GetCurrentCustomer();
+
+                var account = customerOperationsManager.GetAccount(customer, investmentViewModel.AccountId);
+
+                var investment = investmentManager.CreateGicInvestment(
+                    investmentViewModel.Start, 
+                    investmentViewModel.TermDuration, 
+                    investmentViewModel.StartingAmount,
+                    account);
+
+                return RedirectToAction("InvestmentDetails", "Teller", new { InvestmentId = investment.InvestmentId });
+            }
+
+            return this.View();
+        }
+
+        public ActionResult InvestmentDetails()
+        {
+            return this.View();
+        }
+
+        public ActionResult InvestmentSummary(int investmentId)
+        {
+            return this.View();
         }
 
         public ActionResult AccountDetails(int accountId)
@@ -269,7 +405,10 @@ namespace Banking.Application.Web.Controllers
 
             var accountTransactions = transactionRepository.GetAccountTransactions(account);
 
-            var accountDetails = new AccountDetailsViewModel { Account = account.ToViewModel() };
+            var accountDetails = new AccountDetailsViewModel
+            {
+                Account = account.ToViewModel()
+            };
 
             foreach (var transaction in accountTransactions)
             {
@@ -287,18 +426,64 @@ namespace Banking.Application.Web.Controllers
                     account => new SelectListItem()
                     {
                         Value = account.AccountId.ToString(),
-                        Text = string.Format("{0} - {1}", account.Type.ToString(), account.AccountNumber)
+                        Text = FormatAccountDropdownItem(account)
                     });
 
             return values;
         }
 
+        // TODO: All those private methods should be placed somewhere else.
+        private IEnumerable<SelectListItem> GetEnumSelectList(Type enumType)
+        {
+            var values = from int e in Enum.GetValues(enumType)
+                         select new SelectListItem()
+                         {
+                             Value = e.ToString(),
+                             Text = Enum.GetName(enumType, e)
+                         };
+
+            return values.ToList();
+        }
+
+        private string FormatAccountDropdownItem(IAccount account)
+        {
+            return string.Format(
+                "{0} {1} {2}",
+                account.Type.ToString().PadRight(12, '\xA0'),
+                account.AccountNumber,
+                account.Balance.ToString("C").PadLeft(10, '\xA0'));
+        }
+
         private ICustomer GetCurrentCustomer()
         {
+            ICustomer customer = null;
             var customerId = (string)Session[CurrentCustomerId];
-            var customer = customerRepository.GetCustomerById(int.Parse(customerId));
+
+            if (!string.IsNullOrEmpty(customerId))
+            {
+                customer = customerRepository.GetCustomerById(int.Parse(customerId));
+            }
 
             return customer;
+        }
+
+        private CustomerSummary CreateCustomerSummaryViewModel(ICustomer customer)
+        {
+            var customerSummary = new CustomerSummary
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName
+            };
+
+            foreach (var account in customer.Accounts)
+            {
+                customerSummary.Accounts.Add(account.ToViewModel());
+            }
+
+            var address = customerOperationsManager.GetActiveAddress(customer);
+            customerSummary.CurrentAddress = address.ToViewModel();
+
+            return customerSummary;
         }
     }
 }

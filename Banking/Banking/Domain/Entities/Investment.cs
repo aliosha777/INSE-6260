@@ -7,6 +7,15 @@ namespace Banking.Domain.Entities
 {
     public class Investment : IInvestment
     {
+        public Investment()
+        {
+            InvestmentIntervals = new List<IInvestmentInterval>();
+        }
+
+        public int InvestmentId { get; set; }
+
+        public IAccount Account { get; set; }
+
         public DateTime TermStart { get; set; }
 
         public DateTime TermEnd { get; set; }

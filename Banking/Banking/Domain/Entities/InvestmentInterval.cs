@@ -11,6 +11,8 @@ namespace Banking.Domain.Entities
     /// </summary>
     public class InvestmentInterval : IInvestmentInterval
     {
+        public int InvestmentIntervalId { get; set; }
+
         public DateTime Start { get; set; }
 
         public DateTime End { get; set; }
@@ -18,5 +20,7 @@ namespace Banking.Domain.Entities
         public double InterestRate { get; set; }
 
         public decimal StartingAmount { get; set; }
+
+        public Investment Investment { get; set; }
     }
 }

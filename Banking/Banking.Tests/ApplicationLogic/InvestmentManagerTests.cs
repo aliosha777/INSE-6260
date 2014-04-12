@@ -12,6 +12,8 @@ using Ploeh.AutoFixture;
 
 namespace Banking.Tests.ApplicationLogic
 {
+    using Banking.Application.DAL;
+
     [TestClass]
     public class InvestmentManagerTests
     {
@@ -48,12 +50,13 @@ namespace Banking.Tests.ApplicationLogic
                 .Create();
 
             var timeProvider = Mock.Of<ITimeProvider>();
+            var investmentRepository = Mock.Of<IInvestmentRepository>();
 
             Mock.Get(timeProvider).Setup(t => t.GetDifferenceInYears(start, end)).Returns(2);
 
-            var investmentManager = new InvestmentManager(timeProvider);
+            var investmentManager = new InvestmentManager(timeProvider, investmentRepository);
 
-            var balance = investmentManager.CalculateProjectedBalanceAtMaturity(investment);
+            var balance = investmentManager.CalculateBalanceAtMaturity(investment);
 
             Assert.AreEqual(1102.5M, balance);
         }

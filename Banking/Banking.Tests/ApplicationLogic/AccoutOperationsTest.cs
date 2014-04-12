@@ -35,6 +35,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction = 
@@ -64,7 +65,8 @@ namespace Banking.Tests.ApplicationLogic
                 transactionEngine, 
                 transactionRepository, 
                 accountRepository,
-                customerRepository);
+                customerRepository,
+                timeProvider);
 
             accountOperationsManager.Deposit(customer, customerAccount.AccountId, (double)depositAmount);
 
@@ -102,6 +104,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction =
@@ -131,7 +134,8 @@ namespace Banking.Tests.ApplicationLogic
                 transactionEngine, 
                 transactionRepository,
                 accountRepository,
-                customerRepository);
+                customerRepository,
+                timeProvider);
 
             accountOperationsManager.Withdraw(customer, customerAccount.AccountId, withdrawAmount);
 
@@ -146,7 +150,10 @@ namespace Banking.Tests.ApplicationLogic
 
             // must be defined to compare to available balance
             var amount = 100;
+
             var created = fixture.Freeze<DateTime>();
+
+            var customer = Mock.Of<ICustomer>();
 
             var sourceAccount =
                 fixture
@@ -164,6 +171,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
             var transaction =
@@ -175,6 +183,8 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Value, amount)
                 .With(t => t.Created, created)
                 .Create();
+
+            Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { sourceAccount, destinationAccount });
 
             Mock.Get(accountRepository)
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(destinationAccount);
@@ -195,9 +205,11 @@ namespace Banking.Tests.ApplicationLogic
                 transactionEngine, 
                 transactionRepository,
                 accountRepository,
-                customerRepository);
+                customerRepository,
+                timeProvider);
 
-            accountOperationsManager.Transfer(sourceAccount, destinationAccount, amount);
+            accountOperationsManager.Transfer(
+                customer, sourceAccount.AccountId, destinationAccount.AccountId, amount);
 
             Mock.Get(transactionRepository).Verify(r => r.AddTransaction(transaction));
             Mock.Get(transactionRepository).Verify(r => r.SaveChanges());
@@ -248,12 +260,14 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var timeProvider = Mock.Of<ITimeProvider>();
 
             var accountOperationsManager = new AccountOperationsManager(
                 transactionEngine, 
                 transactionRepository, 
                 accountRepository,
-                customerRepository);
+                customerRepository,
+                timeProvider);
 
             var obj = new PrivateObject(accountOperationsManager);
             var hasFunds = obj.Invoke("HasSufficientFunds", sourceAccount, amount, pendingTransactions);

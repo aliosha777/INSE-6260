@@ -62,6 +62,9 @@ namespace Banking.App_Start
             kernel.Bind<ICustomerOperationsManager>().To<CustomerOperationsManager>();
             kernel.Bind<IAccountOperationsManager>().To<AccountOperationsManager>();
             kernel.Bind<ITransactionEngine>().To<TransactionEngine>();
+            kernel.Bind<ITimeProvider>().To<TimeProvider>();
+            kernel.Bind<IInvestmentManager>().To<InvestmentManager>();
+            kernel.Bind<IInvestmentRepository>().To<InvestmentRepository>();
         }        
     }
 }
