@@ -169,6 +169,7 @@
     <Compile Include="Application\DAL\LoggerRepository.cs" />
     <Compile Include="Application\Models\LogModel.cs" />
     <Compile Include="Application\Web\Attributes\MultipleButtonAttribute.cs" />
+    <Compile Include="Application\Web\Controllers\ErrorController.cs" />
     <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountsOperationsViewModel.cs" />
@@ -242,6 +243,10 @@
     <Compile Include="Migrations\201404132027304_AddedLoggingTable.cs" />
     <Compile Include="Migrations\201404132027304_AddedLoggingTable.Designer.cs">
       <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404132043512_AdditionalLogdata.cs" />
+    <Compile Include="Migrations\201404132043512_AdditionalLogdata.Designer.cs">
+      <DependentUpon>201404132043512_AdditionalLogdata.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -332,6 +337,8 @@
     <Content Include="Application\Web\Views\Teller\_InvestmentData.cshtml" />
     <Content Include="Application\Web\Views\Teller\AccountStatement.cshtml" />
     <Content Include="Application\Web\Views\Teller\_RequestStatement.cshtml" />
+    <Content Include="Application\Web\Views\Error\General.cshtml" />
+    <Content Include="Application\Web\Views\System\ErrorLog.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -416,6 +423,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404132027304_AddedLoggingTable.resx">
       <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404132043512_AdditionalLogdata.resx">
+      <DependentUpon>201404132043512_AdditionalLogdata.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

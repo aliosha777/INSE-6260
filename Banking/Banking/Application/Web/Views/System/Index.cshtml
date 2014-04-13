@@ -1,5 +1,7 @@
 ﻿@using Banking.Domain.Entities
 
+@Html.ActionLink("View Error Log", "ErrorLog", "System")
+
 @using (Html.BeginForm("ProcessTransactions", "System"))
 {
     @Html.AntiForgeryToken()

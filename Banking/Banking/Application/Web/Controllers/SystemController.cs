@@ -8,6 +8,7 @@ namespace Banking.Application.Web.Controllers
 {
     using Banking.Application.Core;
     using Banking.Application.DAL;
+    using Banking.Application.Models;
     using Banking.Application.Web.ViewModels;
     using Banking.Domain.Entities;
     using Banking.Domain.Services.BankingOperationsEngine;
@@ -18,15 +19,18 @@ namespace Banking.Application.Web.Controllers
         private readonly ITransactionRepository transactionRepository;
         private readonly ITransactionEngine transactionEngine;
         private readonly IInvestmentRepository investmentRepository;
+        private readonly ILoggerRepository loggerRepository;
 
         public SystemController(
             ITransactionRepository transactionRepository,
             ITransactionEngine transactionEngine,
-            IInvestmentRepository investmentRepository)
+            IInvestmentRepository investmentRepository,
+            ILoggerRepository loggerRepository)
         {
             this.transactionRepository = transactionRepository;
             this.transactionEngine = transactionEngine;
             this.investmentRepository = investmentRepository;
+            this.loggerRepository = loggerRepository;
         }
 
         public ActionResult Index()
@@ -53,6 +57,15 @@ namespace Banking.Application.Web.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult ErrorLog()
+        {
+            var logs = loggerRepository.GetLogs(20);
+
+            ViewData["Logs"] = logs;
+
+            return this.View();
         }
     }
 }

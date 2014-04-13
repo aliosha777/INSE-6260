@@ -29,7 +29,8 @@
             var logEntry = new LogModel()
                 {
                     Created = DateTime.Now,
-                    ErrorMessage = ex.Message
+                    ErrorMessage = ex.Message,
+                    AdditionalData = ex.StackTrace
                 };
             
             loggerRepository.AddLog(logEntry);

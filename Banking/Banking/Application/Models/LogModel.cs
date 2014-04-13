@@ -20,5 +20,7 @@ namespace Banking.Application.Models
         public string UserName { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public string AdditionalData { get; set; }
     }
 }

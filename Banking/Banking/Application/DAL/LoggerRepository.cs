@@ -10,6 +10,8 @@ namespace Banking.Application.DAL
     public interface ILoggerRepository : IDisposable
     {
         void AddLog(LogModel log);
+
+        IEnumerable<LogModel> GetLogs(int numberOfEntries);
     }
 
     public class LoggerRepository : ILoggerRepository
@@ -31,6 +33,13 @@ namespace Banking.Application.DAL
         {
             context.Logs.Add(log);
             context.SaveChanges();
+        }
+
+        public IEnumerable<LogModel> GetLogs(int numberOfEntries)
+        {
+            var logs = context.Logs.OrderByDescending(l => l.LogId).Take(numberOfEntries);
+
+            return logs.ToList();
         }
 
         #region IDisposable

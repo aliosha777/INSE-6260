@@ -1,0 +1,18 @@
+﻿@using Banking.Application.Models
+
+<table>
+<tr>
+    <td><span>Entry Id</span></td>
+    <td><span>Created</span></td>
+    <td><span>Error Message</span></td>
+</tr>
+    
+    @foreach (var logEntry in (IEnumerable<LogModel>)ViewData["Logs"])
+    {
+        <tr>
+            <td><span>@logEntry.LogId</span></td>
+            <td><span>@logEntry.Created</span></td>
+            <td><span>@logEntry.ErrorMessage</span></td>
+        </tr>
+    }
+</table>

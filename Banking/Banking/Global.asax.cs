@@ -10,6 +10,7 @@ using Banking.Membership;
 namespace Banking
 {
     using System.Linq;
+    using System.Web;
 
     using Banking.Application.Core.Logging;
     using Banking.Application.DAL;
@@ -20,7 +21,9 @@ namespace Banking
     public class MvcApplication : System.Web.HttpApplication
     {
         private static SimpleMembershipInitializer _initializer;
+
         private static object _initializerLock = new object();
+
         private static bool _isInitialized;
 
         protected void Application_Start()
@@ -38,17 +41,9 @@ namespace Banking
 
             var razorEngine = ViewEngines.Engines.OfType<RazorViewEngine>().First();
 
-            razorEngine.ViewLocationFormats = 
-                new string[]
-                    {
-                        "~/Application/Web/Views/{1}/{0}.cshtml"
-                    };
+            razorEngine.ViewLocationFormats = new string[] { "~/Application/Web/Views/{1}/{0}.cshtml" };
 
-            razorEngine.PartialViewLocationFormats =
-                new string[]
-                    {
-                        "~/Application/Web/Views/{1}/{0}.cshtml"
-                    };
+            razorEngine.PartialViewLocationFormats = new string[] { "~/Application/Web/Views/{1}/{0}.cshtml" };
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -61,6 +56,10 @@ namespace Banking
                 ILogger logger = new Logger(new LoggerRepository());
 
                 logger.LogException(ex);
+                var errorPageUrl = string.Format("~/Error/{0}/?message={1}", "General", "Something went wrong");
+                Server.ClearError();
+
+                Response.Redirect(errorPageUrl);
             }
         }
     }
