@@ -1,4 +1,5 @@
 using Banking.Domain.Entities;
+using System;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
@@ -11,5 +12,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         bool Transfer(ICustomer customer, int sourceAccountId, int destinationAccountId, double amount);
 
         IAccount CreateAccount(AccountTypes accountType, ICustomer owner);
+
+        double Backtrack(IAccount account, DateTime balancePoint);
     }
 }

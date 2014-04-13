@@ -42,6 +42,29 @@ namespace Banking.Application.DAL
             return transactions.Select(t => t.ToTransaction());
         }
 
+        /// <summary>
+        /// Returns only applied transactions and searches by applied date
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public IEnumerable<ITransaction> GetTransactionRange(IAccount account, DateTime from, DateTime to)
+        {
+            var transactions =
+                context
+                .Transactions
+                .Include("LeftAccount")
+                .Include("RightAccount")
+                .Where(
+                    t =>
+                        (t.LeftAccount.AccountId == account.AccountId || t.RightAccount.AccountId == account.AccountId)
+                        && t.Status == TransactionStatus.Applied
+                        && t.Applied >= from && t.Applied <= to).ToList();
+
+            return transactions.Select(t => t.ToTransaction());
+        }
+
         public void AddTransaction(ITransaction transaction)
         {
             var transactionModel = transaction.ToModel();

@@ -170,8 +170,10 @@
     <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountsOperationsViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\AccountStatementViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\AccountViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\InvestmentViewModel.cs" />
+    <Compile Include="Application\Web\ViewModels\RequestStatementViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\TransactionViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\UserViewModel.cs" />
     <Compile Include="Domain\Services\AdminOperations\BankAccountManager.cs" />
@@ -230,6 +232,10 @@
     <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.cs" />
     <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.Designer.cs">
       <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404130033341_AddTransactionDescription.cs" />
+    <Compile Include="Migrations\201404130033341_AddTransactionDescription.Designer.cs">
+      <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -318,6 +324,8 @@
     <Content Include="Application\Web\Views\Teller\InvestmentDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\InvestmentSummary.cshtml" />
     <Content Include="Application\Web\Views\Teller\_InvestmentData.cshtml" />
+    <Content Include="Application\Web\Views\Teller\AccountStatement.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_RequestStatement.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -396,6 +404,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201404070307551_InitialDatabaseCreate.resx">
       <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404130033341_AddTransactionDescription.resx">
+      <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

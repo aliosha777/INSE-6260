@@ -13,10 +13,26 @@
     }
 </div>
 
-<h3>Transactions</h3>
-    @{
-        Html.RenderPartial("_TransactionInformation", Model.Transactions);
-    }
+<br/>
+@{
+    Html.RenderPartial("_RequestStatement", 
+        new RequestStatementViewModel
+            {
+                AccountId = Model.Account.AccountId,
+                From = DateTime.Now,
+                To = DateTime.Now
+            });
+}
 
 <br />
 @Html.ActionLink("Back", "CustomerSummary")
+
+@section Scripts{
+    <script type="text/javascript" >
+
+        $(document).ready(function() {
+            $('#From').datepicker();
+            $('#To').datepicker();
+        });
+    </script>
+}

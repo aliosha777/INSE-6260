@@ -18,5 +18,7 @@ namespace Banking.Application.DAL
         void AddTransaction(ITransaction transaction);
 
         IEnumerable<ITransaction> GetPendingTransactions();
+
+        IEnumerable<ITransaction> GetTransactionRange(IAccount account, DateTime from, DateTime to);
     }
 }

@@ -1,0 +1,19 @@
+﻿@model Banking.Application.Web.ViewModels.RequestStatementViewModel
+
+@using (Html.BeginForm("AccountStatement", "Teller"))
+{
+    @Html.ValidationSummary()
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(m => m.AccountId)
+    
+    @Html.LabelFor(m => m.From)
+    @Html.EditorFor(m => m.From)
+
+    @Html.LabelFor(m => m.To)
+    @Html.EditorFor(m => m.To)
+    
+    <br/>
+    <input type="submit" value="View Statement" />
+}
+

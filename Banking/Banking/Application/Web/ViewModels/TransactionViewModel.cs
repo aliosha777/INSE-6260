@@ -22,9 +22,20 @@ namespace Banking.Application.Web.ViewModels
         public DateTime Created { get; set; }
 
         [Display(Name = "Applied")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? Applied { get; set; }
         
         [Display(Name = "Status")]
         public TransactionStatus Status { get; set; }
+
+        [Display(Name = "Description")]
+        public string Description { get; set; }
+
+        public string Deposit { get; set; }
+
+        public string Withdrawal { get; set; }
+
+        [DisplayFormat(DataFormatString = ("{0:0.00}"))]
+        public double AccountBalance { get; set; }
     }
 }

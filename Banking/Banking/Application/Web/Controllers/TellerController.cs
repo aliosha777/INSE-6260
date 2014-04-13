@@ -398,6 +398,66 @@ namespace Banking.Application.Web.Controllers
             return this.View();
         }
 
+        public ActionResult AccountStatement(RequestStatementViewModel requestStatementViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                int accountId = requestStatementViewModel.AccountId;
+                DateTime from = requestStatementViewModel.From;
+                DateTime to = requestStatementViewModel.To;
+
+                var customer = this.GetCurrentCustomer();
+                var account = customerOperationsManager.GetAccount(customer, accountId);
+
+                var statement = new AccountStatementViewModel
+                {
+                    AccountNumber = account.AccountNumber,
+                    AccountType = Enum.GetName(typeof(AccountTypes), account.Type),
+                    Balance = account.Balance,
+                    From = from,
+                    To = to
+                };
+
+                var statementLines = new List<TransactionViewModel>();
+                var transactions = transactionRepository.GetTransactionRange(account, from, to);
+
+                var prevBalance = account.Balance;
+                var prevTransValue = 0.0;
+
+                // Could order by date applied as well
+                foreach (var transaction in transactions.OrderByDescending(t => t.TransactionId))
+                {
+                    var transactionViewModel = transaction.ToViewModel();
+                    
+                    // The accounts in question are liability accounts 
+                    // so left means withdrawal and right means deposit
+                    if (account.AccountId == transaction.LeftAccount.AccountId)
+                    {
+                        transactionViewModel.Withdrawal = transaction.Value.ToString();
+                        transactionViewModel.AccountBalance = (double)prevBalance + prevTransValue;
+                        prevTransValue = (double)transaction.Value;
+                    }
+                    else
+                    {
+                        transactionViewModel.Deposit = transaction.Value.ToString();
+                        transactionViewModel.AccountBalance = (double)prevBalance + prevTransValue;
+                        prevTransValue = -(double)transaction.Value;
+                    }
+
+                    prevBalance = (decimal)transactionViewModel.AccountBalance;
+
+                    statementLines.Add(transactionViewModel); 
+                }
+
+                statementLines.Reverse();
+                statement.Transactions.AddRange(statementLines);
+                return this.View(statement);
+            }
+
+            // TODO: return to calling page with error message
+            return this.View("AccountDetails");
+        }
+
         public ActionResult AccountDetails(int accountId)
         {
             var customer = this.GetCurrentCustomer();
@@ -432,7 +492,7 @@ namespace Banking.Application.Web.Controllers
             return values;
         }
 
-        // TODO: All those private methods should be placed somewhere else.
+        // TODO: All those private methods should be placed in Application -> Services
         private IEnumerable<SelectListItem> GetEnumSelectList(Type enumType)
         {
             var values = from int e in Enum.GetValues(enumType)

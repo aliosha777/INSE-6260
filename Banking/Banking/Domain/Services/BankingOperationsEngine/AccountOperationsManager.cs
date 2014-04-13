@@ -119,6 +119,49 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         }
 
         /// <summary>
+        /// Calculates the balance of an account at a time in the past
+        /// </summary>
+        /// <param name="account"> </param>
+        /// <param name="balancePoint"> </param>
+        /// <returns></returns>
+        public double Backtrack(IAccount account, DateTime balancePoint)
+        {
+            if (account.Category != AccountCategories.Liability)
+            {
+                throw new BankingValidationException("Balance backtracking only works on liability accounts");
+            }
+
+            var amountAtBalancePoint = account.Balance;
+            var today = timeProvider.Now().Date;
+            var transactions = transactionRepository.GetTransactionRange(account, balancePoint, today);
+
+            var orderedTransactions =
+                transactions
+                .Where(t => t.Status == TransactionStatus.Applied)
+                .OrderByDescending(t => t.Applied);
+
+            foreach (var transaction in orderedTransactions)
+            {
+                // account on the left => credit
+                // liability + credit => increase (deposit)
+                // reverse => decrease balance
+                if (account.AccountId == transaction.LeftAccount.AccountId)
+                {
+                    amountAtBalancePoint -= transaction.Value;
+                }
+                else
+                {
+                    if (account.AccountId == transaction.RightAccount.AccountId)
+                    {
+                        amountAtBalancePoint += transaction.Value;
+                    }
+                }
+            }
+
+            return (double)amountAtBalancePoint;
+        }
+
+        /// <summary>
         /// Expects a list of pending transactions that debit or credit this account
         /// </summary>
         /// <param name="account"></param>

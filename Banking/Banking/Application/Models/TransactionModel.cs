@@ -42,5 +42,7 @@ namespace Banking.Application.Models
         public DateTime? Applied { get; set; }
 
         public TransactionStatus Status { get; set; }
+
+        public string Description { get; set; }
     }
 }

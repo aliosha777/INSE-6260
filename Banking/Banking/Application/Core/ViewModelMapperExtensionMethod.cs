@@ -42,7 +42,8 @@ namespace Banking.Application.Core
                 Value = transaction.Value,
                 Created = transaction.Created,
                 Applied = transaction.Applied,
-                Status = transaction.Status
+                Status = transaction.Status,
+                Description = transaction.Description,
             };
         }
     }

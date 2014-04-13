@@ -22,5 +22,7 @@ namespace Banking.Domain.Entities
         DateTime? Applied { get; set; }
 
         TransactionStatus Status { get; set; }
+
+        string Description { get; set; }
     }
 }

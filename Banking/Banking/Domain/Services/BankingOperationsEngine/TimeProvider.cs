@@ -29,6 +29,11 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
         public DateTime Now()
         {
+            return DateTime.Now;
+        }
+
+        public DateTime Today()
+        {
             return DateTime.Today;
         }
     }

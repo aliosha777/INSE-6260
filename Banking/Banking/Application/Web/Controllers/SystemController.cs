@@ -16,15 +16,17 @@ namespace Banking.Application.Web.Controllers
     public class SystemController : Controller
     {
         private readonly ITransactionRepository transactionRepository;
-
         private readonly ITransactionEngine transactionEngine;
+        private readonly IInvestmentRepository investmentRepository;
 
         public SystemController(
             ITransactionRepository transactionRepository,
-            ITransactionEngine transactionEngine)
+            ITransactionEngine transactionEngine,
+            IInvestmentRepository investmentRepository)
         {
             this.transactionRepository = transactionRepository;
             this.transactionEngine = transactionEngine;
+            this.investmentRepository = investmentRepository;
         }
 
         public ActionResult Index()

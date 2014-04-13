@@ -13,8 +13,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
     {
         private readonly ITransactionRepository transactionRepository;
         private readonly IAccountRepository accountRepository;
-
-        private ITimeProvider timeProvider;
+        private readonly ITimeProvider timeProvider;
 
         public TransactionEngine(
             ITransactionRepository transactionRepository,
@@ -91,6 +90,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             var modified = timeProvider.Now();
 
+            // TODO: all the updates below should be done in a db transaction
             accountToBeDebited.Balance += debitAccountDelta;
             accountToBeDebited.Modified = modified;
 

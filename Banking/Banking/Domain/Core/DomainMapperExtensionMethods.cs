@@ -65,7 +65,8 @@ namespace Banking.Domain.Core
                 Value = transactionModel.Value,
                 Created = transactionModel.Created,
                 Applied = transactionModel.Applied,
-                Status = transactionModel.Status
+                Status = transactionModel.Status,
+                Description = transactionModel.Description
             };
 
             return transaction;
@@ -83,7 +84,8 @@ namespace Banking.Domain.Core
                 Value = transaction.Value,
                 Created = transaction.Created,
                 Applied = transaction.Applied,
-                Status = transaction.Status
+                Status = transaction.Status,
+                Description = transaction.Description
             };
 
             return transactionModel;
