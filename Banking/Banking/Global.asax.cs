@@ -12,6 +12,7 @@ namespace Banking
     using System.Linq;
 
     using Banking.Application.Core.Logging;
+    using Banking.Application.DAL;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -57,7 +58,7 @@ namespace Banking
             if (Response.StatusCode != 404)
             {
                 // Instantiating here for now
-                ILogger logger = new Logger();
+                ILogger logger = new Logger(new LoggerRepository());
 
                 logger.LogException(ex);
             }

@@ -65,6 +65,7 @@ namespace Banking.App_Start
             kernel.Bind<ITimeProvider>().To<TimeProvider>();
             kernel.Bind<IInvestmentManager>().To<InvestmentManager>();
             kernel.Bind<IInvestmentRepository>().To<InvestmentRepository>();
+            kernel.Bind<ILoggerRepository>().To<LoggerRepository>();
         }        
     }
 }

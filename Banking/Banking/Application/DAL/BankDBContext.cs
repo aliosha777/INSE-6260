@@ -23,6 +23,8 @@ namespace Banking.Application.DAL
 
         public DbSet<InvestmentIntervalModel> InvestmentIntervals { get; set; }
 
+        public DbSet<LogModel> Logs { get; set; }
+             
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

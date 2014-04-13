@@ -166,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
+    <Compile Include="Application\DAL\LoggerRepository.cs" />
+    <Compile Include="Application\Models\LogModel.cs" />
     <Compile Include="Application\Web\Attributes\MultipleButtonAttribute.cs" />
     <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
@@ -236,6 +238,10 @@
     <Compile Include="Migrations\201404130033341_AddTransactionDescription.cs" />
     <Compile Include="Migrations\201404130033341_AddTransactionDescription.Designer.cs">
       <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404132027304_AddedLoggingTable.cs" />
+    <Compile Include="Migrations\201404132027304_AddedLoggingTable.Designer.cs">
+      <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -407,6 +413,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404130033341_AddTransactionDescription.resx">
       <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404132027304_AddedLoggingTable.resx">
+      <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
