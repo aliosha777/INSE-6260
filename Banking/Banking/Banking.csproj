@@ -168,7 +168,9 @@
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
     <Compile Include="Application\DAL\LoggerRepository.cs" />
     <Compile Include="Application\Models\LogModel.cs" />
+    <Compile Include="Application\Services\ViewModelManager.cs" />
     <Compile Include="Application\Web\Attributes\MultipleButtonAttribute.cs" />
+    <Compile Include="Application\Web\Controllers\AdminController.cs" />
     <Compile Include="Application\Web\Controllers\ErrorController.cs" />
     <Compile Include="Application\Web\Controllers\SystemController.cs" />
     <Compile Include="Application\Web\ViewModels\AccountDetailsViewModel.cs" />
@@ -225,6 +227,7 @@
     <Compile Include="Domain\Entities\ITransaction.cs" />
     <Compile Include="Domain\Entities\Transaction.cs" />
     <Compile Include="Domain\Core\Exceptions\BankingValidationException.cs" />
+    <Compile Include="Domain\Services\AdminOperations\ICustomerManager.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -339,6 +342,8 @@
     <Content Include="Application\Web\Views\Teller\_RequestStatement.cshtml" />
     <Content Include="Application\Web\Views\Error\General.cshtml" />
     <Content Include="Application\Web\Views\System\ErrorLog.cshtml" />
+    <Content Include="Application\Web\Views\Admin\Home.cshtml" />
+    <Content Include="Application\Web\Views\Teller\SearchResults.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -408,7 +413,6 @@
     <Content Include="Application\Web\Views\Common\_Address.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Application\Services\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

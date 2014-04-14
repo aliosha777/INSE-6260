@@ -4,48 +4,50 @@
     ViewBag.Title = "Customer Summary";
 }
 
-<h2>Customer</h2>
-<br />
+<div>
+    <span class="action-link-container">
+        @Html.ActionLink("Open Account", "CreateBankAccount", "Teller")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Deposit", "Deposit", "Teller")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Withdraw", "Withdraw", "Teller")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Transfer", "Transfer", "Teller")
+    </span>
+     <span class="action-link-container">
+        @Html.ActionLink("Invest", "Invest", "Teller")
+    </span>
+</div>
+
+
 
 @if (Model != null)
 {
     <div>
-        <span>@Html.DisplayFor(m => Model.FirstName)&nbsp;</span>
-        <span>@Html.DisplayFor(m => Model.LastName)</span>
-    </div>   
+        <div style="float: left;">
+            <h2>Customer</h2>
+            <br />
+            <span>@Html.DisplayFor(m => Model.FirstName)&nbsp;</span>
+            <span>@Html.DisplayFor(m => Model.LastName)</span>
+        </div>   
     
-    <h2>Accounts</h2>
+        <div style="float: right;">
+            @{
+                Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", @Model.CurrentAddress);
+            }
+        </div>
+    </div>
     
-    
-    Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", @Model.Accounts);
-   
-    Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", @Model.CurrentAddress);
-    
+    <div style="clear: both;">
+        <h2>Accounts</h2>
+        @{
+            Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", @Model.Accounts);
+        }
+    </div>
     <br />
-
-    <div>
-        @Html.ActionLink("Open Account", "CreateBankAccount", "Teller")
-    </div>
-    <div>
-        @Html.ActionLink("Deposit", "Deposit", "Teller")
-    </div>
-    <div>
-        @Html.ActionLink("Withdraw", "Withdraw", "Teller")
-    </div>
-    <div>
-        @Html.ActionLink("Transfer", "Transfer", "Teller")
-    </div>
-     <div>
-        @Html.ActionLink("Invest", "Invest", "Teller")
-    </div>
 }
-else
-{
-    <h3>No Customers Found</h3>
-}
-
-<br />
-
-@Html.ActionLink("Back", "Home")
 
 

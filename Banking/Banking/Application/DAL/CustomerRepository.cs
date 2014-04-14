@@ -138,6 +138,36 @@ namespace Banking.Application.DAL
             return trackedEntity.ToCustomer();
         }
 
+        public IEnumerable<ICustomer> GetCustomersByFirstName(string firstName)
+        {
+            var customers = context.Customers.Where(c => c.FirstName.Contains(firstName));
+
+            foreach(var customer in customers)
+            {
+                yield return customer.ToCustomer();
+            }
+        }
+
+        public IEnumerable<ICustomer> GetCustomersByUserName(string userName)
+        {
+            var customers = context.Customers.Where(c => c.UserName == userName);
+
+            foreach (var customer in customers)
+            {
+                yield return customer.ToCustomer();
+            }
+        }
+
+        public IEnumerable<ICustomer> GetCustomersByAccountNumber(string accountNumber)
+        {
+            var customers = context.Customers.Where(c => c.Accounts.Any(a => a.AccountNumber == accountNumber));
+
+            foreach (var customer in customers)
+            {
+                yield return customer.ToCustomer();
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);

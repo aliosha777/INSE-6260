@@ -7,10 +7,18 @@
 
 <div>
 
-    @using (Html.BeginForm("CustomerSummary", "Teller"))
+    @using (Html.BeginForm("SearchResults", "Teller"))
     {
-        <input type="text" name="customerId"/>
-        <input type="submit" value="View" name="view" formmethod="get"/>
+        @Html.DropDownList(
+            "searchType", 
+            new SelectList (
+                (IEnumerable<SelectListItem>)ViewBag.SearchType, "Value", "Text"),
+                new Dictionary<string, object>{{"class", "select-list"}})
+        
+        <br />
+        <input type="text" name="searchField"/>
+        <br />
+        <input type="submit" value="Find Customer" name="view" formmethod="get"/>
     }
     
     @Html.ActionLink("Create Customer", "CreateCustomerStep1")

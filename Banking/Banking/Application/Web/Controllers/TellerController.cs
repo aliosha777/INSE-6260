@@ -14,6 +14,7 @@ namespace Banking.Application.Web.Controllers
     using Banking.Application.Core;
     using Banking.Application.Web.Attributes;
     using Banking.Domain.Entities;
+    using Banking.Domain.Services.AdminOperations;
     using Banking.Exceptions;
 
     using WebMatrix.WebData;
@@ -28,8 +29,8 @@ namespace Banking.Application.Web.Controllers
         private readonly ITransactionRepository transactionRepository;
         private readonly ICustomerOperationsManager customerOperationsManager;
         private readonly IAccountOperationsManager accountOperationsManager;
-
         private readonly IInvestmentManager investmentManager;
+        private readonly ICustomerManager customerManager;
 
         public TellerController(
             ICustomerRepository customerRepository,
@@ -37,7 +38,8 @@ namespace Banking.Application.Web.Controllers
             ITransactionRepository transactionRepository,
             ICustomerOperationsManager customerOperationsManager,
             IAccountOperationsManager accountOperationsManager,
-            IInvestmentManager investmentManager)
+            IInvestmentManager investmentManager,
+            ICustomerManager customerManager)
         {
             this.customerRepository = customerRepository;
             this.accountRepository = accountRepository;
@@ -45,11 +47,59 @@ namespace Banking.Application.Web.Controllers
             this.customerOperationsManager = customerOperationsManager;
             this.accountOperationsManager = accountOperationsManager;
             this.investmentManager = investmentManager;
+            this.customerManager = customerManager;
         }
 
         public ActionResult Home()
         {
+            var searchTypesList = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = "Search By User Name",
+                        Value = "0"
+                    },
+                    new SelectListItem
+                    {
+                        Text = "Search By First Name",
+                        Value = "1"
+                    },
+                    new SelectListItem
+                    {
+                        Text = "Search By Account Number",
+                        Value = "2"
+                    }
+                };
+
+            ViewBag.SearchType = searchTypesList;
+
             return View();
+        }
+
+        public ActionResult SearchResults(string searchType, string searchField)
+        {
+            IEnumerable<ICustomer> customers = null;
+
+            switch (searchType)
+            {
+                case "0":
+                {
+                    customers = customerManager.FindCustomerByUsername(searchField);
+                    break;
+                }
+                case "1":
+                {
+                    customers = customerManager.FindCustomerByFirstName(searchField);
+                    break;
+                }
+                case "2":
+                {
+                    customers = customerManager.FindCustomerByAccountNumber(searchField);
+                    break;
+                }
+            }
+
+            return this.View(customers);
         }
 
         public ActionResult CustomerSummary(string customerId)
@@ -65,16 +115,16 @@ namespace Banking.Application.Web.Controllers
             }
             else
             {
+                // Entry point to a customer, customer Id provided in url. Keep it in the session 
                 if (int.TryParse(customerId, out id))
                 {
                     customer = customerRepository.GetCustomerById(id);
+                    Session[CurrentCustomerId] = customerId;
                 }
             }
             
             if (customer != null)
             {
-                // Easier to keep track of the customer we're working with this way
-                Session[CurrentCustomerId] = customerId;
                 customerSummary = this.CreateCustomerSummaryViewModel(customer);
             }
            

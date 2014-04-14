@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Banking.Domain.Entities.ICustomer>
+
+@if (Model != null)
+{
+    <div class="table-background">
+        <table style="width: 100%">
+            <tr class="table-header">
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>User Name</td>
+                <td>Email</td>
+                <td>Phone</td>
+                <td></td>
+            </tr>
+    
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.UserName</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Phone</td>
+                    <td>@Html.ActionLink("Go To Customer File", "CustomerSummary", "Teller", new { customerId = customer.CustomerId }, null)</td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+else
+{
+    <h3>No Customers Found</h3>
+}
+
+<br />
+
+@Html.ActionLink("Back", "Home")

@@ -7,6 +7,7 @@ namespace Banking.App_Start
     using System.Web;
 
     using Banking.Application.DAL;
+    using Banking.Domain.Services.AdminOperations;
     using Banking.Domain.Services.BankingOperationsEngine;
 
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
@@ -66,6 +67,7 @@ namespace Banking.App_Start
             kernel.Bind<IInvestmentManager>().To<InvestmentManager>();
             kernel.Bind<IInvestmentRepository>().To<InvestmentRepository>();
             kernel.Bind<ILoggerRepository>().To<LoggerRepository>();
+            kernel.Bind<ICustomerManager>().To<CustomerManager>();
         }        
     }
 }
