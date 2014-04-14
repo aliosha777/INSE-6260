@@ -19,5 +19,9 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         double CalculateProjectedInterestAtMaturity(int termDuration, double startingAmount, double interestRate);
 
         Investment CreateGicInvestment(DateTime start, int termDuration, double startingAmount, IAccount associatedAccount);
+
+        DateTime GetNextCompoundingDate(IInvestment investment);
+
+        double CalculateInterestAtNextCompoundingPoint(IInvestment investment);
     }
 }

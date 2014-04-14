@@ -2,6 +2,8 @@
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
+    using System.Collections.Generic;
+
     public interface ICustomerOperationsManager
     {
         IAddress GetActiveAddress(ICustomer customer);
@@ -9,5 +11,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         Customer CreateCustomer(string firstName, string lastName, string phone, string email);
 
         IAccount GetAccount(ICustomer customer, int accountId);
+
+        IEnumerable<IInvestment> GetInvestments(ICustomer customer);
     }
 }

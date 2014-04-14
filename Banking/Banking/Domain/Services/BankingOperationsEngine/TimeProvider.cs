@@ -24,6 +24,9 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         public int GetDifferenceInYears(DateTime start, DateTime end)
         {
             // TODO: adjust for leap years
+
+            // for simplicity we will use days/365 for the fractional periods and there will 
+            // be no compensation for leap years
             return end.Subtract(start).Days / DaysInYear;
         }
 

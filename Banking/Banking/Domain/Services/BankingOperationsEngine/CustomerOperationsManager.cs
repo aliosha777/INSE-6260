@@ -4,8 +4,19 @@ using Banking.Exceptions;
 
 namespace Banking.Domain.Services.BankingOperationsEngine
 {
+    using System.Collections.Generic;
+
+    using Banking.Application.DAL;
+
     public class CustomerOperationsManager : ICustomerOperationsManager
     {
+        private readonly IInvestmentRepository investmentRepository;
+
+        public CustomerOperationsManager(IInvestmentRepository investmentRepository)
+        {
+            this.investmentRepository = investmentRepository;
+        }
+
         public Customer CreateCustomer(string firstName, string lastName, string phone, string email)
         {
             var customer = new Customer
@@ -47,6 +58,20 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             }
 
             return account;
+        }
+
+        public IEnumerable<IInvestment> GetInvestments(ICustomer customer)
+        {
+            var investmentAccounts = customer.Accounts.Where(a => a.Type == AccountTypes.Investment);
+
+            var investments = new List<IInvestment>();
+
+            foreach (var account in investmentAccounts)
+            {
+                investments.AddRange(investmentRepository.GetAccountInvestments(account.AccountId));
+            }
+
+            return investments;
         }
     }
 }

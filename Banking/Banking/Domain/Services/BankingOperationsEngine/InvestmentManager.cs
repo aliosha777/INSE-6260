@@ -135,15 +135,38 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             // Count how many compounding periods passed from the beginniNg of the investment
             // then return the last incomplete period
 
-            // for simplicity we will use days/365 for the fractional periods and there will 
-            // be no compensation for leap years
-
-            if (investment.CompoundingFrequency == CompoundingFrequency.Yearly)
+            if (investment.Type != InvestmentTypes.FixedRate)
             {
-                var yearsFromStart = timeProvider.GetDifferenceInYears(investment.TermStart, timeProvider.Now());
+                throw new BankingValidationException("This method applies only to fixed rate investments");
             }
 
-            return timeProvider.Now();
+            if (investment.CompoundingFrequency != CompoundingFrequency.Yearly)
+            {
+                throw new BankingValidationException("Only yearly compounding is supported");
+            }
+           
+            var yearsFromStart = timeProvider.GetDifferenceInYears(investment.TermStart, timeProvider.Now());
+            var termDuration = timeProvider.GetDifferenceInYears(investment.TermEnd, investment.TermStart);
+
+            var elapsed = yearsFromStart / termDuration;
+
+            var interestDue = investment.TermStart.AddYears(elapsed + 1);
+
+            return interestDue;
+        }
+
+        public double CalculateInterestAtNextCompoundingPoint(IInvestment investment)
+        {
+            if (investment.Type != InvestmentTypes.FixedRate)
+            {
+                throw new BankingValidationException("This method applies only to fixed rate investments");
+            }
+            var investmentInterval = investment.InvestmentIntervals.First();
+            var startingAmount = investmentInterval.StartingAmount;
+            var yearsFromStart = timeProvider.GetDifferenceInYears(investmentInterval.Start, timeProvider.Now());
+
+            return this.CalculateFixedRateCompoundInterest(
+                (double)startingAmount, investmentInterval.InterestRate, yearsFromStart + 1);
         }
 
         public double GetGicInterestrate()

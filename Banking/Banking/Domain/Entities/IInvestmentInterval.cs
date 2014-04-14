@@ -14,6 +14,6 @@ namespace Banking.Domain.Entities
 
         decimal StartingAmount { get; set; }
 
-        Investment Investment { get; set; }
+        IInvestment Investment { get; set; }
     }
 }

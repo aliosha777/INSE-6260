@@ -36,6 +36,14 @@ namespace Banking.Application.Web.ViewModels
 
         public int AccountId { get; set; }
 
+        [Display(Name = "Interest Amount")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        public double InterestAmount { get; set; }
+
+        [Display(Name = "InterestDue")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime InterestDueDate { get; set; }
+
         [Display(Name = "Interest")]
         [DisplayFormat(DataFormatString = "{0:C}")]
         public double Interest { get; set; }

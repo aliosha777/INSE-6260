@@ -40,6 +40,17 @@ namespace Banking.Application.DAL
             investment.InvestmentId = investmentModel.InvestmentId;
         }
 
+        public IEnumerable<IInvestment> GetAccountInvestments(int accountId)
+        {
+            var investments = 
+                context
+                .Investments
+                .Include("InvestmentIntervals")
+                .Where(i => i.AccountId == accountId).ToList();
+
+            return investments.Select(i => i.ToInvestment());
+        }
+
         public void UpdateInvestment(Investment investment)
         {
         }

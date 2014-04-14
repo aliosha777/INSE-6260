@@ -210,14 +210,22 @@ namespace Banking.Domain.Core
             return investmentIntervalModel;
         }
 
-        public static InvestmentInterval ToInvestmentInterval(this InvestmentIntervalModel investmentIntervalModel)
+        public static IInvestmentInterval ToInvestmentInterval(this InvestmentIntervalModel investmentIntervalModel)
         {
-            var investmentInterval = new InvestmentInterval { };
+            var investmentInterval = new InvestmentInterval
+                {
+                    InvestmentIntervalId = investmentIntervalModel.InvestmentIntervalId,
+                    Start = investmentIntervalModel.Start,
+                    End = investmentIntervalModel.End,
+                    InterestRate = investmentIntervalModel.InterestRate,
+                    StartingAmount = investmentIntervalModel.StartingAmount,
+                    Investment = investmentIntervalModel.Investment.ToInvestment(true)
+                };
 
             return investmentInterval;
         }
 
-        public static IInvestment ToInvestment(this InvestmentModel investmentModel)
+        public static IInvestment ToInvestment(this InvestmentModel investmentModel, bool ignoreIntervals = false)
         {
             var investment = new Investment
             {
@@ -228,9 +236,12 @@ namespace Banking.Domain.Core
                 Type = investmentModel.Type
             };
 
-            foreach (var interval in investmentModel.InvestmentIntervals)
+            if (!ignoreIntervals)
             {
-                investment.InvestmentIntervals.Add(interval.ToInvestmentInterval());
+                foreach (var interval in investmentModel.InvestmentIntervals)
+                {
+                    investment.InvestmentIntervals.Add(interval.ToInvestmentInterval());
+                }
             }
 
             return investment;

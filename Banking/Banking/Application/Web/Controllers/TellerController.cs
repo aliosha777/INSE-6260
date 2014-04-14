@@ -432,20 +432,38 @@ namespace Banking.Application.Web.Controllers
                     investmentViewModel.StartingAmount,
                     account);
 
-                return RedirectToAction("InvestmentDetails", "Teller", new { InvestmentId = investment.InvestmentId });
+                return RedirectToAction("InvestmentSummary", "Teller", new { InvestmentId = investment.InvestmentId });
             }
 
             return this.View();
         }
 
-        public ActionResult InvestmentDetails()
+        public ActionResult InvestmentDetails(int investmentId)
         {
             return this.View();
         }
 
-        public ActionResult InvestmentSummary(int investmentId)
+        public ActionResult InvestmentSummary()
         {
-            return this.View();
+            var customer = this.GetCurrentCustomer();
+            var investments = customerOperationsManager.GetInvestments(customer);
+
+            var investmentViewModelList = 
+                investments
+                .Select(
+                    investment => 
+                        new InvestmentViewModel()
+                            {
+                                Start = investment.TermStart, 
+                                End = investment.TermEnd, 
+                                Rate = this.investmentManager.GetGicInterestrate(), 
+                                Frequency = investment.CompoundingFrequency, 
+                                Type = investment.Type,
+                                InterestDueDate = investmentManager.GetNextCompoundingDate(investment),
+                                InterestAmount = investmentManager.CalculateInterestAtNextCompoundingPoint(investment)
+                            }).ToList();
+
+            return this.View(investmentViewModelList);
         }
 
         public ActionResult AccountStatement(RequestStatementViewModel requestStatementViewModel)

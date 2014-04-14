@@ -1,1 +1,47 @@
-﻿
+﻿@using Banking.Application.Web.ViewModels
+@model IEnumerable<InvestmentViewModel>
+
+<div class="table-background">
+    <table style="width: 100%">
+        <tr class="table-header">
+            <td>Investment Type</td>
+            <td>Term Start</td>
+            <td>Term End</td>
+            <td>Interest Rate</td>
+            <td>Compounding Frequency</td>
+            <td>Next Compounding Date</td>
+            <td>Interest</td>
+        </tr>
+        
+        @foreach (var investment in Model)
+        {
+            <tr>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.Type)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.Start)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.End)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.Rate)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.Frequency)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.InterestDueDate)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => investment.InterestAmount)</span>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<br/>
+@Html.ActionLink("Back", "CustomerSummary", "Teller");
