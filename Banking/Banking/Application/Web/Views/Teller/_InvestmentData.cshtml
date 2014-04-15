@@ -2,7 +2,7 @@
 @model InvestmentViewModel
 
     @Html.LabelFor(m => m.AccountId)
-    @Html.DropDownListFor(m => m.AccountId, new SelectList(@Model.AccountsList, "Value", "Text"), new Dictionary<string, object>{{"class", "select-list"}})
+    @Html.DropDownListFor(m => m.AccountId, new SelectList(@Model.AccountsList, "Value", "Text"), new Dictionary<string, object>{{"class", "accounts-list"}})
 
     @Html.LabelFor(m => m.InvesementTypes)
     @Html.DropDownListFor(m => m.Type, new SelectList(@Model.InvesementTypes, "Value", "Text"), new Dictionary<string, object>{{"class", "select-list"}})

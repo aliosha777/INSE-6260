@@ -5,6 +5,9 @@
 <br />
 @using (Html.BeginForm("Invest", "Teller"))
 {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
     Html.RenderPartial("_InvestmentData", @Model);
 
     if (@Model.Interest > 0)
@@ -30,13 +33,14 @@
            formmethod="post"/>
 }
 
+@Html.ActionLink("Back", "CustomerSummary", "Teller")
 
 @section Scripts{
     <script type="text/javascript" >
 
         $(document).ready(function() {
-            $('#Start').datepicker({ dateFormat: "dd/mm/yy" });
-            $('#End').datepicker({ dateFormat: "dd/mm/yy" });
+            $('#Start').datepicker({ dateFormat: "mm/dd/yy" });
+            $('#End').datepicker({ dateFormat: "mm/dd/yy" });
         });
     </script>
 }

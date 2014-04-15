@@ -14,5 +14,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         IAccount CreateAccount(AccountTypes accountType, ICustomer owner);
 
         double Backtrack(IAccount account, DateTime balancePoint);
+
+        double GetAvailableAccountBalance(IAccount account);
     }
 }

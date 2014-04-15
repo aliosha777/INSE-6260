@@ -23,18 +23,21 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         private readonly ITransactionRepository transactionRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly ITimeProvider timeProvider;
+        private readonly IInvestmentRepository investmentRepository;
 
         public AccountOperationsManager(
             ITransactionEngine transactionEngine,
             ITransactionRepository transactionRepository,
             IAccountRepository accountRepository,
             ICustomerRepository customerRepository,
+            IInvestmentRepository investmentRepository,
             ITimeProvider timeProvider)
         {
             this.transactionEngine = transactionEngine;
             this.transactionRepository = transactionRepository;
             this.accountRepository = accountRepository;
             this.customerRepository = customerRepository;
+            this.investmentRepository = investmentRepository;
             this.timeProvider = timeProvider;
         }
 
@@ -167,6 +170,25 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             }
 
             return (double)amountAtBalancePoint;
+        }
+
+        public double GetAvailableAccountBalance(IAccount account)
+        {
+            if (account.Type == AccountTypes.Investment)
+            {
+                var currentBalance = account.Balance;
+
+                var investments = investmentRepository.GetAccountInvestments(account.AccountId);
+
+                var investedAmount =
+                    investments
+                    .Sum(
+                        investment => (double)investment.InvestmentIntervals.First().StartingAmount);
+
+                return (double)currentBalance - investedAmount;
+            }
+
+            return (double)account.Balance;
         }
 
         /// <summary>

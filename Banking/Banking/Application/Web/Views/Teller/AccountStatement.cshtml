@@ -3,29 +3,33 @@
 
 <h2>Account Statement</h2>
 <div>
-    <h3>Account</h3>
-    @Html.LabelFor(m => m.AccountNumber)
-    <span class="readonly-value">
-        @Html.DisplayFor(m => m.AccountNumber)
-    </span>
-    <h3>Balance</h3>
-    @Html.LabelFor(m => m.Balance)
-    <span class="readonly-value">
-        @Html.DisplayFor(m => m.Balance)
-    </span>
-    <h3>Statement Period</h3>
-    @Html.LabelFor(m => m.From)
-    <span class="readonly-value">
-        @Html.DisplayFor(m => m.From)
-    </span>
-    <br />
-    @Html.LabelFor(m => m.To)
-    <span class="readonly-value">
+    <div style="float: left;">
+        <h3>Account</h3>
+        @Html.LabelFor(m => m.AccountNumber)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.AccountNumber)
+        </span>
+        <h3>Balance</h3>
+        @Html.LabelFor(m => m.Balance)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.Balance)
+        </span>
+    </div>
+    <div style="float: right;">
+        <h3>Statement Period</h3>
+        @Html.LabelFor(m => m.From)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.From)
+        </span>
+        <br />
+        @Html.LabelFor(m => m.To)
+        <span class="readonly-value">
         @Html.DisplayFor(m => m.To)
-    </span>
+        </span>
+    </div>
     <br />
 </div>
-<div class="table-background">
+<div class="table-background" style="clear: both;">
     <table style="width: 100%">
         <tr class="table-header">
             <td>Transaction Number</td>
@@ -64,3 +68,7 @@
 
     </table>
 </div>
+
+<br />
+
+@Html.ActionLink("Back", "CustomerSummary", "Teller")

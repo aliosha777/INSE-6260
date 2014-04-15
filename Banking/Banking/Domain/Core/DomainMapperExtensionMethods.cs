@@ -20,14 +20,15 @@ namespace Banking.Domain.Core
                 Modified = account.Modified,
                 Type = account.Type,
                 Category = account.Category,
-                Owners = new List<CustomerModel>()
+                Owners = null
             };
 
+            /*
             foreach (var customer in account.Owners)
             {
                 bankAccountModel.Owners.Add(customer.ToModel(true, true));
             }
-
+            */
             return bankAccountModel;
         }
 

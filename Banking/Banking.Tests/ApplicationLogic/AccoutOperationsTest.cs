@@ -35,6 +35,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var investmentRepository = Mock.Of<IInvestmentRepository>();
             var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
@@ -66,6 +67,7 @@ namespace Banking.Tests.ApplicationLogic
                 transactionRepository, 
                 accountRepository,
                 customerRepository,
+                investmentRepository,
                 timeProvider);
 
             accountOperationsManager.Deposit(customer, customerAccount.AccountId, (double)depositAmount);
@@ -104,6 +106,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var investmentRepository = Mock.Of<IInvestmentRepository>();
             var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
@@ -135,6 +138,7 @@ namespace Banking.Tests.ApplicationLogic
                 transactionRepository,
                 accountRepository,
                 customerRepository,
+                investmentRepository,
                 timeProvider);
 
             accountOperationsManager.Withdraw(customer, customerAccount.AccountId, withdrawAmount);
@@ -171,6 +175,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var investmentRepository = Mock.Of<IInvestmentRepository>();
             var timeProvider = Mock.Of<ITimeProvider>();
 
             // This is the resulting transaction that we expect to be saved to the repository
@@ -206,6 +211,7 @@ namespace Banking.Tests.ApplicationLogic
                 transactionRepository,
                 accountRepository,
                 customerRepository,
+                investmentRepository,
                 timeProvider);
 
             accountOperationsManager.Transfer(
@@ -260,6 +266,7 @@ namespace Banking.Tests.ApplicationLogic
             var transactionRepository = Mock.Of<ITransactionRepository>();
             var transactionEngine = Mock.Of<ITransactionEngine>();
             var customerRepository = Mock.Of<ICustomerRepository>();
+            var investmentRepository = Mock.Of<IInvestmentRepository>();
             var timeProvider = Mock.Of<ITimeProvider>();
 
             var accountOperationsManager = new AccountOperationsManager(
@@ -267,6 +274,7 @@ namespace Banking.Tests.ApplicationLogic
                 transactionRepository, 
                 accountRepository,
                 customerRepository,
+                investmentRepository,
                 timeProvider);
 
             var obj = new PrivateObject(accountOperationsManager);

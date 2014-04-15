@@ -431,7 +431,7 @@ namespace Banking.Application.Web.Controllers
                 MaxYears = investmentManager.GetMaxTermInYears(),
                 Rate = investmentManager.GetGicInterestrate(),
                 CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency)),
-                AccountsList = this.GetAccountsSelectList(customer)
+                AccountsList = this.GetInvestmentAccountsSelectList(customer)
             };
 
             return this.View(viewModel);
@@ -447,6 +447,17 @@ namespace Banking.Application.Web.Controllers
                 var customer = this.GetCurrentCustomer();
 
                 var account = customerOperationsManager.GetAccount(customer, investmentViewModel.AccountId);
+
+                var availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
+
+                if (availableBalance < investmentViewModel.StartingAmount)
+                {
+                    ModelState.AddModelError(string.Empty, "Cannot invest more that the available balance");
+
+                    investmentViewModel.AccountsList = this.GetInvestmentAccountsSelectList(customer);
+                    investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
+                    return this.View(investmentViewModel);
+                }
 
                 var investment = investmentManager.CreateGicInvestment(
                     investmentViewModel.Start, 
@@ -497,15 +508,27 @@ namespace Banking.Application.Web.Controllers
             var account = customerOperationsManager.GetAccount(customer, accountId);
 
             if (ModelState.IsValid)
-            {                
+            {               
+                // Statement calculations should be moved into AccountStatementBuilder class 
                 DateTime from = requestStatementViewModel.From;
                 DateTime to = requestStatementViewModel.To;
 
+                double availableBalance; 
+                
+                if (account.Type == AccountTypes.Investment)
+                {
+                    availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
+                }
+                else
+                {
+                    availableBalance = (double)account.Balance;
+                }
+                 
                 var statement = new AccountStatementViewModel
                 {
                     AccountNumber = account.AccountNumber,
                     AccountType = Enum.GetName(typeof(AccountTypes), account.Type),
-                    Balance = account.Balance,
+                    Balance = availableBalance,
                     From = from,
                     To = to
                 };
@@ -645,6 +668,21 @@ namespace Banking.Application.Web.Controllers
             };
 
             return viewModel;
+        }
+
+        private IEnumerable<SelectListItem> GetInvestmentAccountsSelectList(ICustomer customer)
+        {
+            var values =
+                customer.Accounts
+                .Where(a => a.Type == AccountTypes.Investment)
+                .Select(
+                    account => new SelectListItem()
+                    {
+                        Value = account.AccountId.ToString(),
+                        Text = FormatAccountDropdownItem(account)
+                    });
+
+            return values;
         }
 
         private IEnumerable<SelectListItem> GetAccountsSelectList(ICustomer customer)

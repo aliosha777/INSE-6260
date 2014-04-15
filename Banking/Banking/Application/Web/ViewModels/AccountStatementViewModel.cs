@@ -20,7 +20,7 @@ namespace Banking.Application.Web.ViewModels
         public string AccountNumber { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal Balance { get; set; }
+        public double Balance { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime From { get; set; }

@@ -52,11 +52,11 @@ namespace Banking.Application.Web.ViewModels
         public int TermDuration { get; set; }
 
         [Display(Name = "Term Start")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Start { get; set; }
 
         [Display(Name = "Term End")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime End { get; set; }
 
         [Display(Name = "Interest Rate")]
