@@ -286,11 +286,16 @@ namespace Banking.Application.Web.Controllers
             AccountsOperationsViewModel accountsOperations)
         {
             var customer = this.GetCurrentCustomer();
-            accountsOperations.OperationType = OperationTypes.Withdrawal;
+            accountsOperations.OperationType = OperationTypes.Deposit;
             accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
 
             if (ModelState.IsValid)
             {
+                if (accountsOperations.Amount < 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Amount must be positive");
+                    return this.View(accountsOperations);
+                }
                 accountOperationsManager.Deposit(
                 customer, accountsOperations.SelectedTargetAccountId, accountsOperations.Amount);
                 return RedirectToAction("CustomerSummary", "Teller");
@@ -326,6 +331,12 @@ namespace Banking.Application.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (accountsOperations.Amount < 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Amount must be positive");
+                    return this.View(accountsOperations);
+                }
+
                 var success = accountOperationsManager.Withdraw(
                     customer, accountsOperations.SelectedSourceAccountId, accountsOperations.Amount);
 
@@ -369,6 +380,12 @@ namespace Banking.Application.Web.Controllers
                 if (accountsOperations.SelectedSourceAccountId == accountsOperations.SelectedTargetAccountId)
                 {
                     ModelState.AddModelError(string.Empty, "Source and target accounts cannot be the same");
+                    return this.View(accountsOperations);
+                }
+
+                if (accountsOperations.Amount < 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Amount must be positive");
                     return this.View(accountsOperations);
                 }
 
