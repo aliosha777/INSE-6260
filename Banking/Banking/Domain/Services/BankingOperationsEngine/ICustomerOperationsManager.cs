@@ -8,7 +8,7 @@ namespace Banking.Domain.Services.BankingOperationsEngine
     {
         IAddress GetActiveAddress(ICustomer customer);
 
-        Customer CreateCustomer(string firstName, string lastName, string phone, string email);
+        ICustomer CreateCustomer(string userName);
 
         IAccount GetAccount(ICustomer customer, int accountId);
 

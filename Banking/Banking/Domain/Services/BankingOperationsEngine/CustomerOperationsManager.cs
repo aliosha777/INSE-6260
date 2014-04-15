@@ -17,14 +17,11 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             this.investmentRepository = investmentRepository;
         }
 
-        public Customer CreateCustomer(string firstName, string lastName, string phone, string email)
+        public ICustomer CreateCustomer(string userName)
         {
             var customer = new Customer
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Phone = phone,
-                Email = email
+                UserName = userName
             };
 
             return customer;
@@ -34,11 +31,6 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         {
             // TODO: Verify this does not result in multiple database queries
             var activeAddresses = customer.Addresses.Where(a => a.IsActive);
-
-            if (!activeAddresses.Any())
-            {
-                throw new BankingValidationException("Customer must have an active address");
-            }
 
             if (activeAddresses.Count() > 1)
             {

@@ -4,7 +4,7 @@
     ViewBag.Title = "Create User Account";
 }
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("CreateCustomerStep1", "Teller")) 
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
@@ -29,7 +29,3 @@
 <div>
     @Html.ActionLink("Back", "Home")
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

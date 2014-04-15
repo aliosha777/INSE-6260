@@ -1,0 +1,25 @@
+﻿@model Banking.Application.Web.ViewModels.CustomerPersonalInformation
+
+    <div>
+        @Html.ValidationMessageFor(c => c.FirstName)
+        @Html.LabelFor(c => c.FirstName)
+        @Html.EditorFor(c => c.FirstName)
+    </div>
+
+    <div>
+        @Html.ValidationMessageFor(c => c.LastName)
+        @Html.LabelFor(c => c.LastName)
+        @Html.EditorFor(c => c.LastName)
+    </div>
+
+    <div>
+        @Html.ValidationMessageFor(c => c.Phone)
+        @Html.LabelFor(c => c.Phone)
+        @Html.EditorFor(c => c.Phone)
+    </div>
+
+    <div>
+        @Html.ValidationMessageFor(c => c.Email)
+        @Html.LabelFor(c => c.Email)
+        @Html.EditorFor(c => c.Email)
+    </div>

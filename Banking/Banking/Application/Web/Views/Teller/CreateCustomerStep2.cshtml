@@ -1,31 +1,12 @@
 ﻿@model Banking.Application.Web.ViewModels.CustomerPersonalInformation
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("CreateCustomerStep2", "Teller"))
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
 
-    <div>Personal Information</div>
+    <h2>Personal Information</h2>
 
-    <div>
-        <span>First Name</span>
-        <span>@Html.TextBoxFor(c => c.FirstName)</span>
-    </div>
+    Html.RenderPartial("_PersonalInformation", Model);
 
-    <div>
-        <span>Last Name</span>
-        <span>@Html.TextBoxFor(c => c.LastName)</span>
-    </div>
-
-    <div>
-        <span>Phone</span>
-        <span>@Html.TextBoxFor(c => c.Phone)</span>
-    </div>
-
-    <div>
-        <span>Email</span>
-        <span>@Html.TextBoxFor(c => c.Email)</span>
-    </div>
-    
-    <input type="submit" value="Save"/>
+    <input type="submit" value="Save" formmethod="post"/>
 }

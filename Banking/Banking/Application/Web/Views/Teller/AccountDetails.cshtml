@@ -9,19 +9,25 @@
 
 <div>
     @{
-        Html.RenderPartial("_AccountInformation", new List<AccountViewModel> { Model.Account });
+        if (Model != null)
+        {
+            Html.RenderPartial("_AccountInformation", new List<AccountViewModel> { Model.Account });
+        }
     }
 </div>
 
 <br/>
 @{
-    Html.RenderPartial("_RequestStatement", 
+    if (Model != null)
+    {
+        Html.RenderPartial("_RequestStatement", 
         new RequestStatementViewModel
             {
                 AccountId = Model.Account.AccountId,
                 From = DateTime.Now,
                 To = DateTime.Now
             });
+    }
 }
 
 <br />
@@ -31,8 +37,8 @@
     <script type="text/javascript" >
 
         $(document).ready(function() {
-            $('#From').datepicker();
-            $('#To').datepicker();
+            $('#From').datepicker({ dateFormat: "dd/mm/yy" });
+            $('#To').datepicker({ dateFormat: "dd/mm/yy" });
         });
     </script>
 }

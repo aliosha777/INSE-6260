@@ -1,0 +1,16 @@
+﻿@using Banking.Application.Web.ViewModels; 
+@model CustomerPersonalInformation
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <h2>Personal Information</h2>
+
+    Html.RenderPartial("_PersonalInformation", Model);
+   
+    <input type="submit" value="Save"/>
+}
+
+<br />
+@Html.ActionLink("Back", "CustomerSummary", "Teller")

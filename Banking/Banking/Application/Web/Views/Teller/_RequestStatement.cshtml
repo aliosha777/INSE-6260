@@ -2,17 +2,20 @@
 
 @using (Html.BeginForm("AccountStatement", "Teller"))
 {
-    @Html.ValidationSummary()
     @Html.AntiForgeryToken()
     
     @Html.HiddenFor(m => m.AccountId)
     
-    @Html.LabelFor(m => m.From)
-    @Html.EditorFor(m => m.From)
-
-    @Html.LabelFor(m => m.To)
-    @Html.EditorFor(m => m.To)
-    
+    <div>
+        @Html.ValidationMessageFor(m => m.From)
+        @Html.LabelFor(m => m.From)
+        @Html.EditorFor(m => m.From)
+    </div>
+    <div>
+        @Html.ValidationMessageFor(m => m.To)
+        @Html.LabelFor(m => m.To)
+        @Html.EditorFor(m => m.To)
+    </div>
     <br/>
     <input type="submit" value="View Statement" />
 }

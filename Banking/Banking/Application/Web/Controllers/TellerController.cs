@@ -16,6 +16,7 @@ namespace Banking.Application.Web.Controllers
     using Banking.Domain.Entities;
     using Banking.Domain.Services.AdminOperations;
     using Banking.Exceptions;
+    using Banking.Filters;
 
     using WebMatrix.WebData;
 
@@ -48,6 +49,11 @@ namespace Banking.Application.Web.Controllers
             this.accountOperationsManager = accountOperationsManager;
             this.investmentManager = investmentManager;
             this.customerManager = customerManager;
+        }
+
+        public new RedirectToRouteResult RedirectToAction(string action, string controller)
+        {
+            return base.RedirectToAction(action, controller);
         }
 
         public ActionResult Home()
@@ -102,6 +108,7 @@ namespace Banking.Application.Web.Controllers
             return this.View(customers);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CustomerSummary(string customerId)
         {
             int id;
@@ -127,6 +134,10 @@ namespace Banking.Application.Web.Controllers
             {
                 customerSummary = this.CreateCustomerSummaryViewModel(customer);
             }
+            else
+            {
+                return RedirectToAction("Home", "Teller");
+            }
            
             return View(customerSummary);
         }
@@ -146,7 +157,12 @@ namespace Banking.Application.Web.Controllers
                 try
                 {
                     WebSecurity.CreateUserAndAccount(userModel.UserName, userModel.Password);
-                    Session.Add("NewCreatedUserName", userModel.UserName);
+
+                    // If we reached here then the user was created.
+                    var customer = customerOperationsManager.CreateCustomer(userModel.UserName);
+                    customerRepository.AddCustomer(customer, true);
+                    Session[CurrentCustomerId] = customer.CustomerId;
+                    
                     return RedirectToAction("CreateCustomerStep2", "Teller");
                 }
                 catch (MembershipCreateUserException e)
@@ -164,26 +180,19 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CreateCustomerStep2(CustomerPersonalInformation customerPersonalInformation)
         {
             if (ModelState.IsValid)
             {
-                var userName = (string)Session["NewCreatedUserName"];
+                var customer = this.GetCurrentCustomer();
 
-                Session.Remove("NewCreatedUserName");
+                customer.FirstName = customerPersonalInformation.FirstName;
+                customer.LastName = customerPersonalInformation.LastName;
+                customer.Email = customerPersonalInformation.Email;
+                customer.Phone = customerPersonalInformation.Phone;
 
-                // Fill the personal details
-                var customer = customerOperationsManager.CreateCustomer(
-                    customerPersonalInformation.FirstName,
-                    customerPersonalInformation.LastName,
-                    customerPersonalInformation.Phone,
-                    customerPersonalInformation.Email);
-
-                customer.UserName = userName;
-
-                customerRepository.AddCustomer(customer, true);
-
-                Session[CurrentCustomerId] = customer.CustomerId;
+                customerRepository.UpdateCustomer(customer, true);
 
                 return RedirectToAction("CreateCustomerStep3", "Teller");
             }
@@ -192,12 +201,14 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpGet]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CreateCustomerStep3()
         {
             return View();
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CreateCustomerStep3(AddressViewModel addressViewModel)
         {
             if (ModelState.IsValid)
@@ -240,6 +251,7 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CreateBankAccount(string accountType)
         {
             AccountTypes type;
@@ -252,6 +264,7 @@ namespace Banking.Application.Web.Controllers
             return RedirectToAction("CustomerSummary", "Teller");
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Deposit()
         {
             var customer = this.GetCurrentCustomer();
@@ -268,18 +281,26 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Deposit(
             [Bind(Include = "Amount, SelectedTargetAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
             var customer = this.GetCurrentCustomer();
+            accountsOperations.OperationType = OperationTypes.Withdrawal;
+            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
 
-            accountOperationsManager.Deposit(
+            if (ModelState.IsValid)
+            {
+                accountOperationsManager.Deposit(
                 customer, accountsOperations.SelectedTargetAccountId, accountsOperations.Amount);
+                return RedirectToAction("CustomerSummary", "Teller");
+            }
 
-            return RedirectToAction("CustomerSummary", "Teller");
+            return this.View(accountsOperations);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Withdraw()
         {
             var customer = this.GetCurrentCustomer();
@@ -295,33 +316,31 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Withdraw(
             [Bind(Include = "Amount, SelectedSourceAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
             var customer = this.GetCurrentCustomer();
+            accountsOperations.OperationType = OperationTypes.Withdrawal;
+            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
 
-            var success = accountOperationsManager.Withdraw(
-                customer, accountsOperations.SelectedSourceAccountId, accountsOperations.Amount);
-            
-            if (success)
+            if (ModelState.IsValid)
             {
-                return 
-                    RedirectToAction("CustomerSummary", "Teller");
+                var success = accountOperationsManager.Withdraw(
+                    customer, accountsOperations.SelectedSourceAccountId, accountsOperations.Amount);
+
+                if (success)
+                {
+                    return RedirectToAction("CustomerSummary", "Teller");
+                }
+
+                ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
             }
-
-            ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
-
-            var viewModel = new AccountsOperationsViewModel
-            {
-                Amount = 0,
-                OperationType = OperationTypes.Withdrawal,
-                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
-            };
-
-            return this.View(viewModel);
+            return this.View(accountsOperations);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Transfer()
         {
             var customer = this.GetCurrentCustomer();
@@ -337,68 +356,71 @@ namespace Banking.Application.Web.Controllers
         }
 
         [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Transfer(
             [Bind(Include = "Amount, SelectedSourceAccountId, SelectedTargetAccountId")]
             AccountsOperationsViewModel accountsOperations)
         {
             var customer = this.GetCurrentCustomer();
+            accountsOperations.OperationType = OperationTypes.Transfer;
+            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
 
-            var viewModel = new AccountsOperationsViewModel
+            if (ModelState.IsValid)
             {
-                Amount = 0,
-                OperationType = OperationTypes.Transfer,
-                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
-            };
+                if (accountsOperations.SelectedSourceAccountId == accountsOperations.SelectedTargetAccountId)
+                {
+                    ModelState.AddModelError(string.Empty, "Source and target accounts cannot be the same");
+                    return this.View(accountsOperations);
+                }
 
-            if (accountsOperations.SelectedSourceAccountId == accountsOperations.SelectedTargetAccountId)
-            {
-                ModelState.AddModelError(string.Empty, "Source and target accounts cannot be the same");
-                return this.View(viewModel);
+                var success = accountOperationsManager.Transfer(
+                    customer,
+                    accountsOperations.SelectedSourceAccountId,
+                    accountsOperations.SelectedTargetAccountId,
+                    accountsOperations.Amount);
+
+                if (success)
+                {
+                    return RedirectToAction("CustomerSummary", "Teller");
+                }
+
+                ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
             }
 
-            var success = accountOperationsManager.Transfer(
-                customer,
-                accountsOperations.SelectedSourceAccountId,
-                accountsOperations.SelectedTargetAccountId,
-                accountsOperations.Amount);
-
-            if (success)
-            {
-                return
-                    RedirectToAction("CustomerSummary", "Teller");
-            }
-
-            ModelState.AddModelError(string.Empty, "Insufficient funds in sorce account");
-
-            return this.View(viewModel);
+            return this.View(accountsOperations);
         }
 
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "CalculateInterest")]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult CalculateInterest(
             [Bind(Include = "Type, Frequency, TermDuration, Start, StartingAmount, AccountId")]
             InvestmentViewModel investmentViewModel)
         {
-            var customer = this.GetCurrentCustomer();
+            if (ModelState.IsValid)
+            {
+                var customer = this.GetCurrentCustomer();
 
-            var gicRate = investmentManager.GetGicInterestrate();
+                var gicRate = investmentManager.GetGicInterestrate();
 
-            var interest = investmentManager
-                .CalculateProjectedInterestAtMaturity(
-                    investmentViewModel.TermDuration,
-                    investmentViewModel.StartingAmount,
-                    gicRate);
+                var interest = investmentManager
+                    .CalculateProjectedInterestAtMaturity(
+                        investmentViewModel.TermDuration,
+                        investmentViewModel.StartingAmount,
+                        gicRate);
 
-            investmentViewModel.Interest = interest;
-            investmentViewModel.InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes));
-            investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
-            investmentViewModel.MaxYears = investmentManager.GetMaxTermInYears();
-            investmentViewModel.Rate = gicRate;
-            investmentViewModel.AccountsList = this.GetAccountsSelectList(customer);
-
+                investmentViewModel.Interest = interest;
+                investmentViewModel.InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes));
+                investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
+                investmentViewModel.MaxYears = investmentManager.GetMaxTermInYears();
+                investmentViewModel.Rate = gicRate;
+                investmentViewModel.AccountsList = this.GetAccountsSelectList(customer);
+            }
+            
             return this.View("Invest", investmentViewModel);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Invest()
         {
             var customer = this.GetCurrentCustomer();
@@ -418,6 +440,7 @@ namespace Banking.Application.Web.Controllers
 
         [HttpPost]
         [MultipleButton(Name = "action", Argument = "Invest")]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult Invest(InvestmentViewModel investmentViewModel)
         {
             if (ModelState.IsValid)
@@ -443,6 +466,7 @@ namespace Banking.Application.Web.Controllers
             return this.View();
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult InvestmentSummary()
         {
             var customer = this.GetCurrentCustomer();
@@ -466,16 +490,17 @@ namespace Banking.Application.Web.Controllers
             return this.View(investmentViewModelList);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult AccountStatement(RequestStatementViewModel requestStatementViewModel)
         {
+            int accountId = requestStatementViewModel.AccountId;
+            var customer = this.GetCurrentCustomer();
+            var account = customerOperationsManager.GetAccount(customer, accountId);
+
             if (ModelState.IsValid)
-            {
-                int accountId = requestStatementViewModel.AccountId;
+            {                
                 DateTime from = requestStatementViewModel.From;
                 DateTime to = requestStatementViewModel.To;
-
-                var customer = this.GetCurrentCustomer();
-                var account = customerOperationsManager.GetAccount(customer, accountId);
 
                 var statement = new AccountStatementViewModel
                 {
@@ -522,10 +547,14 @@ namespace Banking.Application.Web.Controllers
                 return this.View(statement);
             }
 
-            // TODO: return to calling page with error message
-            return this.View("AccountDetails");
+            // Reload the same view with the error messages
+            var accountTransactions = transactionRepository.GetAccountTransactions(account);
+            var accountDetails = this.CreateAccountDetailsViewModel(account, accountTransactions);
+            
+            return this.View("AccountDetails", accountDetails);
         }
 
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
         public ActionResult AccountDetails(int accountId)
         {
             var customer = this.GetCurrentCustomer();
@@ -533,17 +562,92 @@ namespace Banking.Application.Web.Controllers
 
             var accountTransactions = transactionRepository.GetAccountTransactions(account);
 
-            var accountDetails = new AccountDetailsViewModel
-            {
-                Account = account.ToViewModel()
-            };
-
-            foreach (var transaction in accountTransactions)
-            {
-                accountDetails.Transactions.Add(transaction.ToViewModel());
-            }
+            var accountDetails = this.CreateAccountDetailsViewModel(account, accountTransactions);
             
             return View(accountDetails);
+        }
+        
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
+        public ActionResult EditPersonalInfo()
+        {
+            var customer = this.GetCurrentCustomer();
+            var viewModel = this.CreatePersonalInformationViewModel(customer);
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
+        public ActionResult EditPersonalInfo(CustomerPersonalInformation personalInformation)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = this.GetCurrentCustomer();
+
+                customer.FirstName = personalInformation.FirstName;
+                customer.LastName = personalInformation.LastName;
+                customer.Email = personalInformation.Email;
+                customer.Phone = personalInformation.Phone;
+
+                customerRepository.UpdateCustomer(customer, true);
+
+                return RedirectToAction("CustomerSummary", "Teller");
+            }
+
+            return this.View(personalInformation);
+        }
+
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
+        public ActionResult EditAddress()
+        {
+            var customer = this.GetCurrentCustomer();
+            var address = customerOperationsManager.GetActiveAddress(customer);
+
+            if (address == null)
+            {
+                address = new Address { IsActive = true };
+
+                customer.Addresses.Add(address);
+                customerRepository.UpdateCustomer(customer, true);
+            }
+
+            return this.View(address.ToViewModel());
+        }
+
+        [HttpPost]
+        [RedirectIfNoCustomerId(CurrentCustomerId)]
+        public ActionResult EditAddress(AddressViewModel address)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = this.GetCurrentCustomer();
+                var activeAddress = customerOperationsManager.GetActiveAddress(customer);
+
+                activeAddress.Line1 = address.Line1;
+                activeAddress.Line2 = address.Line2;
+                activeAddress.City = address.City;
+                activeAddress.Province = address.Province;
+                activeAddress.PostalCode = address.PostalCode;
+
+                customerRepository.UpdateCustomer(customer, true);
+            }
+
+            return this.View(address);
+        }
+
+        #region Private Methods
+        
+        private CustomerPersonalInformation CreatePersonalInformationViewModel(ICustomer customer)
+        {
+            var viewModel = new CustomerPersonalInformation()
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                Phone = customer.Phone
+            };
+
+            return viewModel;
         }
 
         private IEnumerable<SelectListItem> GetAccountsSelectList(ICustomer customer)
@@ -609,9 +713,30 @@ namespace Banking.Application.Web.Controllers
             }
 
             var address = customerOperationsManager.GetActiveAddress(customer);
-            customerSummary.CurrentAddress = address.ToViewModel();
+
+            if (address != null)
+            {
+                customerSummary.CurrentAddress = address.ToViewModel();
+            }
 
             return customerSummary;
         }
+
+        private AccountDetailsViewModel CreateAccountDetailsViewModel(IAccount account, IEnumerable<ITransaction> accountTransactions)
+        {
+            var accountDetails = new AccountDetailsViewModel
+            {
+                Account = account.ToViewModel()
+            };
+
+            foreach (var transaction in accountTransactions)
+            {
+                accountDetails.Transactions.Add(transaction.ToViewModel());
+            }
+
+            return accountDetails;
+        }
+
+        #endregion
     }
 }

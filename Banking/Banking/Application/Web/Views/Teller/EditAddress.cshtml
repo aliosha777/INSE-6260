@@ -1,6 +1,6 @@
 ﻿@model Banking.Application.Web.ViewModels.AddressViewModel
 
-@using (Html.BeginForm("CreateCustomerStep3", "Teller"))
+@using (Html.BeginForm("EditAddress", "Teller"))
 {
     @Html.AntiForgeryToken()
 
@@ -10,3 +10,6 @@
     
     <input type="submit" value="Save" formmethod="post"/>
 }
+
+<br />
+@Html.ActionLink("Back", "CustomerSummary", "Teller")

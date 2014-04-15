@@ -25,6 +25,7 @@ namespace Banking.Application.Web.ViewModels
 
         [Required]
         [Display(Name = "Amount")]
+        [RegularExpression(@"[0-9]+(\.[0-9][0-9]?)?", ErrorMessage = "Amount must be a decimal number")]
         public double Amount { get; set; }
 
         [Display(Name = "Select Source Account")]

@@ -229,6 +229,7 @@
     <Compile Include="Domain\Core\Exceptions\BankingValidationException.cs" />
     <Compile Include="Domain\Services\AdminOperations\ICustomerManager.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Filters\RedirectIfNoCustomerIdAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -322,7 +323,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Application\Web\Views\Teller\CreateCustomer.cshtml" />
+    <Content Include="Application\Web\Views\Teller\EditpersonalInfo.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\AccountDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\AccountDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\_TransactionInformation.cshtml" />
@@ -345,6 +346,9 @@
     <Content Include="Application\Web\Views\System\ErrorLog.cshtml" />
     <Content Include="Application\Web\Views\Admin\Home.cshtml" />
     <Content Include="Application\Web\Views\Teller\SearchResults.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_PersonalInformation.cshtml" />
+    <Content Include="Application\Web\Views\Teller\EditAddress.cshtml" />
+    <Content Include="Application\Web\Views\Teller\_Address.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

@@ -9,12 +9,12 @@ namespace Banking.Application.Web.ViewModels
 
     public class RequestStatementViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Statement start date is required")]
         [Display(Name = "From")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime From { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Statement end date is required")]
         [Display(Name = "To")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime To { get; set; }
