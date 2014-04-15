@@ -641,6 +641,17 @@ tr:nth-child(odd) { background-color: #F9F9F9; }
     padding: 0 5px 5px 0;
 }
 
+.address-display
+{
+    min-width: 200px;    
+}
+
+.address-line 
+{
+    min-width: 100px;
+    display: inline-block;
+}
+
 /********************
 *   Mobile Styles   *
 ********************/

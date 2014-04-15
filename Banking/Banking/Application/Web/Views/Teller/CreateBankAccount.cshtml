@@ -1,12 +1,12 @@
 ﻿@using System.Collections.Specialized
 
 <h2>Open New Bank Account</h2>
+<br />
 @using (Html.BeginForm())
 {
     <div>
-        <span>Account Type: </span>
-        
-        @Html.DropDownList("accountType", (SelectList)ViewBag.AccountTypesList)
+        @Html.Label("Select Account Type")
+        @Html.DropDownList("accountType", (SelectList)ViewBag.AccountTypesList, new Dictionary<string, object>{{"class", "select-list"}})
 
     </div>
     
@@ -14,3 +14,5 @@
         <input type="submit" value="Create Account"/>
     </div>
 }
+<br />
+@Html.ActionLink("Back", "CustomerSummary", "Teller")

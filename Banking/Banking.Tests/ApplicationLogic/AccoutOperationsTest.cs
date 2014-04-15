@@ -54,7 +54,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(cashAccount, customerAccount, depositAmount))
+                .Setup(tr => tr.CreateTransaction(cashAccount, customerAccount, depositAmount, "Deposit"))
                 .Returns(transaction);
 
             // The expected result is that the transaction has the cash account as left accout
@@ -123,7 +123,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(customerAccount, cashAccount, withdrawAmount))
+                .Setup(tr => tr.CreateTransaction(customerAccount, cashAccount, withdrawAmount, "Withdraw"))
                 .Returns(transaction);
 
             // The expected result is that the transaction has the cash account as right accout
@@ -190,7 +190,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(destinationAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(sourceAccount, destinationAccount, amount))
+                .Setup(tr => tr.CreateTransaction(sourceAccount, destinationAccount, amount, "Transfer"))
                 .Returns(transaction);
 
             Mock.Get(transactionRepository)

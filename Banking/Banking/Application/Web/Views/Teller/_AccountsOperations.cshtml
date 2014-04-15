@@ -1,11 +1,12 @@
 ﻿@using Banking.Application.Web.ViewModels
 @model AccountsOperationsViewModel   
 
-    <div>
-        @Html.LabelFor(m => m.Amount)
-        @Html.TextBoxFor(m => m.Amount)
+<div>
+    @Html.ValidationMessageFor(m => m.Amount)
+    @Html.LabelFor(m => m.Amount)
+    @Html.EditorFor(m => m.Amount)
 
-    </div>
+</div>
     
     @if(Model.OperationType == OperationTypes.Transfer || Model.OperationType == OperationTypes.Withdrawal)
     {

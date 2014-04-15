@@ -4,7 +4,9 @@ namespace Banking.Migrations
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.Data.SqlClient;
     using System.Linq;
+    using System.Web.Security;
 
     using Banking.Application.DAL;
     using Banking.Application.Models;
@@ -19,6 +21,19 @@ namespace Banking.Migrations
 
         protected override void Seed(BankDBContext context)
         {
+            // Seed roles in a ghetto way
+            var roles = new string[] { "Admin", "Teller", "Customer" };
+
+            foreach (var role in roles)
+            {
+                context.Database.ExecuteSqlCommand(
+                @"if not exists (select RoleId from webpages_Roles where RoleName like @role)
+                   begin 
+                   insert into webpages_Roles (RoleName) values (@role)
+                   end", 
+                       new SqlParameter("role", role));
+            }
+
             if (!context.Accounts.Any(a => a.Type == AccountTypes.GeneralLedgerCash))
             {
                 var creationDate = DateTime.Now;

@@ -12,11 +12,16 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
     public class AccountOperationsManager : IAccountOperationsManager
     {
+        private const string TransactionDescriptionCashDeposit = "Cash Deposit";
+        private const string TransactionDescriptionCashWithdraw = "Cash Withdraw";
+        private const string TransactionDescriptionOnlineTransfer = "Online Transfer";
+        private const string TransactionDescriptionInvestmentDeposit = "Interest Deposit";
+        private const string TransactionDescriptionCheckDeposit = "Check Deposit";
+
         private readonly ITransactionEngine transactionEngine;
         private readonly IAccountRepository accountRepository;
         private readonly ITransactionRepository transactionRepository;
         private readonly ICustomerRepository customerRepository;
-
         private readonly ITimeProvider timeProvider;
 
         public AccountOperationsManager(
@@ -69,7 +74,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             var account = this.GetCustomerAccount(customer, accountId);
 
             var cashAccount = accountRepository.GetGeneralLedgerCashAccount();
-            var transaction = transactionEngine.CreateTransaction(cashAccount, account, (decimal)amount);
+            var transaction = transactionEngine
+                .CreateTransaction(cashAccount, account, (decimal)amount, TransactionDescriptionCashDeposit);
 
             transactionRepository.AddTransaction(transaction);
             transactionRepository.SaveChanges();
@@ -86,7 +92,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
             if (hasSufficientFunds)
             {
                 var transaction = 
-                    transactionEngine.CreateTransaction(account, cashAccount, (decimal)amount);
+                    transactionEngine.CreateTransaction(
+                    account, cashAccount, (decimal)amount, TransactionDescriptionCashWithdraw);
                 transactionRepository.AddTransaction(transaction);
                 transactionRepository.SaveChanges();
             }
@@ -109,7 +116,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
             if (hasSufficientFunds)
             {
-                var transaction = transactionEngine.CreateTransaction(source, destination, (decimal)amount);
+                var transaction = transactionEngine.CreateTransaction(
+                    source, destination, (decimal)amount, TransactionDescriptionOnlineTransfer);
 
                 transactionRepository.AddTransaction(transaction);
                 transactionRepository.SaveChanges();

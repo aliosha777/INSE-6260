@@ -10,7 +10,7 @@ namespace Banking.Application.DAL
     {
         ICustomer GetCustomerById(int customerId);
 
-        void AddCustomer(ICustomer customer, bool saveImmediately);
+        void AddCustomer(ICustomer customer);
 
         void Save();
 

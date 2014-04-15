@@ -28,7 +28,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         public ITransaction CreateTransaction(
             IAccount leftAccount, 
             IAccount rightAccount, 
-            decimal amount)
+            decimal amount,
+            string description)
         {
             if (!leftAccount.IsActive)
             {
@@ -54,7 +55,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
                 Created = timeProvider.Now(),
                 Applied = null,
                 Status = TransactionStatus.Pending,
-                Value = amount
+                Value = amount,
+                Description = description
             };
 
             return transaction;

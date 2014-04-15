@@ -39,8 +39,10 @@
         <div style="float: left;">
             <h2>Customer</h2>
             <br />
-            <span>@Html.DisplayFor(m => Model.FirstName)&nbsp;</span>
-            <span>@Html.DisplayFor(m => Model.LastName)</span>
+            <div style="padding-left: 20px;">
+                <span>@Html.DisplayFor(m => Model.FirstName)</span>
+                <span>@Html.DisplayFor(m => Model.LastName)</span>
+            </div>
         </div>   
     
         <div style="float: right;">
@@ -58,5 +60,7 @@
     </div>
     <br />
 }
+
+@Html.ActionLink("Back", "SearchResults", "Teller")
 
 

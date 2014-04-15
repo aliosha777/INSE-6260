@@ -42,7 +42,7 @@
             var destinationAccout = Mock.Of<IAccount>();
             destinationAccout.IsActive = true;
 
-            transactionEngine.CreateTransaction(sourceAccount, destinationAccout, amount);
+            transactionEngine.CreateTransaction(sourceAccount, destinationAccout, amount, string.Empty);
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@
             var rightAccount = Mock.Of<IAccount>();
             rightAccount.IsActive = false;
 
-            transactionEngine.CreateTransaction(leftAccount, rightAccount, amount);
+            transactionEngine.CreateTransaction(leftAccount, rightAccount, amount, "Description");
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@
 
             decimal amount = 100;
 
-            var transaction = transactionEngine.CreateTransaction(leftAccount, rightAccount, amount);
+            var transaction = transactionEngine.CreateTransaction(leftAccount, rightAccount, amount, "Description");
 
             Assert.AreEqual(transaction.Status, TransactionStatus.Pending);
             Assert.AreEqual(transaction.LeftAccount, leftAccount);

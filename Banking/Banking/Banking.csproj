@@ -228,6 +228,8 @@
     <Compile Include="Domain\Entities\Transaction.cs" />
     <Compile Include="Domain\Core\Exceptions\BankingValidationException.cs" />
     <Compile Include="Domain\Services\AdminOperations\ICustomerManager.cs" />
+    <Compile Include="Domain\Services\AccountServices\AccountStatement.cs" />
+    <Compile Include="Domain\Services\AccountServices\AccountStatementBuilder.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Filters\RedirectIfNoCustomerIdAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -349,6 +351,7 @@
     <Content Include="Application\Web\Views\Teller\_PersonalInformation.cshtml" />
     <Content Include="Application\Web\Views\Teller\EditAddress.cshtml" />
     <Content Include="Application\Web\Views\Teller\_Address.cshtml" />
+    <Content Include="Application\Web\Views\Customer\Home.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

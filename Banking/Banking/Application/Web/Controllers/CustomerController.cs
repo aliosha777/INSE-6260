@@ -10,11 +10,10 @@ using Banking.Domain.Services.BankingOperationsEngine;
 
 namespace Banking.Application.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Customer")]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository customerRepository;
-
         private readonly ICustomerOperationsManager customerOperationsManager;
 
         public CustomerController(
@@ -25,8 +24,11 @@ namespace Banking.Application.Web.Controllers
             this.customerOperationsManager = customerOperationsManager;
         }
 
-        // GET: /Customer/
-        
+        public ActionResult Home()
+        {
+            return this.View();
+        }
+
         public ActionResult CustomerSummary(int id)
         {
             var customer = customerRepository.GetCustomerById(id);

@@ -8,10 +8,11 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
+    @Html.ValidationSummary(true)
 
     Html.RenderPartial("_AccountsOperations");
     
+    <br />
     <input type="submit" id="deposit" value="Deposit"/>
     
     <br />

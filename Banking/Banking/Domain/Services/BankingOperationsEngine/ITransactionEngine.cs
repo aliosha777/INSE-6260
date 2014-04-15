@@ -13,7 +13,8 @@ namespace Banking.Domain.Services.BankingOperationsEngine
         ITransaction CreateTransaction(
             IAccount leftAccount, 
             IAccount rightAccount, 
-            decimal amount);
+            decimal amount,
+            string description);
 
         bool IsTransactionDue(ITransaction transaction);
     }

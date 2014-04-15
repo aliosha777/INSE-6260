@@ -160,9 +160,9 @@ namespace Banking.Application.Web.Controllers
 
                     // If we reached here then the user was created.
                     var customer = customerOperationsManager.CreateCustomer(userModel.UserName);
-                    customerRepository.AddCustomer(customer, true);
-                    Session[CurrentCustomerId] = customer.CustomerId;
-                    
+                    customerRepository.AddCustomer(customer);
+                    Session[CurrentCustomerId] = customer.CustomerId.ToString();
+
                     return RedirectToAction("CreateCustomerStep2", "Teller");
                 }
                 catch (MembershipCreateUserException e)
@@ -547,9 +547,8 @@ namespace Banking.Application.Web.Controllers
                 return this.View(statement);
             }
 
-            // Reload the same view with the error messages
-            var accountTransactions = transactionRepository.GetAccountTransactions(account);
-            var accountDetails = this.CreateAccountDetailsViewModel(account, accountTransactions);
+            // Reload the same view with the error 
+            var accountDetails = this.CreateAccountDetailsViewModel(account, new List<ITransaction>());
             
             return this.View("AccountDetails", accountDetails);
         }
@@ -559,10 +558,7 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
             var account = customerOperationsManager.GetAccount(customer, accountId);
-
-            var accountTransactions = transactionRepository.GetAccountTransactions(account);
-
-            var accountDetails = this.CreateAccountDetailsViewModel(account, accountTransactions);
+            var accountDetails = this.CreateAccountDetailsViewModel(account, new List<ITransaction>());
             
             return View(accountDetails);
         }
