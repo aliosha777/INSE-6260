@@ -24,7 +24,7 @@ namespace Banking.Application.Web.ViewModels
 
         [Required]
         [RegularExpression(
-            @"[ABCEFGHJKLMNPRSTVXY][0-9][ABCEFGHJKLMNPRSTVWXYZ] [\s]  [0-9][ABCEFGHJKLMNPRSTVWXYZ][0-9]", 
+            @"[ABCEFGHJKLMNPRSTVXY][0-9][ABCEFGHJKLMNPRSTVWXYZ][\s][0-9][ABCEFGHJKLMNPRSTVWXYZ][0-9]", 
             ErrorMessage = "Invalid Postal Code")]
         public string PostalCode { get; set; }
     }

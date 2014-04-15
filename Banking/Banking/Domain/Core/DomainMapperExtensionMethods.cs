@@ -172,7 +172,8 @@ namespace Banking.Domain.Core
                 Line1 = addressModel.Line1,
                 Line2 = addressModel.Line2,
                 PostalCode = addressModel.PostalCode,
-                Province = addressModel.Province
+                Province = addressModel.Province,
+                CustomerId = addressModel.CustomerId
             };
 
             return address;
@@ -188,7 +189,8 @@ namespace Banking.Domain.Core
                 Line1 = address.Line1,
                 Line2 = address.Line2,
                 PostalCode = address.PostalCode,
-                Province = address.Province
+                Province = address.Province,
+                CustomerId = address.CustomerId
             };
 
             return addressModel;

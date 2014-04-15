@@ -213,19 +213,18 @@ namespace Banking.Application.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var customer = GetCurrentCustomer();
+
                 var address = new Address
                 {
                     Line1 = addressViewModel.Line1,
                     Line2 = addressViewModel.Line2,
                     City = addressViewModel.City,
                     PostalCode = addressViewModel.PostalCode,
-                    Province = addressViewModel.Province
+                    Province = addressViewModel.Province,
+                    CustomerId = customer.CustomerId,
+                    IsActive = true
                 };
-
-                // Make the first address active by default
-                address.IsActive = true;
-
-                var customer = GetCurrentCustomer();
 
                 customer.Addresses.Add(address);
                 customerRepository.UpdateCustomer(customer, true);
@@ -626,6 +625,8 @@ namespace Banking.Application.Web.Controllers
                 activeAddress.PostalCode = address.PostalCode;
 
                 customerRepository.UpdateCustomer(customer, true);
+
+                return RedirectToAction("CustomerSummary", "Teller");
             }
 
             return this.View(address);

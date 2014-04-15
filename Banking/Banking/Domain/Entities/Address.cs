@@ -19,6 +19,8 @@ namespace Banking.Domain.Entities
 
         public string PostalCode { get; set; }
 
-        public bool IsActive { get; set; } 
+        public bool IsActive { get; set; }
+
+        public int CustomerId { get; set; }
     }
 }

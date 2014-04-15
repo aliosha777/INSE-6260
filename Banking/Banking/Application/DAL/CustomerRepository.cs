@@ -83,6 +83,12 @@ namespace Banking.Application.DAL
                 {
                     trackedEntity.Addresses.Add(address);
                 }
+                else
+                {
+                    // update the account from the model
+                    var trackedAddress = trackedEntity.Addresses.Single(a => a.AddressId == address.AddressId);
+                    context.Entry(trackedAddress).CurrentValues.SetValues(address);
+                }
             }
 
             // Sync Accounts
