@@ -65,6 +65,7 @@ namespace Banking.Migrations
                         Created = c.DateTime(nullable: false),
                         Applied = c.DateTime(),
                         Status = c.Int(nullable: false),
+                        Description = c.String(),
                     })
                 .PrimaryKey(t => t.TransactionId)
                 .ForeignKey("dbo.Account", t => t.LeftAccountId)
@@ -103,6 +104,18 @@ namespace Banking.Migrations
                 .Index(t => t.InvestmentId);
             
             CreateTable(
+                "dbo.Log",
+                c => new
+                    {
+                        LogId = c.Long(nullable: false, identity: true),
+                        Created = c.DateTime(nullable: false),
+                        UserName = c.String(),
+                        ErrorMessage = c.String(),
+                        AdditionalData = c.String(),
+                    })
+                .PrimaryKey(t => t.LogId);
+            
+            CreateTable(
                 "dbo.CustomerAccounts",
                 c => new
                     {
@@ -134,6 +147,7 @@ namespace Banking.Migrations
             DropForeignKey("dbo.Transaction", "LeftAccountId", "dbo.Account");
             DropForeignKey("dbo.Address", "CustomerId", "dbo.Customer");
             DropTable("dbo.CustomerAccounts");
+            DropTable("dbo.Log");
             DropTable("dbo.InvestmentInterval");
             DropTable("dbo.Investment");
             DropTable("dbo.Transaction");

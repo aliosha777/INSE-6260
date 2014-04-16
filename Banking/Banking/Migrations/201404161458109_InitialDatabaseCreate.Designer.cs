@@ -5,13 +5,13 @@ namespace Banking.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class AddedLoggingTable : IMigrationMetadata
+    public sealed partial class InitialDatabaseCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedLoggingTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDatabaseCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201404132027304_AddedLoggingTable"; }
+            get { return "201404161458109_InitialDatabaseCreate"; }
         }
         
         string IMigrationMetadata.Source

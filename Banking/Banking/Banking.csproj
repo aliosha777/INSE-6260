@@ -240,21 +240,9 @@
     <Compile Include="Application\Core\Logging\ILogger.cs" />
     <Compile Include="Application\Core\Logging\Logger.cs" />
     <Compile Include="Membership\SimpleMembershipInitializer.cs" />
-    <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.cs" />
-    <Compile Include="Migrations\201404070307551_InitialDatabaseCreate.Designer.cs">
-      <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404130033341_AddTransactionDescription.cs" />
-    <Compile Include="Migrations\201404130033341_AddTransactionDescription.Designer.cs">
-      <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404132027304_AddedLoggingTable.cs" />
-    <Compile Include="Migrations\201404132027304_AddedLoggingTable.Designer.cs">
-      <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404132043512_AdditionalLogdata.cs" />
-    <Compile Include="Migrations\201404132043512_AdditionalLogdata.Designer.cs">
-      <DependentUpon>201404132043512_AdditionalLogdata.cs</DependentUpon>
+    <Compile Include="Migrations\201404161458109_InitialDatabaseCreate.cs" />
+    <Compile Include="Migrations\201404161458109_InitialDatabaseCreate.Designer.cs">
+      <DependentUpon>201404161458109_InitialDatabaseCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Application\Models\AccountModels.cs" />
@@ -436,17 +424,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201404070307551_InitialDatabaseCreate.resx">
-      <DependentUpon>201404070307551_InitialDatabaseCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404130033341_AddTransactionDescription.resx">
-      <DependentUpon>201404130033341_AddTransactionDescription.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404132027304_AddedLoggingTable.resx">
-      <DependentUpon>201404132027304_AddedLoggingTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404132043512_AdditionalLogdata.resx">
-      <DependentUpon>201404132043512_AdditionalLogdata.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404161458109_InitialDatabaseCreate.resx">
+      <DependentUpon>201404161458109_InitialDatabaseCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
