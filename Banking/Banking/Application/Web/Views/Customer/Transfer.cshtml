@@ -2,10 +2,10 @@
 @model AccountsOperationsViewModel
 
 @{
-    ViewBag.Title = "Deposit";
+    ViewBag.Title = "Transfer";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Transfer", "Customer"))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -13,9 +13,9 @@
     Html.RenderPartial("~/Application/Web/Views/Common/_AccountsOperations.cshtml");
     
     <br />
-    <input type="submit" id="deposit" value="Deposit"/>
+    <input type="submit" id="transfer" value="Transfer"/>
     
     <br />
-    @Html.ActionLink("Back", "CustomerSummary")
+    @Html.ActionLink("Back", "Home", "Customer")
 }
 

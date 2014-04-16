@@ -51,10 +51,11 @@ namespace Banking.Tests.ApplicationLogic
 
             var timeProvider = Mock.Of<ITimeProvider>();
             var investmentRepository = Mock.Of<IInvestmentRepository>();
+            var accountOperationsManager = Mock.Of<IAccountOperationsManager>();
 
             Mock.Get(timeProvider).Setup(t => t.GetDifferenceInYears(start, end)).Returns(2);
 
-            var investmentManager = new InvestmentManager(timeProvider, investmentRepository);
+            var investmentManager = new InvestmentManager(timeProvider, investmentRepository, accountOperationsManager);
 
             var balance = investmentManager.CalculateBalanceAtMaturity(investment);
 

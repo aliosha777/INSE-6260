@@ -18,7 +18,7 @@ namespace Banking.Application.DAL
 
         IEnumerable<ICustomer> GetCustomersByFirstName(string firstName);
 
-        IEnumerable<ICustomer> GetCustomersByUserName(string userName);
+       ICustomer GetCustomerByUserName(string userName);
 
         IEnumerable<ICustomer> GetCustomersByAccountNumber(string accountNumber);
     }

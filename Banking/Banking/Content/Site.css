@@ -652,6 +652,16 @@ tr:nth-child(odd) { background-color: #F9F9F9; }
     display: inline-block;
 }
 
+.action-link 
+{
+    
+}
+
+.customer-background 
+{
+    background-color: #7AC0DA;
+}
+
 /********************
 *   Mobile Styles   *
 ********************/

@@ -3,7 +3,7 @@
 
 <h2>Start New Investment</h2>
 <br />
-@using (Html.BeginForm("Invest", "Teller"))
+@using (Html.BeginForm("Invest", "Customer"))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
@@ -33,7 +33,7 @@
            formmethod="post"/>
 }
 
-@Html.ActionLink("Back", "CustomerSummary", "Teller")
+@Html.ActionLink("Back", "Home", "Customer")
 
 @section Scripts{
     <script type="text/javascript" >

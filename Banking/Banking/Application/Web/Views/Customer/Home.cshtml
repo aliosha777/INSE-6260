@@ -1,1 +1,58 @@
-﻿
+﻿@model Banking.Application.Web.ViewModels.CustomerSummary
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<div>
+    <span class="action-link-container">
+        @Html.ActionLink("Edit Personal Information", "EditPersonalInfo", "Customer")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Edit Address", "EditAddress", "Customer")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Open Investment Account", "CreateInvestmentAccount", "Customer")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Transfer", "Transfer", "Customer")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("Invest", "Invest", "Customer")
+    </span>
+    <span class="action-link-container">
+        @Html.ActionLink("View Investments", "InvestmentSummary", "Customer")
+    </span>
+</div>
+
+
+
+@if (Model != null)
+{
+    <div>
+        <div style="float: left;">
+            <h2>Welcome</h2>
+            <br />
+            <div style="padding-left: 20px;">
+                <span>@Html.DisplayFor(m => Model.FirstName)</span>
+                <span>@Html.DisplayFor(m => Model.LastName)</span>
+            </div>
+        </div>   
+    
+        <div style="float: right;">
+            @{
+                Html.RenderPartial("~/Application/Web/Views/Common/_AddressDisplay.cshtml", @Model.CurrentAddress);
+            }
+        </div>
+    </div>
+    
+    <div style="clear: both;">
+        <h2>Accounts</h2>
+        @{
+            Html.RenderPartial("~/Application/Web/Views/Common/_AccountInformation.cshtml", @Model.Accounts);
+        }
+    </div>
+    <br />
+}
+
+

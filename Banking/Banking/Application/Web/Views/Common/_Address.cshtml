@@ -1,11 +1,27 @@
 ﻿@model Banking.Application.Web.ViewModels.AddressViewModel
 
-<h2>Address</h2>
-
-<div class="address-display">
-    <div><span class="address-line">Line 1:</span> @Model.Line1</div>
-    <div><span class="address-line">Line 2:</span> @Model.Line2</div>
-    <div><span class="address-line">City:</span> @Model.City</div>
-    <div><span class="address-line">Province:</span> @Model.Province</div>
-    <div><span class="address-line">Postal Code:</span> @Model.PostalCode</div>
+<div>
+    @Html.ValidationMessageFor(a => a.Line1)
+    @Html.LabelFor(a => a.Line1)
+    @Html.EditorFor(a => a.Line1)
+</div>
+<div>
+    @Html.ValidationMessageFor(a => a.Line2)
+    @Html.LabelFor(a => a.Line2)
+    @Html.EditorFor(a => a.Line2)
+</div>
+<div>
+    @Html.ValidationMessageFor(a => a.City)
+    @Html.LabelFor(a => a.City)
+    @Html.EditorFor(a => a.City)
+</div>
+<div>
+    @Html.ValidationMessageFor(a => a.Province)
+    @Html.LabelFor(a => a.Province)
+    @Html.EditorFor(a => a.Province)
+</div>
+<div>
+    @Html.ValidationMessageFor(a => a.PostalCode)
+    @Html.LabelFor(a => a.PostalCode)
+    @Html.EditorFor(a => a.PostalCode)
 </div>

@@ -10,7 +10,7 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    Html.RenderPartial("_AccountsOperations");
+    Html.RenderPartial("~/Application/Web/Views/Common/_AccountsOperations.cshtml");
     
     <br />
     <input type="submit" id="withdraw" value="Withdraw"/>

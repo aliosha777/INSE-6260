@@ -1,7 +1,7 @@
 ﻿@using Banking.Application.Web.ViewModels; 
 @model CustomerPersonalInformation
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("EditPersonalInfo", "Customer"))
 {
     @Html.AntiForgeryToken()
 
@@ -13,4 +13,4 @@
 }
 
 <br />
-@Html.ActionLink("Back", "CustomerSummary", "Teller")
+@Html.ActionLink("Back", "Home", "Customer")

@@ -46,5 +46,18 @@ namespace Banking.Application.Core
                 Description = transaction.Description,
             };
         }
+
+        public static CustomerPersonalInformation ToPersonalInformationViewModel(this ICustomer customer)
+        {
+            var viewModel = new CustomerPersonalInformation()
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                Phone = customer.Phone
+            };
+
+            return viewModel;
+        }
     }
 }

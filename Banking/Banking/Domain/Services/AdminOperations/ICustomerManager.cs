@@ -10,7 +10,7 @@ namespace Banking.Domain.Services.AdminOperations
     {
         IEnumerable<ICustomer> FindCustomerByFirstName(string firstName);
 
-        IEnumerable<ICustomer> FindCustomerByUsername(string userName);
+       ICustomer FindCustomerByUsername(string userName);
 
         IEnumerable<ICustomer> FindCustomerByAccountNumber(string accountNumber);
     }

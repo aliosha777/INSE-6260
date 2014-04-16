@@ -16,48 +16,59 @@ namespace Banking.Domain.Services.BankingOperationsEngine
 
         private readonly ITimeProvider timeProvider;
         private readonly IInvestmentRepository investmentRepository;
+        private readonly IAccountOperationsManager accountOperationsManager;
 
         public InvestmentManager(
             ITimeProvider timeProvider,
-            IInvestmentRepository investmentRepository)
+            IInvestmentRepository investmentRepository,
+            IAccountOperationsManager accountOperationsManager)
         {
             this.timeProvider = timeProvider;
             this.investmentRepository = investmentRepository;
+            this.accountOperationsManager = accountOperationsManager;
         }
 
-        public Investment CreateGicInvestment(
-            DateTime start, int termDuration, double startingAmount, IAccount associatedAccount)
+        public bool CreateGicInvestment(
+            DateTime start, int termDuration, double startingAmount, IAccount associatedAccount, out IInvestment investment)
         {
             if (associatedAccount.Type != AccountTypes.Investment)
             {
                 throw new BankingValidationException("Investments can only be associated with accounts of type Investment.");
             }
 
-            var termEnd = start.AddYears(termDuration);
+            var availableBalance = accountOperationsManager.GetAvailableAccountBalance(associatedAccount);
+            bool hasSufficientFunds = availableBalance > startingAmount;
 
-            var investment = new Investment
+            investment = null;
+
+            if (hasSufficientFunds)
             {
-                Type = InvestmentTypes.FixedRate,
-                TermStart = start,
-                TermEnd = termEnd,
-                CompoundingFrequency = CompoundingFrequency.Yearly,
-                Account = associatedAccount
-            };
+                var termEnd = start.AddYears(termDuration);
 
-            var investmentInterval = new InvestmentInterval()
-                {
-                    Start = start,
-                    End = termEnd,
-                    InterestRate = this.GetGicInterestrate(),
-                    StartingAmount = (decimal)startingAmount,
-                    Investment = investment
-                };
+                investment = new Investment
+                    {
+                        Type = InvestmentTypes.FixedRate,
+                        TermStart = start,
+                        TermEnd = termEnd,
+                        CompoundingFrequency = CompoundingFrequency.Yearly,
+                        Account = associatedAccount
+                    };
 
-            investment.InvestmentIntervals.Add(investmentInterval);
+                var investmentInterval = new InvestmentInterval()
+                    {
+                        Start = start,
+                        End = termEnd,
+                        InterestRate = this.GetGicInterestrate(),
+                        StartingAmount = (decimal)startingAmount,
+                        Investment = investment
+                    };
 
-            investmentRepository.AddInvestment(investment);
+                investment.InvestmentIntervals.Add(investmentInterval);
 
-            return investment;
+                investmentRepository.AddInvestment(investment);
+            }
+
+            return hasSufficientFunds;
         }
 
         // Investment account: regular account + interest calculator

@@ -22,10 +22,9 @@ namespace Banking.Domain.Services.AdminOperations
             return customers;
         }
 
-        public IEnumerable<ICustomer> FindCustomerByUsername(string userName)
+        public ICustomer FindCustomerByUsername(string userName)
         {
-            var customers = customerRepository.GetCustomersByUserName(userName);
-            return customers;
+            return customerRepository.GetCustomerByUserName(userName);
         }
 
         public IEnumerable<ICustomer> FindCustomerByAccountNumber(string accountNumber)

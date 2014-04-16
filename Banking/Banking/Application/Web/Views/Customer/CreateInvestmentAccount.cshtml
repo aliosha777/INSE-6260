@@ -1,7 +1,7 @@
 ﻿
-<h2>Open New Bank Account</h2>
+<h2>Open New Investment Account</h2>
 <br />
-@using (Html.BeginForm())
+@using (Html.BeginForm("CreateInvestmentAccount", "Customer"))
 {
     <div>
         @Html.Label("Select Account Type")
@@ -15,4 +15,4 @@
     </div>
 }
 <br />
-@Html.ActionLink("Back", "CustomerSummary", "Teller")
+@Html.ActionLink("Back", "Home", "Customer")

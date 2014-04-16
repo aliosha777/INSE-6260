@@ -47,7 +47,7 @@
     
         <div style="float: right;">
             @{
-                Html.RenderPartial("~/Application/Web/Views/Common/_Address.cshtml", @Model.CurrentAddress);
+                Html.RenderPartial("~/Application/Web/Views/Common/_AddressDisplay.cshtml", @Model.CurrentAddress);
             }
         </div>
     </div>
@@ -55,7 +55,7 @@
     <div style="clear: both;">
         <h2>Accounts</h2>
         @{
-            Html.RenderPartial("~/Application/Web/Views/Teller/_AccountInformation.cshtml", @Model.Accounts);
+            Html.RenderPartial("~/Application/Web/Views/Common/_AccountInformation.cshtml", @Model.Accounts);
         }
     </div>
     <br />

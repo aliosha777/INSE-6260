@@ -162,14 +162,11 @@ namespace Banking.Application.DAL
             }
         }
 
-        public IEnumerable<ICustomer> GetCustomersByUserName(string userName)
+        public ICustomer GetCustomerByUserName(string userName)
         {
             var customers = context.Customers.Where(c => c.UserName == userName);
 
-            foreach (var customer in customers)
-            {
-                yield return customer.ToCustomer();
-            }
+            return customers.FirstOrDefault().ToCustomer();
         }
 
         public IEnumerable<ICustomer> GetCustomersByAccountNumber(string accountNumber)

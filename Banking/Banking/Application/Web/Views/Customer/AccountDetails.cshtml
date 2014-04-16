@@ -20,26 +20,19 @@
 @{
     if (Model != null)
     {
-        using (Html.BeginForm("AccountStatement", "Teller"))
+        using (Html.BeginForm("AccountStatement", "Customer"))
         {
             @Html.AntiForgeryToken()
 
-            Html.RenderPartial("~/Application/Web/Views/Common/_RequestStatement.cshtml",
-        
-                new RequestStatementViewModel
-                {
-                    AccountId = Model.Account.AccountId,
-                    From = DateTime.Now,
-                    To = DateTime.Now
-                });
-                
+            Html.RenderPartial("~/Application/Web/Views/Common/_RequestStatement.cshtml", new RequestStatementViewModel { AccountId = Model.Account.AccountId, From = DateTime.Now, To = DateTime.Now });
+            
             <input type="submit" value="View Statement" />
         }
     }
 }
 
 <br />
-@Html.ActionLink("Back", "CustomerSummary")
+@Html.ActionLink("Back", "Home", "Customer")
 
 @section Scripts{
     <script type="text/javascript" >

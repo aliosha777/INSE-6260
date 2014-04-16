@@ -1,0 +1,74 @@
+﻿@using Banking.Application.Web.ViewModels
+@model AccountStatementViewModel
+
+<h2>Account Statement</h2>
+<div>
+    <div style="float: left;">
+        <h3>Account</h3>
+        @Html.LabelFor(m => m.AccountNumber)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.AccountNumber)
+        </span>
+        <h3>Balance</h3>
+        @Html.LabelFor(m => m.Balance)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.Balance)
+        </span>
+    </div>
+    <div style="float: right;">
+        <h3>Statement Period</h3>
+        @Html.LabelFor(m => m.From)
+        <span class="readonly-value">
+            @Html.DisplayFor(m => m.From)
+        </span>
+        <br />
+        @Html.LabelFor(m => m.To)
+        <span class="readonly-value">
+        @Html.DisplayFor(m => m.To)
+        </span>
+    </div>
+    <br />
+</div>
+<div class="table-background" style="clear: both;">
+    <table style="width: 100%">
+        <tr class="table-header">
+            <td>Transaction Number</td>
+            <td>Date</td>
+            <td>Description</td>
+            <td>Withdrawals</td>
+            <td>Deposits</td>
+            <td>Balance</td>
+        </tr>
+
+
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.TransactionId)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.Applied)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.Description)</span>
+
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.Withdrawal)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.Deposit)</span>
+                </td>
+                <td>
+                    <span>@Html.DisplayFor(m => transaction.AccountBalance)</span>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<br />
+
+@Html.ActionLink("Back", "Home", "Customer")

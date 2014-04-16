@@ -165,6 +165,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Core\ViewHelpers.cs" />
     <Compile Include="Application\Core\ViewModelMapperExtensionMethod.cs" />
     <Compile Include="Application\DAL\LoggerRepository.cs" />
     <Compile Include="Application\Models\LogModel.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Application\Web\ViewModels\RequestStatementViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\TransactionViewModel.cs" />
     <Compile Include="Application\Web\ViewModels\UserViewModel.cs" />
+    <Compile Include="Domain\Services\AccountServices\AccountStatementLine.cs" />
     <Compile Include="Domain\Services\AdminOperations\BankAccountManager.cs" />
     <Compile Include="Domain\Services\AdminOperations\CustomerManager.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -337,21 +339,29 @@
     <Content Include="Application\Web\Views\Teller\Transfer.cshtml" />
     <Content Include="Application\Web\Views\Teller\Withdraw.cshtml" />
     <Content Include="Application\Web\Views\System\Index.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_AccountsOperations.cshtml" />
+    <Content Include="Application\Web\Views\Common\_AccountsOperations.cshtml" />
     <Content Include="Application\Web\Views\Teller\Invest.cshtml" />
     <Content Include="Application\Web\Views\Teller\InvestmentDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\InvestmentSummary.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_InvestmentData.cshtml" />
+    <Content Include="Application\Web\Views\Common\_InvestmentData.cshtml" />
     <Content Include="Application\Web\Views\Teller\AccountStatement.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_RequestStatement.cshtml" />
+    <Content Include="Application\Web\Views\Common\_RequestStatement.cshtml" />
     <Content Include="Application\Web\Views\Error\General.cshtml" />
     <Content Include="Application\Web\Views\System\ErrorLog.cshtml" />
     <Content Include="Application\Web\Views\Admin\Home.cshtml" />
     <Content Include="Application\Web\Views\Teller\SearchResults.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_PersonalInformation.cshtml" />
+    <Content Include="Application\Web\Views\Common\_PersonalInformation.cshtml" />
     <Content Include="Application\Web\Views\Teller\EditAddress.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_Address.cshtml" />
+    <Content Include="Application\Web\Views\Common\_Address.cshtml" />
     <Content Include="Application\Web\Views\Customer\Home.cshtml" />
+    <Content Include="Application\Web\Views\Customer\EditPersonalInfo.cshtml" />
+    <Content Include="Application\Web\Views\Customer\EditAddress.cshtml" />
+    <Content Include="Application\Web\Views\Customer\Transfer.cshtml" />
+    <Content Include="Application\Web\Views\Customer\CreateInvestmentAccount.cshtml" />
+    <Content Include="Application\Web\Views\Customer\AccountDetails.cshtml" />
+    <Content Include="Application\Web\Views\Customer\AccountStatement.cshtml" />
+    <Content Include="Application\Web\Views\Customer\Invest.cshtml" />
+    <Content Include="Application\Web\Views\Customer\InvestmentSummary.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -413,12 +423,11 @@
     <Content Include="Application\Web\Views\BankAccount\Create.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\Edit.cshtml" />
     <Content Include="Application\Web\Views\BankAccount\Delete.cshtml" />
-    <Content Include="Application\Web\Views\Teller\_AccountInformation.cshtml" />
-    <Content Include="Application\Web\Views\Customer\CustomerSummary.cshtml" />
+    <Content Include="Application\Web\Views\Common\_AccountInformation.cshtml" />
     <Content Include="Application\Web\Views\Teller\Home.cshtml" />
     <Content Include="Application\Web\Views\Customer\PersonalDetails.cshtml" />
     <Content Include="Application\Web\Views\Teller\CustomerSummary.cshtml" />
-    <Content Include="Application\Web\Views\Common\_Address.cshtml" />
+    <Content Include="Application\Web\Views\Common\_AddressDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

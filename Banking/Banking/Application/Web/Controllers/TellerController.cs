@@ -14,6 +14,7 @@ namespace Banking.Application.Web.Controllers
     using Banking.Application.Core;
     using Banking.Application.Web.Attributes;
     using Banking.Domain.Entities;
+    using Banking.Domain.Services.AccountServices;
     using Banking.Domain.Services.AdminOperations;
     using Banking.Exceptions;
     using Banking.Filters;
@@ -84,23 +85,23 @@ namespace Banking.Application.Web.Controllers
 
         public ActionResult SearchResults(string searchType, string searchField)
         {
-            IEnumerable<ICustomer> customers = null;
+            var customers = new List<ICustomer>();
 
             switch (searchType)
             {
                 case "0":
                 {
-                    customers = customerManager.FindCustomerByUsername(searchField);
+                    customers.Add(customerManager.FindCustomerByUsername(searchField));
                     break;
                 }
                 case "1":
                 {
-                    customers = customerManager.FindCustomerByFirstName(searchField);
+                    customers.AddRange(customerManager.FindCustomerByFirstName(searchField));
                     break;
                 }
                 case "2":
                 {
-                    customers = customerManager.FindCustomerByAccountNumber(searchField);
+                    customers.AddRange(customerManager.FindCustomerByAccountNumber(searchField));
                     break;
                 }
             }
@@ -237,14 +238,9 @@ namespace Banking.Application.Web.Controllers
 
         public ActionResult CreateBankAccount()
         {
-            // TODO: move this into AccountOperationsManager
-            var values = from int e in Enum.GetValues(typeof(AccountTypes))
-                         where (AccountTypes)e != AccountTypes.GeneralLedgerCash
-                         select new { Id = e, Name = Enum.GetName(typeof(AccountTypes), e) };
-
-            var accountTypesList = new SelectList(values, "Id", "Name");
-
-             ViewBag.AccountTypesList = accountTypesList;
+             ViewBag.AccountTypesList = 
+                 ViewHelpers.GetAccountTypesSelectList(
+                    new List<AccountTypes>() { AccountTypes.GeneralLedgerCash} );
 
             return View();
         }
@@ -267,7 +263,7 @@ namespace Banking.Application.Web.Controllers
         public ActionResult Deposit()
         {
             var customer = this.GetCurrentCustomer();
-            var values = this.GetAccountsSelectList(customer);
+            var values = ViewHelpers.GetAccountsSelectList(customer.Accounts);
 
             var viewModel = new AccountsOperationsViewModel
                 {
@@ -287,7 +283,7 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
             accountsOperations.OperationType = OperationTypes.Deposit;
-            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
+            accountsOperations.AccountsSelectList = ViewHelpers.GetAccountsSelectList(customer.Accounts);
 
             if (ModelState.IsValid)
             {
@@ -313,7 +309,7 @@ namespace Banking.Application.Web.Controllers
             {
                 Amount = 0,
                 OperationType = OperationTypes.Withdrawal,
-                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
+                AccountsSelectList = ViewHelpers.GetAccountsSelectList(customer.Accounts)
             };
 
             return this.View(viewModel);
@@ -327,7 +323,7 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
             accountsOperations.OperationType = OperationTypes.Withdrawal;
-            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
+            accountsOperations.AccountsSelectList = ViewHelpers.GetAccountsSelectList(customer.Accounts);
 
             if (ModelState.IsValid)
             {
@@ -359,7 +355,7 @@ namespace Banking.Application.Web.Controllers
             {
                 Amount = 0,
                 OperationType = OperationTypes.Transfer,
-                AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer))
+                AccountsSelectList = ViewHelpers.GetAccountsSelectList(customer.Accounts)
             };
 
             return View(viewModel);
@@ -373,7 +369,7 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
             accountsOperations.OperationType = OperationTypes.Transfer;
-            accountsOperations.AccountsSelectList = new List<SelectListItem>(GetAccountsSelectList(customer));
+            accountsOperations.AccountsSelectList = ViewHelpers.GetAccountsSelectList(customer.Accounts);
 
             if (ModelState.IsValid)
             {
@@ -426,11 +422,11 @@ namespace Banking.Application.Web.Controllers
                         gicRate);
 
                 investmentViewModel.Interest = interest;
-                investmentViewModel.InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes));
-                investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
+                investmentViewModel.InvesementTypes = ViewHelpers.GetEnumSelectList(typeof(InvestmentTypes));
+                investmentViewModel.CompoundingFrequecyList = ViewHelpers.GetEnumSelectList(typeof(CompoundingFrequency));
                 investmentViewModel.MaxYears = investmentManager.GetMaxTermInYears();
                 investmentViewModel.Rate = gicRate;
-                investmentViewModel.AccountsList = this.GetAccountsSelectList(customer);
+                investmentViewModel.AccountsList = ViewHelpers.GetAccountsSelectList(customer.Accounts);
             }
             
             return this.View("Invest", investmentViewModel);
@@ -443,12 +439,14 @@ namespace Banking.Application.Web.Controllers
 
             var viewModel = new InvestmentViewModel()
             {
-                InvesementTypes = this.GetEnumSelectList(typeof(InvestmentTypes)),
+                InvesementTypes = ViewHelpers.GetEnumSelectList(typeof(InvestmentTypes)),
                 Start = DateTime.Now,
                 MaxYears = investmentManager.GetMaxTermInYears(),
                 Rate = investmentManager.GetGicInterestrate(),
-                CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency)),
-                AccountsList = this.GetInvestmentAccountsSelectList(customer)
+                CompoundingFrequecyList = ViewHelpers.GetEnumSelectList(typeof(CompoundingFrequency)),
+                AccountsList = 
+                    ViewHelpers.GetAccountsSelectList(
+                        customer.Accounts.Where(a => a.Type == AccountTypes.Investment))
             };
 
             return this.View(viewModel);
@@ -462,25 +460,28 @@ namespace Banking.Application.Web.Controllers
             if (ModelState.IsValid)
             {
                 var customer = this.GetCurrentCustomer();
-
                 var account = customerOperationsManager.GetAccount(customer, investmentViewModel.AccountId);
 
-                var availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
+                IInvestment investment;
 
-                if (availableBalance < investmentViewModel.StartingAmount)
+                var success = investmentManager.CreateGicInvestment(
+                    investmentViewModel.Start,
+                    investmentViewModel.TermDuration,
+                    investmentViewModel.StartingAmount,
+                    account,
+                    out investment);
+
+                if (!success)
                 {
                     ModelState.AddModelError(string.Empty, "Cannot invest more that the available balance");
 
-                    investmentViewModel.AccountsList = this.GetInvestmentAccountsSelectList(customer);
-                    investmentViewModel.CompoundingFrequecyList = this.GetEnumSelectList(typeof(CompoundingFrequency));
+                    investmentViewModel.AccountsList =
+                        ViewHelpers.GetAccountsSelectList(
+                            customer.Accounts.Where(a => a.Type == AccountTypes.Investment));
+
+                    investmentViewModel.CompoundingFrequecyList = ViewHelpers.GetEnumSelectList(typeof(CompoundingFrequency));
                     return this.View(investmentViewModel);
                 }
-
-                var investment = investmentManager.CreateGicInvestment(
-                    investmentViewModel.Start, 
-                    investmentViewModel.TermDuration, 
-                    investmentViewModel.StartingAmount,
-                    account);
 
                 return RedirectToAction("InvestmentSummary", "Teller", new { InvestmentId = investment.InvestmentId });
             }
@@ -525,69 +526,26 @@ namespace Banking.Application.Web.Controllers
             var account = customerOperationsManager.GetAccount(customer, accountId);
 
             if (ModelState.IsValid)
-            {               
-                // Statement calculations should be moved into AccountStatementBuilder class 
-                DateTime from = requestStatementViewModel.From;
-                DateTime to = requestStatementViewModel.To;
+            {
+                var availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
+                var transactions = transactionRepository.GetAccountTransactions(account);
 
-                double availableBalance; 
-                
-                if (account.Type == AccountTypes.Investment)
-                {
-                    availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
-                }
-                else
-                {
-                    availableBalance = (double)account.Balance;
-                }
-                 
-                var statement = new AccountStatementViewModel
-                {
-                    AccountNumber = account.AccountNumber,
-                    AccountType = Enum.GetName(typeof(AccountTypes), account.Type),
-                    Balance = availableBalance,
-                    From = from,
-                    To = to
-                };
+                var statementBuilder = new AccountStatementBuilder();
 
-                var statementLines = new List<TransactionViewModel>();
-                var transactions = transactionRepository.GetTransactionRange(account, from, to);
+                var statement = statementBuilder.BuildAccountStatement(
+                    account, 
+                    requestStatementViewModel.From,
+                    requestStatementViewModel.To,
+                    availableBalance,
+                    transactions);
 
-                var prevBalance = account.Balance;
-                var prevTransValue = 0.0;
+                var statementViewModel = ViewHelpers.CreateAccountStatementViewModel(statement);
 
-                // Could order by date applied as well
-                foreach (var transaction in transactions.OrderByDescending(t => t.TransactionId))
-                {
-                    var transactionViewModel = transaction.ToViewModel();
-                    
-                    // The accounts in question are liability accounts 
-                    // so left means withdrawal and right means deposit
-                    if (account.AccountId == transaction.LeftAccount.AccountId)
-                    {
-                        transactionViewModel.Withdrawal = transaction.Value.ToString();
-                        transactionViewModel.AccountBalance = (double)prevBalance + prevTransValue;
-                        prevTransValue = (double)transaction.Value;
-                    }
-                    else
-                    {
-                        transactionViewModel.Deposit = transaction.Value.ToString();
-                        transactionViewModel.AccountBalance = (double)prevBalance + prevTransValue;
-                        prevTransValue = -(double)transaction.Value;
-                    }
-
-                    prevBalance = (decimal)transactionViewModel.AccountBalance;
-
-                    statementLines.Add(transactionViewModel); 
-                }
-
-                statementLines.Reverse();
-                statement.Transactions.AddRange(statementLines);
-                return this.View(statement);
+                return this.View(statementViewModel);
             }
 
             // Reload the same view with the error 
-            var accountDetails = this.CreateAccountDetailsViewModel(account, new List<ITransaction>());
+            var accountDetails = ViewHelpers.CreateAccountDetailsViewModel(account, new List<ITransaction>());
             
             return this.View("AccountDetails", accountDetails);
         }
@@ -597,7 +555,7 @@ namespace Banking.Application.Web.Controllers
         {
             var customer = this.GetCurrentCustomer();
             var account = customerOperationsManager.GetAccount(customer, accountId);
-            var accountDetails = this.CreateAccountDetailsViewModel(account, new List<ITransaction>());
+            var accountDetails = ViewHelpers.CreateAccountDetailsViewModel(account, new List<ITransaction>());
             
             return View(accountDetails);
         }
@@ -606,7 +564,7 @@ namespace Banking.Application.Web.Controllers
         public ActionResult EditPersonalInfo()
         {
             var customer = this.GetCurrentCustomer();
-            var viewModel = this.CreatePersonalInformationViewModel(customer);
+            var viewModel = customer.ToPersonalInformationViewModel();
 
             return this.View(viewModel);
         }
@@ -673,70 +631,9 @@ namespace Banking.Application.Web.Controllers
         }
 
         #region Private Methods
-        
-        private CustomerPersonalInformation CreatePersonalInformationViewModel(ICustomer customer)
-        {
-            var viewModel = new CustomerPersonalInformation()
-            {
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                Phone = customer.Phone
-            };
-
-            return viewModel;
-        }
-
-        private IEnumerable<SelectListItem> GetInvestmentAccountsSelectList(ICustomer customer)
-        {
-            var values =
-                customer.Accounts
-                .Where(a => a.Type == AccountTypes.Investment)
-                .Select(
-                    account => new SelectListItem()
-                    {
-                        Value = account.AccountId.ToString(),
-                        Text = FormatAccountDropdownItem(account)
-                    });
-
-            return values;
-        }
-
-        private IEnumerable<SelectListItem> GetAccountsSelectList(ICustomer customer)
-        {
-            var values =
-                customer.Accounts
-                .Select(
-                    account => new SelectListItem()
-                    {
-                        Value = account.AccountId.ToString(),
-                        Text = FormatAccountDropdownItem(account)
-                    });
-
-            return values;
-        }
 
         // TODO: All those private methods should be placed in Application -> Services
-        private IEnumerable<SelectListItem> GetEnumSelectList(Type enumType)
-        {
-            var values = from int e in Enum.GetValues(enumType)
-                         select new SelectListItem()
-                         {
-                             Value = e.ToString(),
-                             Text = Enum.GetName(enumType, e)
-                         };
-
-            return values.ToList();
-        }
-
-        private string FormatAccountDropdownItem(IAccount account)
-        {
-            return string.Format(
-                "{0} {1} {2}",
-                account.Type.ToString().PadRight(12, '\xA0'),
-                account.AccountNumber,
-                account.Balance.ToString("C").PadLeft(10, '\xA0'));
-        }
+        
 
         private ICustomer GetCurrentCustomer()
         {
@@ -772,21 +669,6 @@ namespace Banking.Application.Web.Controllers
             }
 
             return customerSummary;
-        }
-
-        private AccountDetailsViewModel CreateAccountDetailsViewModel(IAccount account, IEnumerable<ITransaction> accountTransactions)
-        {
-            var accountDetails = new AccountDetailsViewModel
-            {
-                Account = account.ToViewModel()
-            };
-
-            foreach (var transaction in accountTransactions)
-            {
-                accountDetails.Transactions.Add(transaction.ToViewModel());
-            }
-
-            return accountDetails;
         }
 
         #endregion
