@@ -30,6 +30,7 @@ namespace Banking.Tests.ApplicationLogic
             var investmentInterval = 
                 fixture
                 .Build<InvestmentInterval>()
+                .Without(i => i.Investment)
                 .With(i => i.Start, start)
                 .With(i => i.End, end)
                 .With(i => i.InterestRate, 0.05)
@@ -39,9 +40,10 @@ namespace Banking.Tests.ApplicationLogic
             var intervals = new List<IInvestmentInterval>();
             intervals.Add(investmentInterval);
 
-            IInvestment investment = 
+            var investment = 
                 fixture
                 .Build<Investment>()
+                .Without(i => i.Account)
                 .With(i => i.TermStart, start)
                 .With(i => i.TermEnd, end)
                 .With(i => i.Type, InvestmentTypes.FixedRate)

@@ -47,6 +47,7 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Status, TransactionStatus.Pending)
                 .With(t => t.Value, depositAmount)
                 .With(t => t.Created, created)
+                .With(t => t.Description, "Cash Deposit")
                 .Create();
 
             Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { customerAccount });
@@ -55,7 +56,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(cashAccount, customerAccount, depositAmount, "Deposit"))
+                .Setup(tr => tr.CreateTransaction(cashAccount, customerAccount, depositAmount, "Cash Deposit"))
                 .Returns(transaction);
 
             // The expected result is that the transaction has the cash account as left accout
@@ -118,6 +119,7 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Status, TransactionStatus.Pending)
                 .With(t => t.Value, withdrawAmount)
                 .With(t => t.Created, created)
+                .With(t => t.Description, "Cash Withdraw")
                 .Create();
 
             Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { customerAccount });
@@ -126,7 +128,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(cashAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(customerAccount, cashAccount, withdrawAmount, "Withdraw"))
+                .Setup(tr => tr.CreateTransaction(customerAccount, cashAccount, withdrawAmount, "Cash Withdraw"))
                 .Returns(transaction);
 
             // The expected result is that the transaction has the cash account as right accout
@@ -187,6 +189,7 @@ namespace Banking.Tests.ApplicationLogic
                 .With(t => t.Status, TransactionStatus.Pending)
                 .With(t => t.Value, amount)
                 .With(t => t.Created, created)
+                .With(t => t.Description, "Online Transfer")
                 .Create();
 
             Mock.Get(customer).Setup(c => c.Accounts).Returns(new List<IAccount> { sourceAccount, destinationAccount });
@@ -195,7 +198,7 @@ namespace Banking.Tests.ApplicationLogic
                 .Setup(a => a.GetGeneralLedgerCashAccount()).Returns(destinationAccount);
 
             Mock.Get(transactionEngine)
-                .Setup(tr => tr.CreateTransaction(sourceAccount, destinationAccount, amount, "Transfer"))
+                .Setup(tr => tr.CreateTransaction(sourceAccount, destinationAccount, amount, "Online Transfer"))
                 .Returns(transaction);
 
             Mock.Get(transactionRepository)

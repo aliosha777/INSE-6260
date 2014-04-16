@@ -158,18 +158,21 @@ namespace Banking.Application.Web.Controllers
                 try
                 {
                     WebSecurity.CreateUserAndAccount(userModel.UserName, userModel.Password);
-
-                    // If we reached here then the user was created.
-                    var customer = customerOperationsManager.CreateCustomer(userModel.UserName);
-                    customerRepository.AddCustomer(customer);
-                    Session[CurrentCustomerId] = customer.CustomerId.ToString();
-
-                    return RedirectToAction("CreateCustomerStep2", "Teller");
+                    Roles.AddUserToRole(userModel.UserName, "Customer");
                 }
                 catch (MembershipCreateUserException e)
                 {
                     ModelState.AddModelError(string.Empty, e.StatusCode.ToString());
                 }
+
+                // If we reached here then the user was created.
+                var customer = customerOperationsManager.CreateCustomer(userModel.UserName);
+                customerRepository.AddCustomer(customer);
+                Session[CurrentCustomerId] = customer.CustomerId.ToString();
+
+                var verifyrole = Roles.IsUserInRole(userModel.UserName, "Customer");
+
+                return RedirectToAction("CreateCustomerStep2", "Teller");
             }
             return View(userModel);
         }

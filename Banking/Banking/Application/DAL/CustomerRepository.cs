@@ -40,17 +40,7 @@ namespace Banking.Application.DAL
         {
             var customerModel = customer.ToModel();
             context.Customers.Add(customerModel);
-
-            // Hack until proper role management is implemented
-            context.Database.ExecuteSqlCommand(
-                @"
-                    declare @roleId int
-                    select @roleId = RoleId from webpages_Roles where RoleName like 'Customer'
-                    insert into webpages_UsersInRoles (UserId, RoleId) values (@userId,@roleId)",
-                new SqlParameter("userId", WebSecurity.GetUserId(customer.UserName)));
-
             context.SaveChanges();
-            
             customer.CustomerId = customerModel.CustomerId;
         }
 
