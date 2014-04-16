@@ -350,6 +350,8 @@
     <Content Include="Application\Web\Views\Customer\AccountStatement.cshtml" />
     <Content Include="Application\Web\Views\Customer\Invest.cshtml" />
     <Content Include="Application\Web\Views\Customer\InvestmentSummary.cshtml" />
+    <Content Include="Application\Web\Views\Shared\_CustomerLayout.cshtml" />
+    <Content Include="Application\Web\Views\Customer\_ViewStart.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
