@@ -13,6 +13,7 @@ namespace Banking.Application.Web.Controllers
     using Banking.Application.Web.Attributes;
     using Banking.Domain.Entities;
     using Banking.Domain.Services.AccountServices;
+    using Banking.Exceptions;
 
     [Authorize(Roles = "Customer")]
     public class CustomerController : Controller
@@ -198,6 +199,12 @@ namespace Banking.Application.Web.Controllers
             AccountTypes type;
 
             Enum.TryParse(accountType, out type);
+
+            // This check should be done by a roles/permission/security layer 
+            if (type != AccountTypes.Investment)
+            {
+                throw new BankingValidationException("A customer is only allowed to open Investment accounts");
+            }
 
             var customer = this.GetCurrentCustomer();
             accountOperationsManager.CreateAccount(type, customer);
