@@ -528,8 +528,11 @@ namespace Banking.Application.Web.Controllers
             if (ModelState.IsValid)
             {
                 var availableBalance = accountOperationsManager.GetAvailableAccountBalance(account);
-                var transactions = transactionRepository.GetAccountTransactions(account);
-
+                var transactions = 
+                    transactionRepository.GetTransactionRange(
+                        account,
+                        requestStatementViewModel.From,
+                        requestStatementViewModel.To);
                 var statementBuilder = new AccountStatementBuilder();
 
                 var statement = statementBuilder.BuildAccountStatement(

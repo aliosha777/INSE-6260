@@ -16,10 +16,10 @@ namespace Banking.Application.Web.ViewModels
         [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Balance { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}")]
         public DateTime Created { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}")]
         public DateTime Modified { get; set; }
     }
 }
