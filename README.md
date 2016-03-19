@@ -1,4 +1,4 @@
-Banking
+INSE 6260 project
 =======
 
-A sample online banking application for the software quality assurance course
+A sample web application for the INSE 6260 course at Concordia University
